@@ -78,8 +78,8 @@ export function LoginPage() {
             style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat:'no-repeat', backgroundSize: 'cover'}}
             className="container-fluid d-flex align-items-center justify-content-center"
         >
-            <div className='row container-fluid'>
-                <div lg={7} md={6} xs={12} className="container-fluid col d-flex justify-content-center align-items-center p-5">
+            <div className='container-fluid row'>
+                <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
                         <h1 className="d-block d-sm-none text-center">Sistema de Analítica de Datos</h1>
                         <h1 className="d-none d-md-block">Sistema de Analítica de Datos</h1>
@@ -89,8 +89,8 @@ export function LoginPage() {
                         </p>
                         <div >
                             <div className='row'>
-                                <div lg={4} md={4} xs={12} className="container-fluid col d-flex justify-content-left align-items-left" >
-                                    <button type="button" className="btn btn-primary text-light  mt-3 fw-medium" onClick={handleManualModal}>
+                                <div className="container-fluid col-lg-12 col-md-12 col-xs-12 d-flex justify-content-center" >
+                                    <button type="button" className="btn btn-primary text-light mt-3 fw-medium" onClick={handleManualModal}>
                                         Ver Manual de Usuario
                                     </button>
                                 </div>
@@ -98,23 +98,20 @@ export function LoginPage() {
                         </div>
                     </div>
                 </div>
-                <div lg={5} md={6} xs={12} className="container-fluid col d-flex flex-column align-items-center">
-                    <div className="card p-4" style={{ width: '22.9rem' }}>
+                <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
+                    <div className="card p-4" style={{ width: '21rem' }}>
                         <form onSubmit={handleLogin} className="my-4">
                             <div className="text-center mb-4">
                                 <img src={Logo} alt="Logo" />
                             </div>
-
                             <div className="form-group mb-3">
                                 <label htmlFor="username">Usuario</label>
                                 <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange}/>
                             </div>
-
                             <div className="form-group mb-3">
                                 <label htmlFor="password">Contraseña</label>
                                 <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange}/>
                             </div>
-
                             <button type="submit" className="btn btn-primary w-100 mt-3">Entrar</button>
                             <ManualComponent show={showManualModal} handleClose={handleCloseManualModal} />
                         </form>
