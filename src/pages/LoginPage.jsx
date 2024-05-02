@@ -75,10 +75,10 @@ export function LoginPage() {
 
     return (
         <div
-            style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat:'no-repeat', backgroundSize: 'cover'}}
+            style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             className="container-fluid d-flex align-items-center justify-content-center"
         >
-            <div className='container-fluid row'>
+            <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
                         <h1 className="d-block d-sm-none text-center">Sistema de Analítica de Datos</h1>
@@ -87,30 +87,28 @@ export function LoginPage() {
                             Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
                             business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.
                         </p>
-                        <div >
-                            <div className='row'>
-                                <div className="container-fluid col-lg-12 col-md-12 col-xs-12 d-flex justify-content-center" >
-                                    <button type="button" className="btn btn-primary text-light mt-3 fw-medium" onClick={handleManualModal}>
-                                        Ver Manual de Usuario
-                                    </button>
-                                </div>
+                        <div className="row">
+                            <div className="container-fluid col-lg-12 col-md-12 col-sm-12 d-flex justify-content-md-start justify-content-center">
+                                <button type="button" className="btn btn-primary text-light mt-3 px-3 fw-medium" onClick={handleManualModal}>
+                                    Ver Manual de Usuario
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
                     <div className="card p-4" style={{ width: '21rem' }}>
-                        <form onSubmit={handleLogin} className="my-4">
-                            <div className="text-center mb-4">
+                        <form onSubmit={handleLogin} className="my-2">
+                            <div className="text-center my-2">
                                 <img src={Logo} alt="Logo" />
                             </div>
-                            <div className="form-group mb-3">
+                            <div className="form-group my-4">
                                 <label htmlFor="username">Usuario</label>
-                                <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange}/>
+                                <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange} />
                             </div>
-                            <div className="form-group mb-3">
+                            <div className="form-group my-4">
                                 <label htmlFor="password">Contraseña</label>
-                                <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange}/>
+                                <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange} />
                             </div>
                             <button type="submit" className="btn btn-primary w-100 mt-3">Entrar</button>
                             <ManualComponent show={showManualModal} handleClose={handleCloseManualModal} />
@@ -118,6 +116,20 @@ export function LoginPage() {
                     </div>
                 </div>
             </div>
+            <footer className="fixed-bottom text-white px-5 m-0">
+    <div className='container-fluid'>
+        <div className='row d-block d-sm-none'>
+            <span className="col-6 text-left">© GCTIC - EsSalud</span>
+            <span className="col-6 text-right">Versión: 1.1.0</span>
+        </div>
+        <div className='row d-none d-md-block'>
+            <span className="col-10 text-left">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</span>
+            <span className="col-2 text-right">Versión: 1.1.0</span>
+        </div>
+    </div>
+</footer>
+
+
         </div>
     );
 }
