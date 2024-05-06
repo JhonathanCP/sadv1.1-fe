@@ -117,17 +117,17 @@ export function LoginPage() {
                 </div>
             </div>
             <footer className="fixed-bottom text-white px-5 m-0">
-    <div className='container-fluid'>
-        <div className='row d-flex d-sm-none justify-content-left'>
-            <div className="col-6">© GCTIC - EsSalud</div>
-            <div className="col-6 text-center">Versión: 1.1.0</div>
-        </div>
-        <div className='row d-none d-md-flex'>
-            <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-            <div className="col-1 text-center">Versión: 1.1.0</div>
-        </div>
-    </div>
-</footer>
+                <div className='container-fluid'>
+                    <div className='row d-flex d-sm-none justify-content-left'>
+                        <div className="col-6">© GCTIC - EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0</div>
+                    </div>
+                    <div className='row d-none d-md-flex'>
+                        <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-1 text-center">Versión: 1.1.0</div>
+                    </div>
+                </div>
+            </footer>
 
 
 

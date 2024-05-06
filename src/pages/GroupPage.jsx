@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUserGroups } from '../api/user.api'
+import { getUserModules } from '../api/user.api'
 import { jwtDecode } from "jwt-decode";
 import { Link, Route, useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
@@ -12,10 +12,12 @@ import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar'
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Row, Col, NavItem } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
-export function MenuPage() {
+export function GroupPage() {
 
-    const [grupos, setGrupos] = useState([]);
+    const { id } = useParams();
+    const [modules, setModules] = useState([]);
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
@@ -53,8 +55,9 @@ export function MenuPage() {
             // Solo realizar la llamada a getUserGroups si userId está disponible
             const fetchInfo = async () => {
                 try {
-                    const response = await getUserGroups(decodedToken.id);
-                    setGrupos(response.data.groups);
+                    const response = await getUserModules(decodedToken.id);
+                    const filteredReportes = response.data.modules.filter(report => report.GroupId == id);
+                    setModules(filteredReportes);
                 } catch (error) {
                     console.error('Error al obtener la información:', error);
                 }
@@ -75,33 +78,15 @@ export function MenuPage() {
     return (
         <div fluid className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid fixed="true" style={{ backgroundColor: '#0064AF', minHeight: '35vh' }} className='mt-5'>
-                <Row className='px-5 py-5 d-flex align-items-center justify-content-center'>
-                    <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
-                        <h2 className='d-xl-none text-center'>Sistema de Analítica <span>de Datos</span></h2>
-                        <h2 className='d-none d-xl-block'>Sistema de Analítica <span>de Datos</span></h2>
-                        <p className='d-none d-md-block d-xl-none text-center'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
-                        <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
-
-                    </Col>
-                    <Col xs={12} md={12} xl={5} className='px-5 py-0 d-flex align-items-center justify-content-center'>
-                        <img src={Img} className="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="250" />
-                    </Col>
-                </Row>
-            </Container>
-            <Container fluid className='p-0 m-0 sections-bg' style={{}}>
+            
+            <Container fluid className='p-0 m-0 sections-bg ' style={{minHeight: '98vh'}}>
                 <section fluid id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
+                        
+                        <div className="row gy-4 align-items-center justify-content-center mt-4" data-aos="fade-up" data-aos-delay="100">
 
-                        {/* <div className="section-header">
-                            <h2>Our Services</h2>
-                            <p>Aperiam dolorum et et wuia molestias qui eveniet numquam nihil porro incidunt dolores placeat sunt id nobis omnis tiledo stran delop</p>
-                        </div> */}
-
-                        <div className="row gy-4 align-items-center justify-content-center" data-aos="fade-up" data-aos-delay="100">
-
-                            {grupos.map((grupo) => (
-                                <div className="col-lg-4 col-md-6 align-items-center justify-content-center" onClick={() => navigate(`/group/${grupo.id}`)}>
+                            {modules.map((grupo) => (
+                                <div className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2" onClick={() => navigate(`/module/${grupo.id}`)}>
                                     <div className="service-item  position-relative align-items-center justify-content-center">
                                         <div className="icon">
                                             <i className={`bi bi-${grupo.icon}`}></i>
@@ -113,7 +98,10 @@ export function MenuPage() {
                                 </div>
                             ))}
                         </div>
-
+                        <div className="d-flex justify-content-center mt-5" >
+                            <Button variant="primary" className='mx-2' onClick={() => navigate(-1)}>Regresar</Button>
+                            <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
+                        </div>
                     </div>
                 </section>
             </Container>
