@@ -73,7 +73,7 @@ export function MenuPage() {
         navigate("/login");
     };
     return (
-        <div fluid className='p-0' style={{ height: "100%" }}>
+        <div className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
             <Container fluid fixed="true" style={{ backgroundColor: '#0064AF', minHeight: '35vh' }} className='mt-5'>
                 <Row className='px-5 py-5 d-flex align-items-center justify-content-center'>
@@ -90,7 +90,7 @@ export function MenuPage() {
                 </Row>
             </Container>
             <Container fluid className='p-0 m-0 sections-bg' style={{}}>
-                <section fluid id="services" className='services w-100'>
+                <section id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
 
                         {/* <div className="section-header">
@@ -101,7 +101,7 @@ export function MenuPage() {
                         <div className="row gy-4 align-items-center justify-content-center" data-aos="fade-up" data-aos-delay="100">
 
                             {grupos.map((grupo) => (
-                                <div className="col-lg-4 col-md-6 align-items-center justify-content-center" onClick={() => navigate(`/group/${grupo.id}`)}>
+                                <div key={grupo.id} className="col-lg-4 col-md-6 align-items-center justify-content-center" onClick={() => navigate(`/group/${grupo.id}`)}>
                                     <div className="service-item  position-relative align-items-center justify-content-center">
                                         <div className="icon">
                                             <i className={`bi bi-${grupo.icon}`}></i>
@@ -120,8 +120,8 @@ export function MenuPage() {
             <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-6">© GCTIC - EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0</div>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>

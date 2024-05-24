@@ -104,7 +104,10 @@ export function LoginPage() {
                             </div>
                             <div className="form-group my-4">
                                 <label htmlFor="username">Usuario</label>
-                                <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange} />
+                                <div class="input-group">
+                                    <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange}></input>
+                                    <span class="input-group-text" id="basic-addon2">@essalud.gob.pe</span>
+                                </div>
                             </div>
                             <div className="form-group my-4">
                                 <label htmlFor="password">Contraseña</label>

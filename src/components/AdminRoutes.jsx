@@ -11,8 +11,8 @@ const AdminRoutes = () => {
         // Verificar si el token de acceso existe
         if (decodedToken) {
             try {
-                const rol = decodedToken.rol;
-                if (rol === 2 ) {
+                const role = decodedToken.role;
+                if (role === 2 ) {
                     return true; // El usuario es admin o moderator
                 }
             } catch (error) {

@@ -76,23 +76,23 @@ export function GroupPage() {
         navigate("/login");
     };
     return (
-        <div fluid className='p-0' style={{ height: "100%" }}>
+        <div className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
             
             <Container fluid className='p-0 m-0 sections-bg ' style={{minHeight: '98vh'}}>
-                <section fluid id="services" className='services w-100'>
+                <section id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
                         
                         <div className="row gy-4 align-items-center justify-content-center mt-4" data-aos="fade-up" data-aos-delay="100">
 
-                            {modules.map((grupo) => (
-                                <div className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2" onClick={() => navigate(`/module/${grupo.id}`)}>
+                            {modules.map((module) => (
+                                <div key={module.id} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2" onClick={() => navigate(`/module/${module.id}`)}>
                                     <div className="service-item  position-relative align-items-center justify-content-center">
                                         <div className="icon">
-                                            <i className={`bi bi-${grupo.icon}`}></i>
+                                            <i className={`bi bi-${module.icon}`}></i>
                                         </div>
-                                        <h3>{grupo.name}</h3>
-                                        <p >{grupo.description}</p>
+                                        <h3>{module.name}</h3>
+                                        <p >{module.description}</p>
                                         {/* <a href="#" className="readmore stretched-link">Read more <i className="bi bi-arrow-right"></i></a> */}
                                     </div>
                                 </div>
@@ -108,8 +108,8 @@ export function GroupPage() {
             <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-6">© GCTIC - EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0</div>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
