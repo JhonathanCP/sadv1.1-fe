@@ -6,17 +6,18 @@ const URL =
         : "https://sad.essalud.gob.pe/api";
 
 const authApi = axios.create({
-    // baseURL: 'https://sad.essalud.gob.pe/api/auth/',
-    baseURL: 'https://sad.essalud.gob.pe/api/auth/',
+    // baseURL: 'https://sad.essalud.gob.pe/api/accessaudit/',
+    baseURL: 'https://sad.essalud.gob.pe/api/accessaudit/',
 });
 
 // Interceptor para incluir el token en los encabezados de todas las solicitudes
 authApi.interceptors.request.use((config) => {
     const token = localStorage.getItem("access");
     if (token) {
-        config.headers['x-access-token'] = token;  // Corregir aquí
+        config.headers['x-access-token'] = token;
     }
+    // Agregar un parámetro de consulta único
     return config;
 });
 
-export const login = (credentials) => authApi.post("login/", credentials);
+export const postAccessAudit = (accessData) => authApi.post("/", accessData);

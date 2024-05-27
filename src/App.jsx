@@ -17,6 +17,7 @@ import { EditUserPermissions } from './pages/EditUserPermissions';
 import { ReportListPage } from './pages/ReportsListPage';
 import { ReportForm } from './pages/ReportForm';
 import { GroupModuleManagement } from './pages/GroupModuleManagement';
+import { AccessRequestForm } from './pages/AccessRequestForm'
 import PrivateRoutes from './components/PrivateRoutes';
 import AdminRoutes from './components/AdminRoutes';
 
@@ -29,13 +30,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="/*" element={<Navigate to="/login" />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/menu" element={<MenuPage />} />
           <Route path="/group/:id" element={<GroupPage />} />
           <Route path="/module/:id" element={<ModulePage />} />
           <Route path="/report/:id" element={<ReportPage />} />
           <Route path="/reports" element={<ResultPage />} />
+          <Route path="/access-request" element={<AccessRequestForm />} />
           <Route element={<AdminRoutes />}>
             <Route path="/admin/users" element={<UserListPage />} />
             <Route path="/admin/user/:id" element={<EditUserPermissions />} />

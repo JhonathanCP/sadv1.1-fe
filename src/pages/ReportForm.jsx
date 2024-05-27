@@ -24,8 +24,8 @@ export function ReportForm() {
         limited: false,
         restricted: false,
         ModuleId: '',
-        createdAt: '',
-        updatedAt: ''
+        createdAt: new Date().toISOString().slice(0, 16),
+        updatedAt: new Date().toISOString().slice(0, 16)
     });
     const [groups, setGroups] = useState([]);
     const [modules, setModules] = useState([]);
@@ -44,6 +44,13 @@ export function ReportForm() {
                         createdAt: reportResponse.data.createdAt ? new Date(reportResponse.data.createdAt).toISOString().slice(0, 16) : '',
                         updatedAt: reportResponse.data.updatedAt ? new Date(reportResponse.data.updatedAt).toISOString().slice(0, 16) : ''
                     });
+                } else {
+                    const now = new Date();
+                    setReport(prevState => ({
+                        ...prevState,
+                        createdAt: now.toISOString().slice(0, 16),
+                        updatedAt: now.toISOString().slice(0, 16)
+                    }));
                 }
                 const modulesResponse = await getModules();
                 const groupsResponse = await getGroups();
@@ -233,9 +240,11 @@ export function ReportForm() {
                                             <Form.Label>Nivel de acceso</Form.Label>
                                             <Form.Control
                                                 as="select"
-                                                value={report.free ? 'free' : report.limited ? 'limited' : 'restricted'}
+                                                value={report.free ? 'free' : report.limited ? 'limited' : report.restricted ? 'restricted' : ''}
                                                 onChange={handleSelectChange}
+                                                required
                                             >
+                                                <option value="">Seleccionar Nivel de Acceso</option>
                                                 <option value="free">Libre</option>
                                                 <option value="limited">Limitado</option>
                                                 <option value="restricted">Restringido</option>
@@ -264,6 +273,7 @@ export function ReportForm() {
                                                 name="createdAt"
                                                 value={report.createdAt}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </Form.Group>
                                     </Col>
@@ -275,6 +285,7 @@ export function ReportForm() {
                                                 name="updatedAt"
                                                 value={report.updatedAt}
                                                 onChange={handleChange}
+                                                required
                                             />
                                         </Form.Group>
                                     </Col>

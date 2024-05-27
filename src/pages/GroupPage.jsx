@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { getUserModules } from '../api/user.api'
-import { jwtDecode } from "jwt-decode";
-import { Link, Route, useNavigate } from 'react-router-dom';
-import { toast } from "react-hot-toast";
+import { getUserModules } from '../api/user.api';
+import {jwtDecode} from 'jwt-decode';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import Img from '../assets/hero-img.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
-import { NavBar } from '../components/NavBar'
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Row, Col, NavItem } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { NavBar } from '../components/NavBar';
+import { Button, Container } from 'react-bootstrap';
 
 export function GroupPage() {
-
     const { id } = useParams();
     const [modules, setModules] = useState([]);
     const [usuario, setUsuario] = useState('');
@@ -23,13 +20,10 @@ export function GroupPage() {
     const [userId, setUserId] = useState('');
     const navigate = useNavigate();
 
-
     useEffect(() => {
         const successMessage = localStorage.getItem('successMessage');
         if (successMessage) {
-            // Display success message using toast or other notification mechanism
             toast.success(successMessage);
-            // Clear the success message from localStorage
             localStorage.removeItem('successMessage');
         }
         AOS.init();
@@ -37,10 +31,7 @@ export function GroupPage() {
         if (expirationTime) {
             const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
             if (currentTime > expirationTime) {
-                toast('Sesión expirada', {
-                    icon: '👏',
-                });
-                // El token ha expirado, cierra sesión
+                toast('Sesión expirada', { icon: '👏' });
                 handleLogout();
             }
         }
@@ -52,12 +43,18 @@ export function GroupPage() {
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
 
-            // Solo realizar la llamada a getUserGroups si userId está disponible
+            // Solo realizar la llamada a getUserModules si userId está disponible
             const fetchInfo = async () => {
                 try {
                     const response = await getUserModules(decodedToken.id);
-                    const filteredReportes = response.data.modules.filter(report => report.GroupId == id);
-                    setModules(filteredReportes);
+                    const filteredModules = response.data.modules.filter(module => module.GroupId == id);
+                    
+                    // Filtrar módulos para incluir solo aquellos con reportes activos
+                    const modulesWithActiveReports = filteredModules.filter(module =>
+                        module.Reports && module.Reports.some(report => report.active)
+                    );
+
+                    setModules(modulesWithActiveReports);
                 } catch (error) {
                     console.error('Error al obtener la información:', error);
                 }
@@ -65,16 +62,15 @@ export function GroupPage() {
 
             fetchInfo();
         }
-    }, []);
+    }, [id]);
 
     const handleLogout = () => {
-        // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
         localStorage.removeItem('access');
         localStorage.removeItem('expirationTime');
-        // Redirige al inicio de sesión u otra página
         toast.success("Sesión terminada");
         navigate("/login");
     };
+
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
@@ -82,23 +78,20 @@ export function GroupPage() {
             <Container fluid className='p-0 m-0 sections-bg ' style={{minHeight: '98vh'}}>
                 <section id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
-                        
                         <div className="row gy-4 align-items-center justify-content-center mt-4" data-aos="fade-up" data-aos-delay="100">
-
                             {modules.map((module) => (
                                 <div key={module.id} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2" onClick={() => navigate(`/module/${module.id}`)}>
-                                    <div className="service-item  position-relative align-items-center justify-content-center">
+                                    <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="icon">
                                             <i className={`bi bi-${module.icon}`}></i>
                                         </div>
                                         <h3>{module.name}</h3>
-                                        <p >{module.description}</p>
-                                        {/* <a href="#" className="readmore stretched-link">Read more <i className="bi bi-arrow-right"></i></a> */}
+                                        <p>{module.description}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <div className="d-flex justify-content-center mt-5" >
+                        <div className="d-flex justify-content-center mt-5">
                             <Button variant="primary" className='mx-2' onClick={() => navigate(-1)}>Regresar</Button>
                             <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
                         </div>
@@ -118,6 +111,5 @@ export function GroupPage() {
                 </div>
             </footer>
         </div>
-
     );
 }

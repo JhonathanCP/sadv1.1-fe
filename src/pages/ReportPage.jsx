@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getUserReports } from '../api/user.api'
-import { jwtDecode } from "jwt-decode";
-import { toast } from "react-hot-toast";
+import { getUserReports } from '../api/user.api';
+import { postAccessAudit } from '../api/accessaudit.api';
+import {jwtDecode} from 'jwt-decode';
+import { toast } from 'react-hot-toast';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -43,6 +44,14 @@ export function ReportPage() {
                     const reportData = response.data.reports.filter(report => report.id == id);
                     setReport(reportData);
                     setLoading(false); // Marcar la carga como completada
+
+                    if (reportData.length > 0) {
+                        // Enviar los datos de auditoría de acceso
+                        await postAccessAudit({
+                            userId: decodedToken.id,
+                            reportId: id
+                        });
+                    }
                 } catch (error) {
                     console.error('Error al obtener la información:', error);
                 }
@@ -68,7 +77,7 @@ export function ReportPage() {
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
-            <NavBar></NavBar>
+            <NavBar />
             <Container fluid className='p-0 m-0' style={{ minHeight: '100vh' }}>
                 <Col xs={12} className="pt-5 px-0 m-0 g-0" style={{ minHeight: '100vh' }}>
                     {report.map((report) => (

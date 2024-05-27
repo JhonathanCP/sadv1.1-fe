@@ -66,7 +66,7 @@ export function ModulePage() {
             const fetchInfo = async () => {
                 try {
                     const response = await getUserReports(decodedToken.id);
-                    const filteredReportes = response.data.reports.filter(report => report.ModuleId == id || report.active == true);
+                    const filteredReportes = response.data.reports.filter(report => report.ModuleId == id && report.active);
                     setReports(filteredReportes);
                 } catch (error) {
                     console.error('Error al obtener la información:', error);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal } from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -12,6 +12,11 @@ export function NavBar() {
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const [showModal, setShowModal] = useState(false);
+
+    const handleDownload = () => {
+        window.open('https://docs.google.com/spreadsheets/d/1Qa8foxxOi5xDO3JpZyOd1IPRTwrDVUGy/export?format=xlsx', '_blank');
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('access');
@@ -64,6 +69,11 @@ export function NavBar() {
                         <Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link>
+                        {role === 1 && (
+                            <>
+                                <Nav.Link onClick={() => setShowModal(true)} ><i className={`bi bi-send`}></i> Solicitud de acceso</Nav.Link>
+                            </>
+                        )}
                         {role === 2 && (
                             <>
                                 <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people`}></i> Administración de usuarios</Nav.Link>
@@ -89,6 +99,17 @@ export function NavBar() {
                     </Form>
                 </Navbar.Collapse>
             </Container>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Descargar Solicitud de Acceso</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Button variant="primary" onClick={handleDownload}>Descargar Archivo</Button>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
+                </Modal.Footer>
+            </Modal>
         </Navbar>
     );
 }

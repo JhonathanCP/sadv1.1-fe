@@ -87,13 +87,13 @@ export function LoginPage() {
                             Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
                             business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.
                         </p>
-                        <div className="row">
+                        {/* <div className="row">
                             <div className="container-fluid col-lg-12 col-md-12 col-sm-12 d-flex justify-content-md-start justify-content-center">
                                 <button type="button" className="btn btn-primary text-light mt-3 px-3 fw-medium" onClick={handleManualModal}>
                                     Ver Manual de Usuario
                                 </button>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
@@ -104,9 +104,9 @@ export function LoginPage() {
                             </div>
                             <div className="form-group my-4">
                                 <label htmlFor="username">Usuario</label>
-                                <div class="input-group">
+                                <div className="input-group">
                                     <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange}></input>
-                                    <span class="input-group-text" id="basic-addon2">@essalud.gob.pe</span>
+                                    <span className="input-group-text" id="basic-addon2">@essalud.gob.pe</span>
                                 </div>
                             </div>
                             <div className="form-group my-4">
