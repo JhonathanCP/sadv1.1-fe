@@ -23,35 +23,35 @@ import AdminRoutes from './components/AdminRoutes';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [count, setCount] = useState(0)
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/*" element={<Navigate to="/login" />} />
-        <Route element={<PrivateRoutes />}>
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/group/:id" element={<GroupPage />} />
-          <Route path="/module/:id" element={<ModulePage />} />
-          <Route path="/report/:id" element={<ReportPage />} />
-          <Route path="/reports" element={<ResultPage />} />
-          <Route path="/access-request" element={<AccessRequestForm />} />
-          <Route element={<AdminRoutes />}>
-            <Route path="/admin/users" element={<UserListPage />} />
-            <Route path="/admin/user/:id" element={<EditUserPermissions />} />
-            <Route path="/admin/reports" element={<ReportListPage />} />
-            <Route path="/admin/report/:id" element={<ReportForm />} />
-            <Route path="/admin/create-report" element={<ReportForm />} />
-            <Route path="/admin/groups-modules" element={<GroupModuleManagement />} />
-          </Route>
-        </Route>
-      </Routes>
-      <Toaster position="top-center" reverseOrder={false} />
-    </BrowserRouter>
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={<Navigate to="/login" />} />
+                <Route path="/*" element={<Navigate to="/login" />} />
+                <Route element={<PrivateRoutes />}>
+                    <Route path="/menu" element={<MenuPage />} />
+                    <Route path="/group/:id" element={<GroupPage />} />
+                    <Route path="/module/:id" element={<ModulePage />} />
+                    <Route path="/report/:id" element={<ReportPage />} />
+                    <Route path="/reports" element={<ResultPage />} />
+                    <Route path="/access-request" element={<AccessRequestForm />} />
+                    <Route element={<AdminRoutes />}>
+                        <Route path="/admin/users" element={<UserListPage />} />
+                        <Route path="/admin/user/:id" element={<EditUserPermissions />} />
+                        <Route path="/admin/reports" element={<ReportListPage />} />
+                        <Route path="/admin/report/:id" element={<ReportForm />} />
+                        <Route path="/admin/create-report" element={<ReportForm />} />
+                        <Route path="/admin/groups-modules" element={<GroupModuleManagement />} />
+                    </Route>
+                </Route>
+            </Routes>
+            <Toaster position="top-center" reverseOrder={false} />
+        </BrowserRouter>
 
-  )
+    )
 }
 
 export default App

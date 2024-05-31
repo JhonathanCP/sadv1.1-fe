@@ -88,43 +88,48 @@ export function ModulePage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid className='p-0 m-0 sections-bg ' style={{ minHeight: '98vh' }}>
-                <section id="services" className='services w-100'>
-                    <div className="container w-100" data-aos="fade-up">
-                        <div className="row gy-4 align-items-center justify-content-center mt-4" data-aos="fade-up" data-aos-delay="100">
-                            {reports.map((report) => (
-                                <div key={report.id} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2" onClick={() => navigate(`/report/${report.id}`)}>
-                                    <div className="service-item  position-relative align-items-center justify-content-center">
-                                        <div className="badges">
-                                            {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge text-bg-success mx-1">Nuevo</span>}
-                                            {(new Date(report.updatedAt) >= oneWeekAgo && !report.version.startsWith('1.0')) && <span className="badge text-bg-warning mx-1">Cambios</span>}
-                                        </div>
-                                        <div className="icon">
-                                            <i className={`bi bi-${report.icon}`}></i>
-                                        </div>
-                                        <h3>{report.name}</h3>
-                                        <p >{report.description}</p>
-                                        {/* <a href="#" className="readmore stretched-link">Read more <i className="bi bi-arrow-right"></i></a> */}
-                                    </div>
+            <Container fluid className='p-0 m-0 sections-bg' style={{ minHeight: '98vh' }}>
+            <section id="services" className='services w-100'>
+            <div className="container w-100" data-aos="fade-up">
+                <div className="row gy-4 align-items-center justify-content-center mt-4" data-aos="fade-up" data-aos-delay="100">
+                    {reports.map((report) => (
+                        <div
+                            key={report.id}
+                            className="col-lg-3 col-md-6 align-items-center justify-content-center mt-2"
+                            onClick={() => navigate(`/report/${report.id}`)}
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title={report.description}
+                        >
+                            <div className="service-item position-relative align-items-center justify-content-center">
+                                <div className="badges">
+                                    {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge text-bg-success mx-1">Nuevo</span>}
+                                    {(new Date(report.updatedAt) >= oneWeekAgo && !report.version.startsWith('1.0')) && <span className="badge text-bg-warning mx-1">Cambios</span>}
                                 </div>
-                            ))}
+                                <div className="icon">
+                                    <i className={`bi bi-${report.icon}`}></i>
+                                </div>
+                                <h3>{report.name}</h3>
+                            </div>
                         </div>
-                        <div className="d-flex justify-content-center mt-5" >
-                            <Button variant="primary" className='mx-2' onClick={() => navigate(-1)}>Regresar</Button>
-                            <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
-                        </div>
-                    </div>
-                </section>
+                    ))}
+                </div>
+                <div className="d-flex justify-content-center mt-4">
+                    <Button variant="primary" className='mx-2' onClick={() => navigate(-1)}>Regresar</Button>
+                    <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
+                </div>
+            </div>
+        </section>
             </Container>
             <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
-                        <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-1 text-center">Versión: 1.1.0</div>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>
