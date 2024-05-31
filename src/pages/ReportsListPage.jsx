@@ -184,11 +184,11 @@ export function ReportListPage() {
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
-                        <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-1 text-center">Versión: 1.1.0</div>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

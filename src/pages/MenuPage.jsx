@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getUserGroups } from '../api/user.api';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
 import Img from '../assets/hero-img.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
@@ -85,18 +84,24 @@ export function MenuPage() {
                     </Col>
                 </Row>
             </Container>
-            <Container fluid className='p-0 m-0 sections-bg' style={{}}>
+            <Container fluid className='px-0 mx-0 sections-bg'>
                 <section id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
                         <div className="row gy-4 align-items-center justify-content-center" data-aos="fade-up" data-aos-delay="100">
                             {grupos.map((grupo) => (
-                                <div key={grupo.id} className="col-lg-4 col-md-6 align-items-center justify-content-center" onClick={() => navigate(`/group/${grupo.id}`)}>
+                                <div
+                                    key={grupo.id}
+                                    className="col-lg-4 col-md-6 align-items-center justify-content-center"
+                                    onClick={() => navigate(`/group/${grupo.id}`)}
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title={grupo.description}
+                                >
                                     <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="icon">
                                             <i className={`bi bi-${grupo.icon}`}></i>
                                         </div>
                                         <h3>{grupo.name}</h3>
-                                        <p>{grupo.description}</p>
                                     </div>
                                 </div>
                             ))}
@@ -108,11 +113,11 @@ export function MenuPage() {
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
-                        <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-1 text-center">Versión: 1.1.0</div>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

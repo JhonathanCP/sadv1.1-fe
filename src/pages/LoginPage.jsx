@@ -97,7 +97,7 @@ export function LoginPage() {
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
-                    <div className="card p-4" style={{ width: '21rem' }}>
+                    <div className="card p-4" style={{ width: '24.5rem' }}>
                         <form onSubmit={handleLogin} className="my-2">
                             <div className="text-center my-2">
                                 <img src={Logo} alt="Logo" />
@@ -123,11 +123,11 @@ export function LoginPage() {
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC - EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
-                        <div className="col-11">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-1 text-center">Versión: 1.1.0</div>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>
