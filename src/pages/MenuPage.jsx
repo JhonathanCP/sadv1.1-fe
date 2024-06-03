@@ -165,7 +165,7 @@ export function MenuPage() {
                     </Col>
                 </Row>
             </Container>
-            <Container fluid className='px-0 mx-0 sections-bg'>
+            <Container fluid className='px-0 mx-0 pb-5 sections-bg'>
                 <section id="services" className='services w-100'>
                     <div className="container w-100" data-aos="fade-up">
                         <div className="row gy-4 align-items-center justify-content-center" data-aos="fade-up" data-aos-delay="100">
