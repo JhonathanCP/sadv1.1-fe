@@ -27,7 +27,7 @@ section {
   min-height: 58vh;
   display: flex;
   align-items: center;
-  justify-content: center
+  justify-content: center;
 }
 
 .section-header {
@@ -159,4 +159,76 @@ section {
   display: flex;
   align-items: right;
   justify-content: right;
+}
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 220px; /* Ajusta según sea necesario */
+}
+
+.search-input {
+  width: 100%;
+  padding-right: 2.5rem; /* Espacio para el icono */
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem; /* Ajusta según sea necesario */
+  transform: translateY(-50%);
+  cursor: pointer; /* Cambia el cursor al pasar sobre el icono */
+  color: #6c757d; /* Color del icono */
+}
+
+.search-icon:hover {
+  color: #495057; /* Color del icono cuando se pasa el cursor por encima */
+}
+
+.service-item {
+  cursor: pointer;
+  padding: 20px;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 300px; /* Ajusta este valor según sea necesario */
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.service-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+.service-item h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-item p {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.badges {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
