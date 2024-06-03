@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup } from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -76,27 +76,28 @@ export function NavBar() {
                         )}
                         {role === 2 && (
                             <>
-                                <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people`}></i> Administración de usuarios</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection`}></i> Administración de grupos y módulos</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-gear`}></i> Administración de reportes</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people`}></i> Gestión de usuarios</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection`}></i> Gestión de grupos y módulos</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-gear`}></i> Gestión de reportes</Nav.Link>
                             </>
                         )}
+                        <div className="search-bar">
+                            <FormControl
+                                type="search"
+                                placeholder="Buscar reporte"
+                                className="search-input"
+                                aria-label="Buscar reporte"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={handleKeyPress}
+                            />
+                            <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                        </div>
                         <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                    <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
-                        <FormControl
-                            type="search"
-                            placeholder="Buscar reporte"
-                            className="me-2"
-                            aria-label="Buscar reporte"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={handleKeyPress}
-                        />
-                        <Button variant="outline-dark" onClick={handleSearch}>Buscar</Button>
-                    </Form>
+
                 </Navbar.Collapse>
             </Container>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
