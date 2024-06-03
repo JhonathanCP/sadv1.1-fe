@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getUserGroups } from '../api/user.api';
-import { jwtDecode } from 'jwt-decode';
+import { getUserGroups, getUser, updateUser } from '../api/user.api';
+import { getDependencies } from '../api/dependency.api';
+import { getMainDependencies } from '../api/maindependency.api';
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,13 +12,19 @@ import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 
 export function MenuPage() {
     const [grupos, setGrupos] = useState([]);
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [userDetails, setUserDetails] = useState({});
+    const [mainDependencies, setMainDependencies] = useState([]);
+    const [dependencies, setDependencies] = useState([]);
+    const [selectedMainDependency, setSelectedMainDependency] = useState(null);
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +50,8 @@ export function MenuPage() {
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
 
-            // Solo realizar la llamada a getUserGroups si userId está disponible
+            fetchUserDetails(decodedToken.id);
+
             const fetchInfo = async () => {
                 try {
                     const response = await getUserGroups(decodedToken.id);
@@ -60,6 +69,78 @@ export function MenuPage() {
             fetchInfo();
         }
     }, []);
+
+    const fetchUserDetails = async (id) => {
+        try {
+            const response = await getUser(id);
+            const userData = response.data;
+            setUserDetails(userData);
+
+            if (!userData.firstname || !userData.lastname || !userData.dni || !userData.cargo || !userData.DependencyId) {
+                fetchMainDependencies();
+                setShowModal(true);
+            }
+        } catch (error) {
+            console.error('Error al obtener los detalles del usuario:', error);
+        }
+    };
+
+    const fetchMainDependencies = async () => {
+        try {
+            const response = await getMainDependencies();
+            setMainDependencies(response.data);
+        } catch (error) {
+            console.error('Error al obtener MainDependencies:', error);
+        }
+    };
+
+    const fetchDependencies = async (mainDependencyId) => {
+        try {
+            const response = await getDependencies(mainDependencyId);
+            setDependencies(response.data);
+        } catch (error) {
+            console.error('Error al obtener Dependencies:', error);
+        }
+    };
+
+    const handleMainDependencyChange = (e) => {
+        const mainDependencyId = e.target.value;
+        setSelectedMainDependency(mainDependencyId);
+        setUserDetails({ ...userDetails, MainDependencyId: mainDependencyId, DependencyId: '' });
+        fetchDependencies(mainDependencyId);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUserDetails({ ...userDetails, [name]: value });
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!userDetails.firstname) newErrors.firstname = 'Apellidos es requerido';
+        if (!userDetails.lastname) newErrors.lastname = 'Nombre es requerido';
+        if (!userDetails.dni) newErrors.dni = 'DNI es requerido';
+        if (!userDetails.cargo) newErrors.cargo = 'Cargo es requerido';
+        if (!userDetails.MainDependencyId) newErrors.MainDependencyId = 'Dependencia principal es requerida';
+        if (!userDetails.DependencyId) newErrors.DependencyId = 'Dependencia secundaria es requerida';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSaveUserDetails = async () => {
+        if (!validateForm()) {
+            return;
+        }
+
+        try {
+            await updateUser(userId, userDetails);
+            toast.success("Información actualizada exitosamente");
+            setShowModal(false);
+        } catch (error) {
+            console.error('Error al actualizar la información del usuario:', error);
+            toast.error("Error al actualizar la información");
+        }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('access');
@@ -121,6 +202,99 @@ export function MenuPage() {
                     </div>
                 </div>
             </footer>
+
+            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
+                <Modal.Header closeButton={false}>
+                    <Modal.Title>Actualizar Información Personal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="firstname">
+                            <Form.Label>Apellidos</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="firstname"
+                                value={userDetails.firstname || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.firstname}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.firstname}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="lastname">
+                            <Form.Label>Nombre</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="lastname"
+                                value={userDetails.lastname || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.lastname}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.lastname}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="dni">
+                            <Form.Label>DNI</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="dni"
+                                value={userDetails.dni || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.dni}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.dni}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="cargo">
+                            <Form.Label>Cargo</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="cargo"
+                                value={userDetails.cargo || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.cargo}
+                            />
+                            <Form.Control.Feedback type="invalid">{errors.cargo}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="mainDependency">
+                            <Form.Label>Dependencia principal</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="MainDependencyId"
+                                value={selectedMainDependency || ''}
+                                onChange={handleMainDependencyChange}
+                                isInvalid={!!errors.MainDependencyId}
+                            >
+                                <option value="">Seleccione una opción</option>
+                                {mainDependencies.map((mainDep) => (
+                                    <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.MainDependencyId}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="dependency">
+                            <Form.Label>Dependencia secundaria</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="DependencyId"
+                                value={userDetails.DependencyId || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.DependencyId}
+                                disabled={!selectedMainDependency}
+                            >
+                                <option value="">Seleccione una opción</option>
+                                {dependencies
+                                    .filter(dep => dep.MainDependencyId == selectedMainDependency)
+                                    .map((dep) => (
+                                        <option key={dep.id} value={dep.id}>{dep.name}</option>
+                                    ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.DependencyId}</Form.Control.Feedback>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleLogout}>Cerrar</Button>
+                    <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

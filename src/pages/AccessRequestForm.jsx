@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import { jsPDF } from 'jspdf';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {jwtDecode} from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Corrección de importación
 
 export function AccessRequestForm() {
     const [formData, setFormData] = useState({
@@ -23,21 +23,19 @@ export function AccessRequestForm() {
 
     useEffect(() => {
         const fetchAccessRequests = async () => {
-            try {
-                const response = await getAllAccessRequests();
-                setAccessRequests(response.data);
-            } catch (error) {
+            const response = await getAllAccessRequests().catch(error => {
                 console.error('Error al obtener las solicitudes de acceso:', error);
-            }
+                toast.error("Error al cargar solicitudes de acceso");
+            });
+            if (response) setAccessRequests(response.data);
         };
 
         const fetchReportsCatalog = async () => {
-            try {
-                const response = await getReports();
-                setReportsCatalog(response.data);
-            } catch (error) {
+            const response = await getReports().catch(error => {
                 console.error('Error al obtener el catálogo de reportes:', error);
-            }
+                toast.error("Error al cargar el catálogo de reportes");
+            });
+            if (response) setReportsCatalog(response.data);
         };
 
         fetchAccessRequests();
@@ -59,8 +57,11 @@ export function AccessRequestForm() {
     };
 
     const handleCreateAccessRequest = async () => {
-        try {
-            const response = await createAccessRequest(formData);
+        const response = await createAccessRequest(formData).catch(error => {
+            console.error('Error al crear la solicitud de acceso:', error);
+            toast.error("Error al crear la solicitud de acceso");
+        });
+        if (response) {
             setAccessRequests([...accessRequests, response.data]);
             setFormData({
                 justification: '',
@@ -72,19 +73,24 @@ export function AccessRequestForm() {
             });
             setShowModal(false);
             toast.success("Solicitud de acceso creada exitosamente");
-            return response.data;
-        } catch (error) {
-            console.error('Error al crear la solicitud de acceso:', error);
-            toast.error("Error al crear la solicitud de acceso");
         }
     };
 
     const handleGeneratePDF = (request) => {
-        const doc = new jsPDF();
-        doc.text("Justificación: " + request.justification, 10, 10);
-        doc.text("Cargo: " + request.cargo, 10, 20);
-        doc.text("Nombre del Jefe: " + request.nombreJefe, 10, 30);
-        doc.text("Cargo del Jefe: " + request.cargoJefe, 10, 40);
+        const doc = new jsPDF({
+            orientation: 'landscape'
+        });
+        doc.text(`Justificación: ${request.justification}`, 10, 20);
+        doc.text(`Cargo: ${request.cargo}`, 10, 40);
+        doc.text(`Nombre del Jefe: ${request.nombreJefe}`, 10, 60);
+        doc.text(`Cargo del Jefe: ${request.cargoJefe}`, 10, 80);
+
+        doc.text("Firma del Solicitante:", 20, 110);
+        doc.line(20, 120, 100, 120); // x1, y1, x2, y2
+
+        doc.text("Firma del Jefe Inmediato:", 120, 110);
+        doc.line(120, 120, 200, 120);
+
         doc.save("solicitud_acceso.pdf");
     };
 
@@ -93,27 +99,25 @@ export function AccessRequestForm() {
     };
 
     const handleUploadPdf = async (requestId) => {
-        try {
-            if (pdfFile) {
-                await uploadPdfForAccessRequest(requestId, pdfFile);
-                toast.success("Archivo PDF subido exitosamente");
-            } else {
-                toast.error("Seleccione un archivo PDF");
-            }
-        } catch (error) {
+        if (!pdfFile) {
+            toast.error("Seleccione un archivo PDF");
+            return;
+        }
+        const response = await uploadPdfForAccessRequest(requestId, pdfFile).catch(error => {
             console.error('Error al subir el archivo PDF:', error);
             toast.error("Error al subir el archivo PDF");
-        }
+        });
+        if (response) toast.success("Archivo PDF subido exitosamente");
     };
 
     const handleDeleteAccessRequest = async (requestId) => {
-        try {
-            await deleteAccessRequest(requestId);
-            setAccessRequests(accessRequests.filter(req => req.id !== requestId));
-            toast.success("Solicitud de acceso eliminada exitosamente");
-        } catch (error) {
+        const response = await deleteAccessRequest(requestId).catch(error => {
             console.error('Error al eliminar la solicitud de acceso:', error);
             toast.error("Error al eliminar la solicitud de acceso");
+        });
+        if (response) {
+            setAccessRequests(accessRequests.filter(req => req.id !== requestId));
+            toast.success("Solicitud de acceso eliminada exitosamente");
         }
     };
 
@@ -151,7 +155,7 @@ export function AccessRequestForm() {
                     </Col>
                 ))}
             </Row>
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal size="xl" show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Crear Solicitud de Acceso</Modal.Title>
                 </Modal.Header>

@@ -20,6 +20,7 @@ authApi.interceptors.request.use((config) => {
 
 export const getUsers = () => authApi.get("/");
 export const getUser = (userId) => authApi.get(`/${userId}/`);
+export const updateUser = (userId, data) => authApi.put(`/${userId}/`, data);
 export const addReport = (data) => authApi.post(`/add-report/`, data);
 export const removeReport = (userId, reportId) => authApi.delete(`/${userId}/delete-report/${reportId}`);
 export const getUserGroups = (userId) => authApi.get(`/${userId}/get-groups/`);

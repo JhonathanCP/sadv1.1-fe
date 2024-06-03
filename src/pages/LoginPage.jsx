@@ -113,7 +113,7 @@ export function LoginPage() {
                                 <label htmlFor="password">Contraseña</label>
                                 <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange} />
                             </div>
-                            <button type="submit" className="btn btn-primary w-100 mt-3">Entrar</button>
+                            <button type="submit" className="btn btn-primary w-100 mt-3">Ingresar</button>
                             <ManualComponent show={showManualModal} handleClose={handleCloseManualModal} />
                         </form>
                     </div>
