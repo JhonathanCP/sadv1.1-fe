@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getGroups, createGroup, updateGroup } from '../api/group.api';
 import { getModules, createModule, updateModule } from '../api/module.api';
+import { getGroups, createGroup, updateGroup } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
 import { Container, Row, Col, Button, Table, Modal, Form, Spinner, InputGroup, FormControl } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -8,30 +8,24 @@ import { toast } from 'react-hot-toast';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 export function GroupModuleManagement() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [modules, setModules] = useState([]);
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [modalType, setModalType] = useState('');
-    const [selectedGroup, setSelectedGroup] = useState(null);
     const [selectedModule, setSelectedModule] = useState(null);
-    const [formData, setFormData] = useState({ name: '', description: '', icon: '', GroupId: '' });
-    const [expandedGroups, setExpandedGroups] = useState({});
+    const [selectedGroup, setSelectedGroup] = useState(null);
+    const [formData, setFormData] = useState({ name: '', description: '', icon: '' });
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const groupsResponse = await getGroups();
                 const modulesResponse = await getModules();
-
-                const groupsData = groupsResponse.data.map(group => ({
-                    ...group,
-                    modules: modulesResponse.data.filter(module => module.GroupId === group.id)
-                }));
-
-                setGroups(groupsData);
+                const groupsResponse = await getGroups();
+                setModules(modulesResponse.data);
+                setGroups(groupsResponse.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -42,15 +36,13 @@ export function GroupModuleManagement() {
         fetchData();
     }, []);
 
-    const handleShowModal = (type, group = null, module = null) => {
-        setModalType(type);
-        setSelectedGroup(group);
-        setSelectedModule(module);
+    const handleShowModal = (type, item = null, isGroup = false) => {
+        setSelectedModule(isGroup ? null : item);
+        setSelectedGroup(isGroup ? item : null);
         setFormData({
-            name: group ? group.name : module ? module.name : '',
-            description: group ? group.description : module ? module.description : '',
-            icon: group ? group.icon : module ? module.icon : '',
-            GroupId: module ? module.GroupId : ''
+            name: item ? item.name : '',
+            description: item ? item.description : '',
+            icon: item ? item.icon : ''
         });
         setShowModal(true);
     };
@@ -64,88 +56,48 @@ export function GroupModuleManagement() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            if (modalType === 'createGroup') {
-                await createGroup(formData);
-                toast.success('Grupo creado con éxito');
-            } else if (modalType === 'createModule') {
-                await createModule(formData);
-                toast.success('Módulo creado con éxito');
-            } else if (modalType === 'editGroup') {
-                await updateGroup(selectedGroup.id, formData);
-                toast.success('Grupo actualizado con éxito');
-            } else if (modalType === 'editModule') {
+            if (selectedModule) {
                 await updateModule(selectedModule.id, formData);
                 toast.success('Módulo actualizado con éxito');
+            } else if (selectedGroup) {
+                await updateGroup(selectedGroup.id, formData);
+                toast.success('Grupo actualizado con éxito');
+            } else {
+                await createModule(formData);
+                toast.success('Módulo creado con éxito');
             }
             // Refresh data
-            const groupsResponse = await getGroups();
             const modulesResponse = await getModules();
-
-            const groupsData = groupsResponse.data.map(group => ({
-                ...group,
-                modules: modulesResponse.data.filter(module => module.GroupId === group.id)
-            }));
-
-            setGroups(groupsData);
+            const groupsResponse = await getGroups();
+            setModules(modulesResponse.data);
+            setGroups(groupsResponse.data);
             handleCloseModal();
         } catch (error) {
             toast.error('Error al procesar la solicitud');
         }
     };
 
-    const toggleGroupExpansion = (groupId) => {
-        setExpandedGroups(prevState => ({
-            ...prevState,
-            [groupId]: !prevState[groupId]
-        }));
-    };
-
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
-    const filteredGroups = groups.map(group => ({
-        ...group,
-        modules: group.modules.filter(module =>
-            module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            module.description.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    })).filter(group => group.modules.length > 0 || searchTerm === '');
+    const filteredModules = modules.filter(module =>
+        module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-    useEffect(() => {
-        // Expand all groups if there's a search term
-        if (searchTerm) {
-            const expandedGroupIds = groups.map(group => group.id);
-            setExpandedGroups(expandedGroupIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
-        } else {
-            setExpandedGroups({});
-        }
-    }, [searchTerm, groups]);
+    const filteredGroups = groups.filter(group =>
+        group.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className='p-0'>
             <NavBar />
             <Container fluid className='my-3 p-5'>
-                <Row className="mb-3">
-                    <Col md={9} className='d-none d-md-block'>
-                        <h2>Grupos y Módulos</h2>
-                    </Col>
-                    <Col md={9} className="d-sm-none d-flex justify-content-center">
-                        <h2>Grupos y Módulos</h2>
-                    </Col>
-                    <Col md={3} className="d-flex justify-content-center">
-                        <Button variant="success" onClick={() => handleShowModal('createGroup')} className="me-2">
-                            Crear Grupo
-                        </Button>
-                        <Button variant="success" onClick={() => handleShowModal('createModule')}>
-                            Crear Módulo
-                        </Button>
-                    </Col>
-                </Row>
-                <Row className="mb-3">
-                    <Col md={12}>
+                <Row >
+                    <Col md={10} xs={12} className="mt-2 mb-2">
                         <InputGroup>
                             <FormControl
                                 placeholder="Buscar por nombre o descripción"
@@ -153,6 +105,14 @@ export function GroupModuleManagement() {
                                 onChange={handleSearchChange}
                             />
                         </InputGroup>
+                    </Col>
+                    <Col md={2} xs={12} className="mt-2 mb-2">
+                        <Button variant="success" onClick={() => handleShowModal('createModule', null, false)}>
+                            Crear Módulo
+                        </Button>
+                        <Button variant="success" onClick={() => handleShowModal('createGroup', null, true)} className="ms-2">
+                            Crear Grupo
+                        </Button>
                     </Col>
                 </Row>
                 {loading ? (
@@ -164,38 +124,40 @@ export function GroupModuleManagement() {
                 ) : error ? (
                     <p>Error: {error}</p>
                 ) : (
-                    <Table responsive hover className='mt-3'>
-                        <tbody>
-                            {filteredGroups.map((group) => (
-                                <React.Fragment key={group.id}>
-                                    <tr>
-                                        <td colSpan="3">
-                                            <Button variant="link" onClick={() => toggleGroupExpansion(group.id)} style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }}>
-                                                <i className={`bi ${expandedGroups[group.id] ? 'bi-dash-square' : 'bi-plus-square'}`}></i> <i className={`bi bi-${group.icon}`}></i> Grupo: {group.name}
-                                            </Button>
-                                        </td>
+                    <>
+                        <h4>Grupos</h4>
+                        <Table responsive hover className='mt-3'>
+                            <tbody>
+                                {filteredGroups.map((group) => (
+                                    <tr key={group.id}>
+                                        <td><i className={`bi bi-${group.icon}`}></i> {group.name}</td>
+                                        <td>{group.description}</td>
                                         <td>
-                                            <Button variant="primary" onClick={() => handleShowModal('editGroup', group)}>
+                                            <Button variant="primary" onClick={() => handleShowModal('edit', group, true)}>
                                                 Editar
                                             </Button>
                                         </td>
                                     </tr>
-                                    {expandedGroups[group.id] && group.modules.map((module) => (
-                                        <tr key={module.id}>
-                                            <td></td>
-                                            <td><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
-                                            <td>{module.description}</td>
-                                            <td>
-                                                <Button variant="primary" onClick={() => handleShowModal('editModule', null, module)}>
-                                                    Editar
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </React.Fragment>
-                            ))}
-                        </tbody>
-                    </Table>
+                                ))}
+                            </tbody>
+                        </Table>
+                        <h4>Módulos</h4>
+                        <Table responsive hover className='mt-3'>
+                            <tbody>
+                                {filteredModules.map((module) => (
+                                    <tr key={module.id}>
+                                        <td><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
+                                        <td>{module.description}</td>
+                                        <td>
+                                            <Button variant="primary" onClick={() => handleShowModal('edit', module, false)}>
+                                                Editar
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </>
                 )}
                 <Row className='mb-4 justify-content-center'>
                     <Col md={2} className='mb-2'>
@@ -206,16 +168,12 @@ export function GroupModuleManagement() {
                 </Row>
             </Container>
 
-
             <Modal show={showModal} onHide={handleCloseModal} size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {modalType === 'createGroup' && 'Crear Grupo'}
-                        {modalType === 'createModule' && 'Crear Módulo'}
-                        {modalType === 'editGroup' && 'Editar Grupo'}
-                        {modalType === 'editModule' && 'Editar Módulo'}
+                        {selectedModule ? 'Editar Módulo' : selectedGroup ? 'Editar Grupo' : 'Crear Módulo'}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -250,42 +208,23 @@ export function GroupModuleManagement() {
                                 required
                             />
                         </Form.Group>
-                        {modalType === 'createModule' && (
-                            <Form.Group controlId="formGroupId">
-                                <Form.Label>Grupo</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    name="GroupId"
-                                    value={formData.GroupId}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Seleccionar Grupo</option>
-                                    {groups.map(group => (
-                                        <option key={group.id} value={group.id}>
-                                            {group.name}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                        )}
                         <div className='d-flex justify-content-center'>
-                            <Button variant="primary" type="submit" className="mt-3" >
-                                {modalType.includes('create') ? 'Crear' : 'Guardar'}
+                            <Button variant="primary" type="submit" className="mt-3">
+                                {selectedModule ? 'Guardar' : 'Crear'}
                             </Button>
                         </div>
                     </Form>
                 </Modal.Body>
             </Modal>
-            <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6">© GCTIC-EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

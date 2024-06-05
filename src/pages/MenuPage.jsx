@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUserGroups, getUser, updateUser } from '../api/user.api';
+import { getUserModules, getUser, updateUser } from '../api/user.api';
 import { getDependencies } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import {jwtDecode} from 'jwt-decode';
@@ -15,7 +15,7 @@ import { NavBar } from '../components/NavBar';
 import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 
 export function MenuPage() {
-    const [grupos, setGrupos] = useState([]);
+    const [modules, setModules] = useState([]);
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
@@ -52,21 +52,21 @@ export function MenuPage() {
 
             fetchUserDetails(decodedToken.id);
 
-            const fetchInfo = async () => {
+            const fetchModules = async () => {
                 try {
-                    const response = await getUserGroups(decodedToken.id);
-                    const filteredGroups = response.data.groups.filter(group =>
-                        group.Modules && group.Modules.some(module =>
-                            module.Reports && module.Reports.some(report => report.active)
-                        )
+                    const response = await getUserModules(decodedToken.id);
+                    const activeModules = response.data.modules.filter(module =>
+                        module.Reports.some(report => report.active)
                     );
-                    setGrupos(filteredGroups);
+                    setModules(activeModules);
                 } catch (error) {
-                    console.error('Error al obtener la información:', error);
+                    console.error('Error al obtener los módulos:', error);
                 }
             };
 
-            fetchInfo();
+            fetchModules();
+
+            
         }
     }, []);
 
@@ -165,24 +165,21 @@ export function MenuPage() {
                     </Col>
                 </Row>
             </Container>
-            <Container fluid className='px-0 mx-0 pb-5 sections-bg'>
-                <section id="services" className='services w-100'>
-                    <div className="container w-100" data-aos="fade-up">
-                        <div className="row gy-4 align-items-center justify-content-center" data-aos="fade-up" data-aos-delay="100">
-                            {grupos.map((grupo) => (
-                                <div
-                                    key={grupo.id}
-                                    className="col-lg-4 col-md-6 align-items-center justify-content-center"
-                                    onClick={() => navigate(`/group/${grupo.id}`)}
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title={grupo.description}
+            <Container fluid className='px-0 mx-0 pb-4 pt-0 mt-0 sections-bg'>
+                <section id="services" className='services'>
+                <div className="container-fluid" data-aos="fade-up">
+                    <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
+                            {modules.sort((a, b) => a.id - b.id).map((module) => (
+                                <div 
+                                    key={module.id}
+                                    className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4"
+                                    onClick={() => navigate(`/module/${module.id}`)}
                                 >
                                     <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="icon">
-                                            <i className={`bi bi-${grupo.icon}`}></i>
+                                            <i className={`bi bi-${module.icon}`}></i>
                                         </div>
-                                        <h3>{grupo.name}</h3>
+                                        <h3>{module.name}</h3>
                                     </div>
                                 </div>
                             ))}
@@ -190,20 +187,20 @@ export function MenuPage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6">© GCTIC-EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>
 
-            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
+            {/* <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
                 <Modal.Header closeButton={false}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
                 </Modal.Header>
@@ -294,7 +291,7 @@ export function MenuPage() {
                     <Button variant="secondary" onClick={handleLogout}>Cerrar</Button>
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }

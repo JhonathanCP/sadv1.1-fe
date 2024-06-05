@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getReports } from '../api/report.api';
 import { getModules } from '../api/module.api';
-import { getGroups } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,12 +9,11 @@ import AOS from 'aos';
 import 'bootstrap-icons/font/bootstrap-icons.css';  // Importamos Bootstrap Icons
 
 export function ReportListPage() {
-    const [groups, setGroups] = useState([]);
-    const navigate = useNavigate()
+    const [modules, setModules] = useState([]);
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [expandedGroups, setExpandedGroups] = useState({});
     const [expandedModules, setExpandedModules] = useState({});
 
     useEffect(() => {
@@ -39,21 +37,15 @@ export function ReportListPage() {
 
         const fetchData = async () => {
             try {
-                const groupsResponse = await getGroups();
                 const modulesResponse = await getModules();
                 const reportsResponse = await getReports();
 
-                const groupsData = groupsResponse.data.map(group => ({
-                    ...group,
-                    modules: modulesResponse.data
-                        .filter(module => module.GroupId === group.id)
-                        .map(module => ({
-                            ...module,
-                            reports: reportsResponse.data.filter(report => report.ModuleId === module.id)
-                        }))
+                const modulesData = modulesResponse.data.map(module => ({
+                    ...module,
+                    reports: reportsResponse.data.filter(report => report.ModuleId === module.id)
                 }));
 
-                setGroups(groupsData);
+                setModules(modulesData);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -66,23 +58,12 @@ export function ReportListPage() {
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
-        // Expand all groups and modules if there's a search term
         if (event.target.value) {
-            const allGroupIds = groups.map(group => group.id);
-            const allModuleIds = groups.flatMap(group => group.modules.map(module => module.id));
-            setExpandedGroups(allGroupIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
+            const allModuleIds = modules.map(module => module.id);
             setExpandedModules(allModuleIds.reduce((acc, id) => ({ ...acc, [id]: true }), {}));
         } else {
-            setExpandedGroups({});
             setExpandedModules({});
         }
-    };
-
-    const toggleGroupExpansion = (groupId) => {
-        setExpandedGroups(prevState => ({
-            ...prevState,
-            [groupId]: !prevState[groupId]
-        }));
     };
 
     const toggleModuleExpansion = (moduleId) => {
@@ -92,16 +73,14 @@ export function ReportListPage() {
         }));
     };
 
-    const filteredGroups = groups.map(group => ({
-        ...group,
-        modules: group.modules.map(module => ({
-            ...module,
-            reports: module.reports.filter(report =>
-                report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                report.description.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        })).filter(module => module.reports.length > 0)
-    })).filter(group => group.modules.length > 0);
+    const filteredModules = modules.filter(module =>
+        module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        module.reports.some(report => 
+            report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            report.description.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    );
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
@@ -135,36 +114,25 @@ export function ReportListPage() {
                     <div className="table-responsive">
                         <table className="table">
                             <tbody>
-                                {filteredGroups.map((group, groupIndex) => (
-                                    <React.Fragment key={group.id}>
+                                {filteredModules.map((module) => (
+                                    <React.Fragment key={module.id}>
                                         <tr>
                                             <td colSpan="3">
-                                                <Button variant="link" onClick={() => toggleGroupExpansion(group.id)} style={{ textDecoration: 'none', color: '#00527E', fontWeight: 'bold' }}>
-                                                    <i className={`bi ${expandedGroups[group.id] ? 'bi-dash-square' : 'bi-plus-square'}`}></i> Grupo: {group.name}
+                                                <Button variant="link" onClick={() => toggleModuleExpansion(module.id)} style={{ textDecoration: 'none', color: '#00527E', fontWeight: 'bold' }}>
+                                                    <i className={`bi ${expandedModules[module.id] ? 'bi-dash-square' : 'bi-plus-square'}`}></i> Módulo: {module.name}
                                                 </Button>
                                             </td>
                                         </tr>
-                                        {expandedGroups[group.id] && group.modules.map((module, moduleIndex) => (
-                                            <React.Fragment key={module.id}>
-                                                <tr>
-                                                    <td colSpan="3" style={{ paddingLeft: '20px' }}>
-                                                        <Button variant="link" onClick={() => toggleModuleExpansion(module.id)} style={{ textDecoration: 'none', color: '#006CA6', fontWeight: 'bold' }}>
-                                                            <i className={`bi ${expandedModules[module.id] ? 'bi-dash-square' : 'bi-plus-square'}`}></i> Módulo: {module.name}
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                                {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
-                                                    <tr key={report.id}>
-                                                        <td style={{ paddingLeft: '40px' }}>{reportIndex + 1}</td>
-                                                        <td>{report.name}</td>
-                                                        <td>
-                                                            <Link to={`/admin/report/${report.id}`} className="btn btn-primary">
-                                                                Editar Reporte
-                                                            </Link>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </React.Fragment>
+                                        {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
+                                            <tr key={report.id}>
+                                                <td style={{ paddingLeft: '40px' }}>{reportIndex + 1}</td>
+                                                <td>{report.name}</td>
+                                                <td>
+                                                    <Link to={`/admin/report/${report.id}`} className="btn btn-primary">
+                                                        Editar Reporte
+                                                    </Link>
+                                                </td>
+                                            </tr>
                                         ))}
                                     </React.Fragment>
                                 ))}
@@ -180,15 +148,15 @@ export function ReportListPage() {
                     </Col>
                 </Row>
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6">© GCTIC-EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

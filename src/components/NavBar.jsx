@@ -55,7 +55,7 @@ export function NavBar() {
     return (
         <Navbar expand="lg" style={{ backgroundColor: "#0064AF", boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', minHeight: '5vh' }} className='px-1 py-1 fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
-                <Navbar.Brand href="#home">
+                <Navbar.Brand href="/menu">
                     <img
                         src={Logo}
                         style={{ width: "140.5px", height: "29.98px" }}

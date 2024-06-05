@@ -131,9 +131,6 @@ export function LoginPage() {
                     </div>
                 </div>
             </footer>
-
-
-
         </div>
     );
 }

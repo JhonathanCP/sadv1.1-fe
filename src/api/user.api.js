@@ -23,6 +23,5 @@ export const getUser = (userId) => authApi.get(`/${userId}/`);
 export const updateUser = (userId, data) => authApi.put(`/${userId}/`, data);
 export const addReport = (data) => authApi.post(`/add-report/`, data);
 export const removeReport = (userId, reportId) => authApi.delete(`/${userId}/delete-report/${reportId}`);
-export const getUserGroups = (userId) => authApi.get(`/${userId}/get-groups/`);
 export const getUserModules = (userId) => authApi.get(`/${userId}/get-modules/`);
 export const getUserReports = (userId) => authApi.get(`/${userId}/get-reports/`);

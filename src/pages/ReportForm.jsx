@@ -24,11 +24,12 @@ export function ReportForm() {
         limited: false,
         restricted: false,
         ModuleId: '',
+        GroupId: '',
         createdAt: new Date().toISOString().slice(0, 16),
         updatedAt: new Date().toISOString().slice(0, 16)
     });
-    const [groups, setGroups] = useState([]);
     const [modules, setModules] = useState([]);
+    const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -44,19 +45,14 @@ export function ReportForm() {
                         createdAt: reportResponse.data.createdAt ? new Date(reportResponse.data.createdAt).toISOString().slice(0, 16) : '',
                         updatedAt: reportResponse.data.updatedAt ? new Date(reportResponse.data.updatedAt).toISOString().slice(0, 16) : ''
                     });
-                } else {
-                    const now = new Date();
-                    setReport(prevState => ({
-                        ...prevState,
-                        createdAt: now.toISOString().slice(0, 16),
-                        updatedAt: now.toISOString().slice(0, 16)
-                    }));
                 }
-                const modulesResponse = await getModules();
-                const groupsResponse = await getGroups();
 
+                const modulesResponse = await getModules();
                 setModules(modulesResponse.data);
+
+                const groupsResponse = await getGroups();
                 setGroups(groupsResponse.data);
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -210,6 +206,27 @@ export function ReportForm() {
                                     </Col>
                                     <Col md={2}>
                                         <Form.Group controlId="formModule">
+                                            <Form.Label>Grupo</Form.Label>
+                                            <Form.Control
+                                                as="select"
+                                                name="GroupId"
+                                                value={report.GroupId}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">Seleccionar Grupo</option>
+                                                {groups.map(group => (
+                                                    <option key={group.id} value={group.id}>
+                                                        {group.name}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className='mb-4 justify-content-center'>
+                                    <Col md={3}>
+                                        <Form.Group controlId="formModule">
                                             <Form.Label>Módulo</Form.Label>
                                             <Form.Control
                                                 as="select"
@@ -219,23 +236,15 @@ export function ReportForm() {
                                                 required
                                             >
                                                 <option value="">Seleccionar Módulo</option>
-                                                {groups.map(group => (
-                                                    <optgroup key={group.id} label={group.name}>
-                                                        {modules
-                                                            .filter(module => module.GroupId === group.id)
-                                                            .map(module => (
-                                                                <option key={module.id} value={module.id}>
-                                                                    {module.name}
-                                                                </option>
-                                                            ))}
-                                                    </optgroup>
+                                                {modules.map(module => (
+                                                    <option key={module.id} value={module.id}>
+                                                        {module.name}
+                                                    </option>
                                                 ))}
                                             </Form.Control>
                                         </Form.Group>
                                     </Col>
-                                </Row>
-                                <Row className='mb-4 justify-content-center'>
-                                    <Col md={4}>
+                                    <Col md={3}>
                                         <Form.Group controlId="formStatus">
                                             <Form.Label>Nivel de acceso</Form.Label>
                                             <Form.Control
@@ -251,7 +260,7 @@ export function ReportForm() {
                                             </Form.Control>
                                         </Form.Group>
                                     </Col>
-                                    <Col md={4}>
+                                    <Col md={3}>
                                         <Form.Group controlId="formActive">
                                             <Form.Label>Estado</Form.Label>
                                             <Form.Check
@@ -260,32 +269,6 @@ export function ReportForm() {
                                                 name="active"
                                                 checked={report.active}
                                                 onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Row className='mb-4 justify-content-center'>
-                                    <Col md={4}>
-                                        <Form.Group controlId="formCreatedAt">
-                                            <Form.Label>Fecha de Creación</Form.Label>
-                                            <Form.Control
-                                                type="datetime-local"
-                                                name="createdAt"
-                                                value={report.createdAt}
-                                                onChange={handleChange}
-                                                required
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={4}>
-                                        <Form.Group controlId="formUpdatedAt">
-                                            <Form.Label>Fecha de Actualización</Form.Label>
-                                            <Form.Control
-                                                type="datetime-local"
-                                                name="updatedAt"
-                                                value={report.updatedAt}
-                                                onChange={handleChange}
-                                                required
                                             />
                                         </Form.Group>
                                     </Col>
@@ -314,15 +297,15 @@ export function ReportForm() {
                     </Col>
                 </Row>
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6">© GCTIC-EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>
