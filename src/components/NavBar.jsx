@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Route, useNavigate, useLocation } from 'react-router-dom';
+import { getUser, updateUser } from '../api/user.api';
+import { getDependencies, getDependency } from '../api/dependency.api';
+import { getMainDependencies } from '../api/maindependency.api';
+import { getRLs } from '../api/rl.api';
+import { getPositions } from '../api/position.api';
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup } from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
@@ -12,7 +17,16 @@ export function NavBar() {
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false)
+    const [showModal2, setShowModal2] = useState(false);
+    const [userDetails, setUserDetails] = useState({});
+    const [mainDependencies, setMainDependencies] = useState([]);
+    const [dependencies, setDependencies] = useState([]);
+    const [RLs, setRLs] = useState([]);
+    const [positions, setPositions] = useState([]);
+    const [selectedMainDependency, setSelectedMainDependency] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [originalUserData, setOriginalUserData] = useState({});
 
     const handleDownload = () => {
         window.open('https://docs.google.com/spreadsheets/d/1Qa8foxxOi5xDO3JpZyOd1IPRTwrDVUGy/export?format=xlsx', '_blank');
@@ -25,8 +39,142 @@ export function NavBar() {
             setUsuario(decodedToken.username);
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
+            fetchUserDetails(decodedToken.id);
+            fetchRLs();
+            fetchPositions();
+            fetchMainDependencies();
         }
     }, []);
+
+    const fetchUserDetails = async (id) => {
+        try {
+            const response = await getUser(id);
+            const userData = response.data;
+            setUserDetails(userData);
+            setOriginalUserData({ ...userData });
+            if (userData.DependencyId) {
+                fetchDependencyDetails(userData.DependencyId);
+            }
+        } catch (error) {
+            console.error('Error al obtener los detalles del usuario:', error);
+        }
+    };
+
+    const fetchRLs = async () => {
+        try {
+            const response = await getRLs();
+            setRLs(response.data);
+        } catch (error) {
+            console.error('Error al obtener los régimenes laborales:', error);
+        }
+    };
+
+    const fetchPositions = async () => {
+        try {
+            const response = await getPositions();
+            setPositions(response.data);
+        } catch (error) {
+            console.error('Error al obtener los posiciones:', error);
+        }
+    };
+
+    const fetchMainDependencies = async () => {
+        try {
+            const response = await getMainDependencies();
+            setMainDependencies(response.data);
+        } catch (error) {
+            console.error('Error al obtener MainDependencies:', error);
+        }
+    };
+
+    const fetchDependencyDetails = async (dependencyId) => {
+        try {
+            const response = await getDependency(dependencyId);
+            if (response.data) {
+                setSelectedMainDependency(response.data.MainDependencyId);
+                fetchDependencies(response.data.MainDependencyId);
+                setUserDetails(prev => ({
+                    ...prev,
+                    DependencyId: dependencyId,
+                    MainDependencyId: response.data.MainDependencyId
+                }));
+            }
+        } catch (error) {
+            console.error('Error al obtener la dependencia:', error);
+        }
+    };
+
+    const fetchDependencies = async (mainDependencyId) => {
+        try {
+            const response = await getDependencies(mainDependencyId);
+            setDependencies(response.data);
+        } catch (error) {
+            console.error('Error al obtener Dependencies:', error);
+        }
+    };
+
+    const handleMainDependencyChange = (e) => {
+        const mainDependencyId = e.target.value;
+        setSelectedMainDependency(mainDependencyId);
+        setUserDetails(prev => ({ ...prev, MainDependencyId: mainDependencyId, DependencyId: '' })); // Clear DependencyId when MainDependency changes
+        fetchDependencies(mainDependencyId);
+    };
+    
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (name === "dni" && (value.length > 8 || !/^\d*$/.test(value))) {
+            return; // Prevents input if not digits or if more than 8 digits
+        }
+    
+        if (name === "RLId") {
+            if (value === '4') {
+                // Set generic user details if RLId is '4'
+                setUserDetails({
+                    ...userDetails,
+                    RLId: '4',
+                    PositionId: '4',
+                    isGeneric: true
+                });
+            } else {
+                // Reset to original user data if RLId changes from '4' to another value
+                setUserDetails(prev => ({
+                    ...prev,
+                    firstname: prev.originalFirstname || '-',
+                    lastname: prev.originalLastname || '-',
+                    dni: prev.originalDni || '-',
+                    RLId: value,
+                    isGeneric: false
+                }));
+            }
+        } else {
+            setUserDetails(prev => ({ ...prev, [name]: value }));
+        }
+    };
+    
+
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!userDetails.MainDependencyId) newErrors.MainDependencyId = 'Dependencia principal es requerida';
+        if (!userDetails.DependencyId) newErrors.DependencyId = 'Dependencia secundaria es requerida';
+        if (!userDetails.RLId) newErrors.RLId = 'Régimen laboral es requerido';
+        if (!userDetails.PositionId) newErrors.PositionId = 'Posición es requerida';
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSaveUserDetails = async () => {
+        if (!validateForm()) return;
+
+        try {
+            await updateUser(userId, userDetails);
+            toast.success("Información actualizada exitosamente");
+            setShowModal2(false);
+        } catch (error) {
+            console.error('Error al actualizar la información del usuario:', error);
+            toast.error("Error al actualizar la información");
+        }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('access');
@@ -38,13 +186,11 @@ export function NavBar() {
     const handleSearch = () => {
         if (searchQuery.trim() !== '') {
             const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
-            //navigate(searchUrl);
             window.location.replace(searchUrl); // Reload the page
         } else {
             // Show error message or handle empty search query
         }
     };
-
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -94,6 +240,7 @@ export function NavBar() {
                             <i onClick={handleSearch} className="bi bi-search search-icon"></i>
                         </div>
                         <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
+                            <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
@@ -109,6 +256,88 @@ export function NavBar() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            <Modal size="lg" show={showModal2} onHide={() => setShowModal2(false)} centered  keyboard={true}>
+                <Modal.Header closeButton={true}>
+                    <Modal.Title>Actualizar Información Personal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                    <Form.Group controlId="rl">
+                            <Form.Label>Régimen Laboral</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="RLId"
+                                value={userDetails.RLId || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.RLId}
+                            >
+                                <option value="">Seleccione un régimen</option>
+                                {RLs.map((rl) => (
+                                    <option key={rl.id} value={rl.id}>{rl.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.RLId}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="position">
+                            <Form.Label>Posición</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="PositionId"
+                                value={userDetails.PositionId || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.PositionId}
+                                disabled={userDetails.RLId=='4'}
+                            >
+                                <option value="">Seleccione una posición</option>
+                                {positions.map((position) => (
+                                    <option key={position.id} value={position.id}>{position.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.PositionId}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="mainDependency">
+                            <Form.Label>Dependencia principal</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="MainDependencyId"
+                                value={selectedMainDependency || ''}
+                                onChange={handleMainDependencyChange}
+                                isInvalid={!!errors.MainDependencyId}
+                            >
+                                <option value="">Seleccione una opción</option>
+                                {mainDependencies.map((mainDep) => (
+                                    <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.MainDependencyId}</Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="dependency">
+                            <Form.Label>Dependencia secundaria</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="DependencyId"
+                                value={userDetails.DependencyId || ''}
+                                onChange={handleInputChange}
+                                isInvalid={!!errors.DependencyId}
+                                disabled={!selectedMainDependency}
+                            >
+                                <option value="">Seleccione una opción</option>
+                                {dependencies
+                                    .filter(dep => dep.MainDependencyId == selectedMainDependency)
+                                    .map((dep) => (
+                                        <option key={dep.id} value={dep.id}>{dep.name}</option>
+                                    ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.DependencyId}</Form.Control.Feedback>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>
         </Navbar>

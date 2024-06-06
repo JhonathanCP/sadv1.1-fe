@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getUserModules, getUser, updateUser } from '../api/user.api';
 import { getDependencies } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
-import {jwtDecode} from 'jwt-decode';
+import { getRLs } from '../api/rl.api';
+import { getPositions } from '../api/position.api';
+import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,6 +25,8 @@ export function MenuPage() {
     const [userDetails, setUserDetails] = useState({});
     const [mainDependencies, setMainDependencies] = useState([]);
     const [dependencies, setDependencies] = useState([]);
+    const [RLs, setRLs] = useState([]);
+    const [positions, setPositions] = useState([]);
     const [selectedMainDependency, setSelectedMainDependency] = useState(null);
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
@@ -52,6 +56,26 @@ export function MenuPage() {
 
             fetchUserDetails(decodedToken.id);
 
+            const fetchRLs = async () => {
+                try {
+                    const response = await getRLs();
+                    setRLs(response.data);
+                } catch (error) {
+                    console.error('Error al obtener los régimenes laborales:', error);
+                }
+            };
+            const fetchPositions = async () => {
+                try {
+                    const response = await getPositions();
+                    setPositions(response.data);
+                } catch (error) {
+                    console.error('Error al obtener los posiciones:', error);
+                }
+            };
+
+            fetchRLs();
+            fetchPositions();
+
             const fetchModules = async () => {
                 try {
                     const response = await getUserModules(decodedToken.id);
@@ -65,8 +89,6 @@ export function MenuPage() {
             };
 
             fetchModules();
-
-            
         }
     }, []);
 
@@ -74,9 +96,8 @@ export function MenuPage() {
         try {
             const response = await getUser(id);
             const userData = response.data;
-            setUserDetails(userData);
 
-            if (!userData.firstname || !userData.lastname || !userData.dni || !userData.cargo || !userData.DependencyId) {
+            if (!userData.DependencyId || !userData.RLId || !userData.PositionId) {
                 fetchMainDependencies();
                 setShowModal(true);
             }
@@ -112,17 +133,36 @@ export function MenuPage() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUserDetails({ ...userDetails, [name]: value });
+
+        if (name == "RLId" && value == '4') {
+            // Establece los valores predeterminados para el régimen laboral '4'
+            setUserDetails({
+                ...userDetails,
+                RLId: '4', // Suponiendo que el ID '4' es correcto
+                PositionId: '4', // Suponiendo que el ID '4' es correcto
+                isGeneric: true
+            });
+        } else if (name == "RLId" && userDetails.isGeneric) {
+            // Restablece si se cambia de '4' a otro valor y estaba previamente en genérico
+            setUserDetails({
+                ...userDetails,
+                RLId: value,
+                PositionId: userDetails.PositionId,
+                isGeneric: false
+            });
+        } else {
+            // Actualiza normalmente si no es el campo especial
+            setUserDetails({ ...userDetails, [name]: value });
+        }
     };
+
 
     const validateForm = () => {
         const newErrors = {};
-        if (!userDetails.firstname) newErrors.firstname = 'Apellidos es requerido';
-        if (!userDetails.lastname) newErrors.lastname = 'Nombre es requerido';
-        if (!userDetails.dni) newErrors.dni = 'DNI es requerido';
-        if (!userDetails.cargo) newErrors.cargo = 'Cargo es requerido';
         if (!userDetails.MainDependencyId) newErrors.MainDependencyId = 'Dependencia principal es requerida';
         if (!userDetails.DependencyId) newErrors.DependencyId = 'Dependencia secundaria es requerida';
+        if (!userDetails.RLId) newErrors.RLId = 'Régimen laboral es requerido';
+        if (!userDetails.PositionId) newErrors.PositionId = 'Posición es requerida';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -167,10 +207,10 @@ export function MenuPage() {
             </Container>
             <Container fluid className='px-0 mx-0 pb-4 pt-0 mt-0 sections-bg'>
                 <section id="services" className='services'>
-                <div className="container-fluid" data-aos="fade-up">
-                    <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
+                    <div className="container-fluid" data-aos="fade-up">
+                        <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             {modules.sort((a, b) => a.id - b.id).map((module) => (
-                                <div 
+                                <div
                                     key={module.id}
                                     className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4"
                                     onClick={() => navigate(`/module/${module.id}`)}
@@ -200,55 +240,44 @@ export function MenuPage() {
                 </div>
             </footer>
 
-            {/* <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
+            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
                 <Modal.Header closeButton={false}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group controlId="firstname">
-                            <Form.Label>Apellidos</Form.Label>
+                        <Form.Group controlId="rl">
+                            <Form.Label>Régimen Laboral</Form.Label>
                             <Form.Control
-                                type="text"
-                                name="firstname"
-                                value={userDetails.firstname || ''}
+                                as="select"
+                                name="RLId"
+                                value={userDetails.RLId || ''}
                                 onChange={handleInputChange}
-                                isInvalid={!!errors.firstname}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.firstname}</Form.Control.Feedback>
+                                isInvalid={!!errors.RLId}
+                            >
+                                <option value="">Seleccione un régimen</option>
+                                {RLs.map((rl) => (
+                                    <option key={rl.id} value={rl.id}>{rl.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.RLId}</Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="lastname">
-                            <Form.Label>Nombre</Form.Label>
+                        <Form.Group controlId="position">
+                            <Form.Label>Posición</Form.Label>
                             <Form.Control
-                                type="text"
-                                name="lastname"
-                                value={userDetails.lastname || ''}
+                                as="select"
+                                name="PositionId"
+                                value={userDetails.PositionId || ''}
                                 onChange={handleInputChange}
-                                isInvalid={!!errors.lastname}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.lastname}</Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group controlId="dni">
-                            <Form.Label>DNI</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="dni"
-                                value={userDetails.dni || ''}
-                                onChange={handleInputChange}
-                                isInvalid={!!errors.dni}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.dni}</Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group controlId="cargo">
-                            <Form.Label>Cargo</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="cargo"
-                                value={userDetails.cargo || ''}
-                                onChange={handleInputChange}
-                                isInvalid={!!errors.cargo}
-                            />
-                            <Form.Control.Feedback type="invalid">{errors.cargo}</Form.Control.Feedback>
+                                isInvalid={!!errors.PositionId}
+                                disabled={userDetails.isGeneric}
+                            >
+                                <option value="">Seleccione una posición</option>
+                                {positions.map((position) => (
+                                    <option key={position.id} value={position.id}>{position.name}</option>
+                                ))}
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">{errors.PositionId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="mainDependency">
                             <Form.Label>Dependencia principal</Form.Label>
@@ -288,10 +317,9 @@ export function MenuPage() {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleLogout}>Cerrar</Button>
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
-            </Modal> */}
+            </Modal>
         </div>
     );
 }

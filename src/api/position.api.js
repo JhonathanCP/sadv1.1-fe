@@ -6,8 +6,8 @@ const URL =
         : "http://10.0.28.15:3000";
 
 const authApi = axios.create({
-    // baseURL: 'http://10.0.28.15:3000/groups/',
-    baseURL: 'http://10.0.28.15:3000/group/',
+    // baseURL: 'http://10.0.28.15:3000/modules/',
+    baseURL: 'http://10.0.28.15:3000/position/',
 });
 
 // Interceptor para incluir el token en los encabezados de todas las solicitudes
@@ -20,8 +20,8 @@ authApi.interceptors.request.use((config) => {
     return config;
 });
 
-export const getGroups = () => authApi.get("/");
-export const getGroup = (groupId) => authApi.get(`/${groupId}/`);
-export const createGroup = (groupData) => authApi.post("/", groupData);
-export const updateGroup = (groupId, groupData) => authApi.put(`/${groupId}/`, groupData);
-export const deleteGroup = (groupId) => authApi.delete(`/${groupId}/`);
+export const getPositions = () => authApi.get("/");
+export const getPosition = (PositionId) => authApi.get(`/${PositionId}/`);
+export const createPosition = (PositionData) => authApi.post("/", PositionData);
+export const updatePosition = (PositionId, PositionData) => authApi.put(`/${PositionId}/`, PositionData);
+export const deletePosition = (PositionId) => authApi.delete(`/${PositionId}/`);

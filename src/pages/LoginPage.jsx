@@ -8,6 +8,7 @@ import { Row, Card, Col, Form, FormGroup, FormControl, FormLabel, Button, Contai
 import FondoSvg from '../assets/fondo.svg';
 import Logo from '../assets/logo-essalud.svg';
 import { ManualComponent } from '../components/ManualComponent';
+import ComunicadoImage from '../assets/COMUNICADO.jpeg';  // Asegúrate de que la ruta es correcta
 
 export function LoginPage() {
     const [credentials, setCredentials] = useState({
@@ -19,7 +20,12 @@ export function LoginPage() {
     const [showManualModal, setShowManualModal] = useState(false);
     const handleManualModal = () => setShowManualModal(true); // Nuevo controlador
     const handleCloseManualModal = () => setShowManualModal(false); // Nuevo controlador
+    const [showComunicadoModal, setShowComunicadoModal] = useState(true);  // Estado para controlar la visibilidad del modal
     const navigate = useNavigate();
+
+    const handleCloseComunicado = () => {
+        setShowComunicadoModal(false);  // Función para cerrar el modal
+    };
 
     useEffect(() => {
         if (window.location.pathname === '/login') {
@@ -78,6 +84,18 @@ export function LoginPage() {
             style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             className="container-fluid d-flex align-items-center justify-content-center"
         >
+            <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
+                <Modal.Header closeButton>
+                </Modal.Header>
+                <Modal.Body>
+                    <Image src={ComunicadoImage} alt="Comunicado" fluid />
+                </Modal.Body>
+                {/* <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseComunicado}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer> */}
+            </Modal>
             <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
@@ -97,7 +115,7 @@ export function LoginPage() {
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
-                    <div className="card p-4" style={{ width: '24.5rem' }}>
+                    <div className="card p-4" style={{ width: '24rem' }}>
                         <form onSubmit={handleLogin} className="my-2">
                             <div className="text-center my-2">
                                 <img src={Logo} alt="Logo" />
@@ -131,6 +149,9 @@ export function LoginPage() {
                     </div>
                 </div>
             </footer>
+
+
+
         </div>
     );
 }
