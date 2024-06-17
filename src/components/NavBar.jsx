@@ -189,6 +189,7 @@ export function NavBar() {
             window.location.replace(searchUrl); // Reload the page
         } else {
             // Show error message or handle empty search query
+            
         }
     };
 
@@ -199,7 +200,7 @@ export function NavBar() {
     };
 
     return (
-        <Navbar expand="lg" style={{ backgroundColor: "#0064AF", boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', minHeight: '5vh' }} className='px-1 py-1 fixed-top' variant="dark">
+        <Navbar expand="lg" style={{ backgroundColor: "#1A3EC1", boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', minHeight: '5vh' }} className='px-1 py-1 fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
                 <Navbar.Brand href="/menu">
                     <img
@@ -214,31 +215,31 @@ export function NavBar() {
                     <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
                         <Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
                             <i className={`bi bi-house`}></i> Volver al menú principal
-                        </Nav.Link>
-                        {role === 1 && (
-                            <>
-                                <Nav.Link onClick={() => setShowModal(true)} ><i className={`bi bi-send`}></i> Solicitud de acceso</Nav.Link>
-                            </>
-                        )}
-                        {role === 2 && (
+                        </Nav.Link>           
+                        
+                        <NavDropdown title={<span><i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
+                            </i> </span>} >
+                            {role === 1 && (
+                                <>
+                                <NavDropdown.Item onClick={() => setShowModal(true)} ><i className={`bi bi-send-fill`}></i>Solicitudes</NavDropdown.Item>
+                                <NavDropdown.Item ><i className={`bi bi-star-fill`}></i>Destacados</NavDropdown.Item>
+                                </>
+                            )}
+                            {role === 2 && (
                             <>
                                 <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people`}></i> Gestión de usuarios</Nav.Link>
                                 <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection`}></i> Gestión de grupos y módulos</Nav.Link>
                                 <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-gear`}></i> Gestión de reportes</Nav.Link>
                             </>
-                        )}
-                        <div className="search-bar">
-                            <FormControl
-                                type="search"
-                                placeholder="Buscar reporte"
-                                className="search-input"
-                                aria-label="Buscar reporte"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={handleKeyPress}
-                            />
-                            <i onClick={handleSearch} className="bi bi-search search-icon"></i>
-                        </div>
+                            )}
+                        </NavDropdown>
+
+                        <button type="button" className='btn btn-primary btn-primary-custom position-relative bi bi-bell-fill'>
+                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
+                            <span class="visually-hidden">New alerts</span>
+                            </span>
+                        </button>
+
                         <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
                             <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>

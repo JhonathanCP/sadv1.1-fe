@@ -6,7 +6,8 @@ import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Card, Col, Form, FormGroup, FormControl, FormLabel, Button, Container, Image, Modal, FormCheck } from 'react-bootstrap';
 import FondoSvg from '../assets/fondo.svg';
-import Logo from '../assets/logo-essalud.svg';
+import background from '../assets/background.png';
+import Logo from '../assets/logo-essalud-blanco.svg';
 import { ManualComponent } from '../components/ManualComponent';
 import ComunicadoImage from '../assets/COMUNICADO.jpeg';  // Asegúrate de que la ruta es correcta
 
@@ -81,7 +82,8 @@ export function LoginPage() {
 
     return (
         <div
-            style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
+            //style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
+            style={{ backgroundImage: `url(${background})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             className="container-fluid d-flex align-items-center justify-content-center"
         >
             <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
@@ -99,6 +101,7 @@ export function LoginPage() {
             <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
+                        <img src={Logo} alt="Logo" />
                         <h1 className="d-block d-sm-none text-center">Sistema de Analítica de Datos</h1>
                         <h1 className="d-none d-md-block">Sistema de Analítica de Datos</h1>
                         <p className="d-none d-sm-block">
@@ -117,8 +120,8 @@ export function LoginPage() {
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
                     <div className="card p-4" style={{ width: '24rem' }}>
                         <form onSubmit={handleLogin} className="my-2">
-                            <div className="text-center my-2">
-                                <img src={Logo} alt="Logo" />
+                            <div className="text-center my-4">
+                                <h4 className="">Inicio de sesión</h4>
                             </div>
                             <div className="form-group my-4">
                                 <label htmlFor="username">Usuario</label>
@@ -129,9 +132,13 @@ export function LoginPage() {
                             </div>
                             <div className="form-group my-4">
                                 <label htmlFor="password">Contraseña</label>
-                                <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange} />
+                                <div className="input-group">
+                                    <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange}>
+                                    </input>
+                                    <span className="input-group-text bi bi-eye" id="basic-addon2" ></span>
+                                </div>
                             </div>
-                            <button type="submit" className="btn btn-primary w-100 mt-3">Ingresar</button>
+                            <button type="submit" className="btn btn-primary btn-primary-custom w-100 mt-3">Ingresar</button>
                             <ManualComponent show={showManualModal} handleClose={handleCloseManualModal} />
                         </form>
                     </div>
@@ -141,11 +148,11 @@ export function LoginPage() {
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC - EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6 text-center">Versión: 2.0.20240617</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-center">Versión: 2.0.20240617</div>
                     </div>
                 </div>
             </footer>

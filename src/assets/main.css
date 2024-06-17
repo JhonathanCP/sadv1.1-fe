@@ -1,8 +1,9 @@
 /* Colors */
 :root {
   --color-default: #222222;
-  --color-primary: #0064AF;
+  --color-primary: #1A3EC1;
   --color-secondary: #11213F;
+  --color-background-system: #FBFCFE;
 }
 
 /* Smooth scroll behavior */
@@ -23,7 +24,7 @@ section {
 }
 
 .sections-bg {
-  background-color: #f6f6f6af;
+  background-color: var(--color-background-system);
   min-height: 58vh;
   display: flex;
   align-items: center;
@@ -268,4 +269,45 @@ section {
   position: absolute;
   top: 10px;
   left: 10px;
+}
+
+/******/
+
+body {
+  margin: 0;
+  font-family: calibri,sans-serif;
+  background-color: var(--color-background-system);
+  height: 100vh;
+  
+ }
+
+
+.btn-primary-custom{
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.img-banner{
+  max-height: 220px;
+}
+
+
+
+.banner-container{
+  padding: 20px 150px !important;
+  align-content: center;
+}
+
+.banner{
+ 
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
+  /*min-height: 35vh;*/
+  border-radius: 8px;
+}
+
+.footer{
+  background-color: var(--color-primary);
+  font-size: 12px;
 }

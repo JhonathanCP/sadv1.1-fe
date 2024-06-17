@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import Img from '../assets/hero-img.svg';
+import Img from '../assets/img-portada.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
@@ -190,10 +190,10 @@ export function MenuPage() {
     };
 
     return (
-        <div className='p-0' style={{ height: "100%" }}>
+        <div className='p-0' style={{backgroundColor: "#FBFCFE", height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid fixed="true" style={{ backgroundColor: '#0064AF', minHeight: '35vh' }} className='mt-5'>
-                <Row className='px-5 py-5 d-flex align-items-center justify-content-center'>
+            <Container fluid fixed="true" style={{minHeight: '35vh' }} className='mt-5 banner-container'>
+                <Row className='px-5 py-5 d-flex banner'>
                     <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
                         <h2 className='d-xl-none text-center'>Sistema de Analítica <span>de Datos</span></h2>
                         <h2 className='d-none d-xl-block'>Sistema de Analítica <span>de Datos</span></h2>
@@ -201,11 +201,12 @@ export function MenuPage() {
                         <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                     </Col>
                     <Col xs={12} md={12} xl={5} className='px-5 py-0 d-flex align-items-center justify-content-center'>
-                        <img src={Img} className="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="250" />
+                        <img src={Img} className="img-fluid img-banner" alt="" data-aos="zoom-out" data-aos-delay="250" />
                     </Col>
                 </Row>
             </Container>
             <Container fluid className='px-0 mx-0 pb-4 pt-0 mt-0 sections-bg'>
+
                 <section id="services" className='services'>
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
@@ -227,7 +228,7 @@ export function MenuPage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
