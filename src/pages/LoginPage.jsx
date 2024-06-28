@@ -135,7 +135,7 @@ export function LoginPage() {
                                 <div className="input-group">
                                     <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange}>
                                     </input>
-                                    <span className="input-group-text bi bi-eye" id="basic-addon2" ></span>
+                                    <span className="input-group-text bi bi-eye-slash" id="basic-addon2" ></span>
                                 </div>
                             </div>
                             <button type="submit" className="btn btn-primary btn-primary-custom w-100 mt-3">Ingresar</button>

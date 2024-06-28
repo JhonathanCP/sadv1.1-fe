@@ -227,9 +227,9 @@ export function NavBar() {
                             )}
                             {role === 2 && (
                             <>
-                                <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people`}></i> Gestión de usuarios</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection`}></i> Gestión de grupos y módulos</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-gear`}></i> Gestión de reportes</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people-fill`}></i> Usuarios</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection-fill`}></i> Grupos y módulos</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-clipboard2-data`}></i>Reportes</Nav.Link>
                             </>
                             )}
                         </NavDropdown>

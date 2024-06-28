@@ -12,8 +12,9 @@ import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar'
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Row, Col, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormGroup, FormControl, FormLabel, Button, Container, Row, Col, NavItem, Breadcrumb,InputGroup } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+
 
 export function ModulePage() {
     const { id } = useParams();
@@ -22,6 +23,7 @@ export function ModulePage() {
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     // Obtener la fecha actual
     const currentDate = new Date();
@@ -98,13 +100,56 @@ export function ModulePage() {
         toast.success("Sesión terminada");
         navigate("/login");
     };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const handleSearch = () => {
+        if (searchQuery.trim() !== '') {
+            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
+            window.location.replace(searchUrl); // Reload the page
+        } else {
+            // Show error message or handle empty search query
+            
+        }
+    };
+
     return (
         <div className='p-0' style={{ height: "100%" }}>
+            
             <NavBar></NavBar>
-            <Container fluid className='px-0 mx-0 pb-2 sections-bg ' style={{ minHeight: '97vh' }}>
-                <section id="services" className='services w-100'>
-                <div className="container-fluid" data-aos="fade-up">
-                    <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
+
+            <Container fluid className='px-0 mx-0 pb-2 row sections-bg ' style={{ minHeight: '97vh' }}>
+                <section id="services" className='services w-100'>                                 
+                    <div className="container-fluid" data-aos="fade-up">                      
+                        <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
+                            <div className='w-100'>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb" style={{}}>
+                                        <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                            <a href="#">
+                                                <i class="bi bi-house-door">
+                                                </i>Menú Principal</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                                    </ol>
+                                </nav> 
+                                <div className="search-bar d-flex" >
+                                    <Form.Control
+                                    type="search"
+                                    placeholder="Buscar reporte"
+                                    className="search-input"
+                                    aria-label="Buscar reporte"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={handleKeyPress}
+                                    />
+                                    <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                                </div>                   
+                            </div>
                             {reports.sort((a, b) => a.GroupId - b. GroupId).map((report) => (
                                 <div
                                     key={report.id}
@@ -116,12 +161,12 @@ export function ModulePage() {
                                 >
                                     <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="badges">
-                                            {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge text-bg-success mx-1">Nuevo</span>}
-                                            {(new Date(report.updatedAt) >= oneWeekAgo && !report.version.startsWith('1.0')) && <span className="badge text-bg-warning mx-1">Cambios</span>}
+                                            {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-success mx-1">Nuevo</span>}
+                                            {(new Date(report.updatedAt) >= oneWeekAgo && !report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-primary mx-1">Renovado</span>}
                                         </div>
                                         <div className='groups'>
                                             {groups.map((group, index) => (
-                                                <span key={index} className="badge text-bg-warning mx-1">
+                                                <span key={index} className="badge rounded-pill text-bg-light mx-1">
                                                     {group.id === report.GroupId && (
                                                         <><i className={`bi bi-${group.icon}`}></i> {group.name}</>
                                                     )}
@@ -136,21 +181,21 @@ export function ModulePage() {
                                 </div>
                             ))}
                         </div>
-                        <div className="d-flex justify-content-center mt-4">
+                        {/*<div className="d-flex justify-content-center mt-4">
                             <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
-                        </div>
+                        </div> */}
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#1A3EC1", minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6 text-center">Versión: 1.2</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.2</div>
                     </div>
                 </div>
             </footer>

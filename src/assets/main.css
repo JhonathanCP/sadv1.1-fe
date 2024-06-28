@@ -74,6 +74,7 @@ section {
   background: #fff;
   height: 100%;
   border-radius: 10px;
+  border-color: #E8F0FC;
 }
 
 .services .service-item .icon {
@@ -112,7 +113,7 @@ section {
   font-size: 22px;
   position: relative;
   display: inline-block;
-  border-bottom: 4px solid #eeeeee;
+  /*border-bottom: 4px solid #eeeeee;*/
   transition: 0.3s;
 }
 
@@ -212,6 +213,10 @@ section {
     justify-content: space-between;
     text-align: center;
   }
+
+  .banner-container{
+    padding: 20px 50px !important;
+  }
 }
 
 @media only screen and (max-width: 599px) {
@@ -230,12 +235,17 @@ section {
     justify-content: space-between;
     text-align: center;
   }
+
+  .banner-container{
+    padding: 20px 50px !important;
+  }
+
 }
 
 
 .service-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /*transform: translateY(-5px);*/
+  box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
 }
 
 .icon {
@@ -294,12 +304,11 @@ body {
 
 
 .banner-container{
-  padding: 20px 150px !important;
+  padding: 20px 150px;
   align-content: center;
 }
 
 .banner{
- 
   align-items: center;
   justify-content: center;
   background-color: var(--color-primary);
