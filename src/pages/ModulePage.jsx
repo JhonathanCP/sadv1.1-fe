@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import Img from '../assets/hero-img.svg';
+import iconReport from '../assets/logo-microsoft-power-bi.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
@@ -127,28 +128,31 @@ export function ModulePage() {
                     <div className="container-fluid" data-aos="fade-up">                      
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
-                                <nav aria-label="breadcrumb">
+                                <nav class aria-label="breadcrumb">
                                     <ol class="breadcrumb" style={{}}>
                                         <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
                                             <a href="#">
-                                                <i class="bi bi-house-door">
+                                                <i class="bi bi-house-door"  style={{paddingRight:'5px'}}>
                                                 </i>Menú Principal</a>
                                         </li>
                                         <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
                                     </ol>
                                 </nav> 
-                                <div className="search-bar d-flex" >
-                                    <Form.Control
-                                    type="search"
-                                    placeholder="Buscar reporte"
-                                    className="search-input"
-                                    aria-label="Buscar reporte"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    onKeyDown={handleKeyPress}
-                                    />
-                                    <i onClick={handleSearch} className="bi bi-search search-icon"></i>
-                                </div>                   
+                                <div className='d-flex' style={{justifyContent:"flex-end"}}>
+                                    <div className="search-bar d-flex" >
+                                        <Form.Control
+                                        type="search"
+                                        placeholder="Buscar reporte"
+                                        className="search-input"
+                                        aria-label="Buscar reporte"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyDown={handleKeyPress}
+                                        />
+                                        <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                                    </div>
+                                </div>
+                                                   
                             </div>
                             {reports.sort((a, b) => a.GroupId - b. GroupId).map((report) => (
                                 <div
@@ -159,7 +163,7 @@ export function ModulePage() {
                                     data-bs-placement="top"
                                     title={report.description}
                                 >
-                                    <div className="service-item position-relative align-items-center justify-content-center">
+                                    <div className="service-item service-item-gray position-relative align-items-center justify-content-center">
                                         <div className="badges">
                                             {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-success mx-1">Nuevo</span>}
                                             {(new Date(report.updatedAt) >= oneWeekAgo && !report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-primary mx-1">Renovado</span>}
@@ -174,7 +178,9 @@ export function ModulePage() {
                                             ))}
                                         </div>
                                         <div className="icon">
-                                            <i className={`bi bi-${report.icon}`}></i>
+                                            {/*<i className={`bi bi-${report.icon}`}></i>*/}
+                                            <img src={iconReport} style={{ width: "140.5px", height: "29.98px" }}
+                                                className="d-inline-block align-top img-fluid"/>
                                         </div>
                                         <h3>{report.name}</h3>
                                     </div>

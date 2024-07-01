@@ -78,21 +78,33 @@ section {
 }
 
 .services .service-item .icon {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
+  background-color: #E3FDFE;
+  border-radius: 80px;
+}
+
+.services .service-item-gray .icon {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  margin-bottom: 20px;
+  background-color: #F9F9F9;
+  border-radius: 80px;
 }
 
 .services .service-item .icon i {
   color: var(--color-default);
-  font-size: 56px;
+  font-size: 32px;
   transition: ease-in-out 0.3s;
   z-index: 2;
   position: relative;
+  
 }
 
-.services .service-item .icon:before {
+/*.services .service-item .icon:before {
   position: absolute;
   content: "";
   height: 100%;
@@ -103,7 +115,7 @@ section {
   top: 10px;
   right: -20px;
   transition: 0.3s;
-}
+}*/
 
 .services .service-item h3 {
   color: var(--color-default);
@@ -175,7 +187,7 @@ section {
 .search-bar {
   position: relative;
   width: 100%;
-  max-width: 220px; /* Ajusta según sea necesario */
+  max-width: 300px; /* Ajusta según sea necesario */
 }
 
 .search-input {
@@ -251,14 +263,14 @@ section {
 .icon {
   font-size: 2rem;
   color: #007bff;
-  margin-bottom: 15px;
+  /*margin-bottom: 15px;*/
 }
 
 .service-item h3 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  flex-grow: 1;
+  /*flex-grow: 1;*/
   display: flex;
   align-items: center;
   justify-content: center;
@@ -320,3 +332,51 @@ body {
   background-color: var(--color-primary);
   font-size: 12px;
 }
+
+.dropdown-item-menu{
+  display: flex;
+  align-items: center !important;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 85px;
+  height: 100px;
+  justify-content: center;
+}
+
+.dropdown-item-menu:hover{
+  display: flex;
+  align-items: center !important;
+  background-color: #EEF3FF;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 85px;
+  height: 100px;
+  justify-content: center;
+}
+
+.dropdown-menu2{
+    background-color: pink;
+    display: flex !important;
+    flex-wrap: wrap;
+    border-style: solid;
+    flex-direction: row;
+    padding: 10px;
+    gap: 20px;
+    width: max-content;
+    border-color: #E8F0FC;
+    box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
+    border-width: 4px;
+    border-radius: 10px;
+}
+
+.menu-icon{
+  color:'#0B38AB';
+  background-Color:'#EEF3FF';
+   border-Radius:"80px";
+   height:'30px';
+   width:'30px';
+   display:'flex';
+   justify-Content:'center';
+   align-Items:'center'
+}
+

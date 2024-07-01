@@ -212,24 +212,38 @@ export function NavBar() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
-                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                        <Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
+                    <Nav  className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}  navbarScroll>
+                        {/*<Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
                             <i className={`bi bi-house`}></i> Volver al menú principal
-                        </Nav.Link>           
+                        </Nav.Link> */}          
                         
-                        <NavDropdown title={<span><i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
-                            </i> </span>} >
+                        <NavDropdown  title={<span> <i  className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
+                            </i> </span>}  >
+                            
                             {role === 1 && (
                                 <>
-                                <NavDropdown.Item onClick={() => setShowModal(true)} ><i className={`bi bi-send-fill`}></i>Solicitudes</NavDropdown.Item>
-                                <NavDropdown.Item ><i className={`bi bi-star-fill`}></i>Destacados</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => setShowModal(true)} >
+                                    <i className={`bi bi-send-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>
+                                    Solicitudes
+                                </NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu">
+                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Destacados</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/users')} >
+                                    <i className={`bi bi-people-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Usuarios</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/groups-modules')} >
+                                    <i className={`bi bi-collection-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Grupos y módulos</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/reports')} >
+                                    <i className={`bi bi-clipboard2-data`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Reportes</NavDropdown.Item>
                                 </>
                             )}
                             {role === 2 && (
                             <>
-                                <Nav.Link onClick={() => navigate('/admin/users')} ><i className={`bi bi-people-fill`}></i> Usuarios</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/groups-modules')} ><i className={`bi bi-collection-fill`}></i> Grupos y módulos</Nav.Link>
-                                <Nav.Link onClick={() => navigate('/admin/reports')} ><i className={`bi bi-clipboard2-data`}></i>Reportes</Nav.Link>
+                               <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/users')} >
+                                    <i className={`bi bi-people-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Usuarios</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/groups-modules')} >
+                                    <i className={`bi bi-collection-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Grupos y módulos</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/reports')} >
+                                    <i className={`bi bi-clipboard2-data`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Reportes</NavDropdown.Item>
                             </>
                             )}
                         </NavDropdown>
