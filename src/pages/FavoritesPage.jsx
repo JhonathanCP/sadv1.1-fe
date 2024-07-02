@@ -1,32 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { getUserReports } from '../api/user.api'
+import { getUserFavorites } from '../api/user.api';
 import { getGroups } from '../api/group.api';
 import { jwtDecode } from "jwt-decode";
-import { Link, Route, useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
+import { NavBar } from '../components/NavBar';
+import iconReport from '../assets/logo-microsoft-power-bi.svg';
+import AOS from 'aos';
+import { Link, Route, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
-import Img from '../assets/hero-img.svg';
-import iconReport from '../assets/logo-microsoft-power-bi.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
-import AOS from 'aos';
-import { NavBar } from '../components/NavBar'
 import { Navbar, Nav, NavDropdown, Form, FormGroup, FormControl, FormLabel, Button, Container, Row, Col, NavItem, Breadcrumb, InputGroup } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 
-
-export function ModulePage() {
-    const { id } = useParams();
+export function FavoritesPage() {
+    const [favoriteReports, setFavoriteReports] = useState([]);
     const [reports, setReports] = useState([]);
     const [groups, setGroups] = useState([]);
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
-    // Obtener la fecha actual
     const currentDate = new Date();
 
     // Obtener la fecha de hace dos semanas
@@ -37,29 +31,8 @@ export function ModulePage() {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(currentDate.getDate() - 7);
 
-
-
     useEffect(() => {
-        const successMessage = localStorage.getItem('successMessage');
-        if (successMessage) {
-            // Display success message using toast or other notification mechanism
-            toast.success(successMessage);
-            // Clear the success message from localStorage
-            localStorage.removeItem('successMessage');
-        }
         AOS.init();
-        const expirationTime = localStorage.getItem('expirationTime');
-        if (expirationTime) {
-            const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
-            if (currentTime > expirationTime) {
-                toast('Sesión expirada', {
-                    icon: '👏',
-                });
-                // El token ha expirado, cierra sesión
-                handleLogout();
-            }
-        }
-
         const token = localStorage.getItem('access');
         if (token) {
             const decodedToken = jwtDecode(token);
@@ -67,18 +40,17 @@ export function ModulePage() {
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
 
-            // Solo realizar la llamada a getUserGroups si userId está disponible
-            const fetchInfo = async () => {
+            const fetchFavorites = async () => {
                 try {
-                    const response = await getUserReports(decodedToken.id);
-                    const filteredReportes = response.data.reports.filter(report => report.ModuleId == id && report.active);
-                    setReports(filteredReportes);
+                    const response = await getUserFavorites(decodedToken.id);
+                    setFavoriteReports(response.data.favoriteReports);
                 } catch (error) {
-                    console.error('Error al obtener la información:', error);
+                    console.error('Error al obtener reportes favoritos:', error);
+                    toast.error('No se pudieron cargar los reportes favoritos.');
                 }
             };
 
-            fetchInfo();
+            fetchFavorites();
 
             const fetchGroups = async () => {
                 try {
@@ -93,68 +65,14 @@ export function ModulePage() {
         }
     }, []);
 
-    const handleLogout = () => {
-        // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
-        localStorage.removeItem('access');
-        localStorage.removeItem('expirationTime');
-        // Redirige al inicio de sesión u otra página
-        toast.success("Sesión terminada");
-        navigate("/login");
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
-
-    const handleSearch = () => {
-        if (searchQuery.trim() !== '') {
-            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
-            window.location.replace(searchUrl); // Reload the page
-        } else {
-            // Show error message or handle empty search query
-
-        }
-    };
-
     return (
         <div className='p-0' style={{ height: "100%" }}>
-
-            <NavBar></NavBar>
-
-            <Container fluid className='px-0 mx-0 pb-2 row sections-bg ' style={{ minHeight: '97vh' }}>
+            <NavBar />
+            <Container fluid className='px-0 mx-0 pb-2 sections-bg ' style={{ minHeight: '97vh' }}>
                 <section id="services" className='services w-100'>
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
-                            <div className='w-100'>
-                                <nav class aria-label="breadcrumb">
-                                    <ol class="breadcrumb" style={{}}>
-                                        <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
-                                            <a href="#">
-                                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                                </i>Menú Principal</a>
-                                        </li>
-                                        <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
-                                    </ol>
-                                </nav>
-                                <div className='d-flex' style={{ justifyContent: "flex-end" }}>
-                                    <div className="search-bar d-flex" >
-                                        <Form.Control
-                                            type="search"
-                                            placeholder="Buscar reporte"
-                                            className="search-input"
-                                            aria-label="Buscar reporte"
-                                            value={searchQuery}
-                                            onChange={(e) => setSearchQuery(e.target.value)}
-                                            onKeyDown={handleKeyPress}
-                                        />
-                                        <i onClick={handleSearch} className="bi bi-search search-icon"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-                            {reports.sort((a, b) => a.GroupId - b.GroupId).map((report) => (
+                            {favoriteReports.sort((a, b) => a.GroupId - b.GroupId).map((report) => (
                                 <div
                                     key={report.id}
                                     className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4 pt-3"
@@ -206,6 +124,5 @@ export function ModulePage() {
                 </div>
             </footer>
         </div>
-
     );
 }

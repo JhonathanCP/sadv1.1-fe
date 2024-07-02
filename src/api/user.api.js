@@ -25,3 +25,6 @@ export const addReport = (data) => authApi.post(`/add-report/`, data);
 export const removeReport = (userId, reportId) => authApi.delete(`/${userId}/delete-report/${reportId}`);
 export const getUserModules = (userId) => authApi.get(`/${userId}/get-modules/`);
 export const getUserReports = (userId) => authApi.get(`/${userId}/get-reports/`);
+export const getUserFavorites = (userId) => authApi.get(`/favorites/${userId}/`);
+export const addFavorite = () => authApi.post(`/favorites/`);
+export const removeFavorite = () => authApi.delete(`/favorites/`);

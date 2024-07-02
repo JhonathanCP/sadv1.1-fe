@@ -226,7 +226,7 @@ export function NavBar() {
                                     <i className={`bi bi-send-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>
                                     Solicitudes
                                 </NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu">
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/favorites')}>
                                     <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Destacados</NavDropdown.Item>
                                 <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/users')} >
                                     <i className={`bi bi-people-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Usuarios</NavDropdown.Item>
@@ -249,8 +249,8 @@ export function NavBar() {
                         </NavDropdown>
 
                         <button type="button" className='btn btn-primary btn-primary-custom position-relative bi bi-bell-fill'>
-                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
-                            <span class="visually-hidden">New alerts</span>
+                            <span className="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
+                            <span className="visually-hidden">New alerts</span>
                             </span>
                         </button>
 
