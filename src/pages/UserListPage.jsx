@@ -13,6 +13,7 @@ export function UserListPage() {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
 
@@ -66,6 +67,22 @@ export function UserListPage() {
 
     const RoleToText = (value) => value == 1 ? "Usuario" : "Administrador";
 
+    const handleSearch = () => {
+        if (searchQuery.trim() !== '') {
+            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
+            window.location.replace(searchUrl); // Reload the page
+        } else {
+            // Show error message or handle empty search query
+            
+        }
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
@@ -74,13 +91,28 @@ export function UserListPage() {
                     <Col md={10}>
                         <h2>Listado de Usuarios</h2>
                     </Col>
+                    <Col>
+                    <div className="search-bar d-flex" >
+                                        <Form.Control
+                                        type="search"
+                                        placeholder="Buscar reporte"
+                                        className="search-input"
+                                        aria-label="Buscar reporte"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyDown={handleKeyPress}
+                                        />
+                                        <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                                    </div>
+                    </Col>
                     <Col md={2}>
-                        <Link to={`/admin/editar/user`} className="btn btn-success">
+                        <Link to={`/admin/editar/user`} className="btn btn-primary">
                             Crear Usuario
                         </Link>
                     </Col>
+                    
                 </Row>
-                <Row className="my-3">
+                {/** <Row className="my-3">
                     <Col md={12}>
                         <Form.Control
                             type="text"
@@ -89,7 +121,7 @@ export function UserListPage() {
                             onChange={handleSearchChange}
                         />
                     </Col>
-                </Row>
+                </Row>*/}
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (
@@ -120,7 +152,8 @@ export function UserListPage() {
                                         <td>{activeStatusToText(user.active)}</td>
                                         <td>{RoleToText(user.RoleId)}</td>
                                         <td>
-                                            <Link to={`/admin/user/${user.id}`} className="btn btn-primary">
+                                            <Link to={`/admin/user/${user.id}`} className="btn btn-link" style={{textDecorationLine:'none'}}>
+                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar Permisos
                                             </Link>
                                         </td>
