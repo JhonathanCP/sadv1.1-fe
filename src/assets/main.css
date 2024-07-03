@@ -215,10 +215,10 @@ section {
     border: 1px solid #e7e7e7;
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
-    min-width: 415px;
-    max-width: 415px;
-    min-height: 200px;
-    max-height: 200px;
+    min-width: 435px;
+    max-width: 435px;
+    min-height: 215px;
+    max-height: 215px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -238,9 +238,9 @@ section {
     border: 1px solid #e7e7e7;
     border-radius: 8px;
     transition: transform 0.3s, box-shadow 0.3s;
-    max-width: 415px;
-    min-height: 200px;
-    max-height: 200px;
+    max-width: 435px;
+    min-height: 215px;
+    max-height: 215px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -347,6 +347,33 @@ body {
   justify-content: center;
 }
 
+.btn-menu{
+  display: flex;
+  align-items: center !important;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 85px;
+  height: 100px;
+  justify-content: center;
+  background-color: #ffffff !important;
+  color: var(--color-default);
+  border-color: #FFFFFF;
+}
+
+.btn-menu:hover{
+  display: flex;
+  align-items: center !important;
+  flex-direction: column;
+  border-radius: 8px;
+  width: 85px;
+  height: 100px;
+  justify-content: center;
+  background-color: #EEF3FF !important;
+  color: var(--color-default);
+  border-color:  #EEF3FF;
+}
+
+
 .dropdown-item-menu:hover{
   display: flex;
   align-items: center !important;
@@ -356,10 +383,11 @@ body {
   width: 85px;
   height: 100px;
   justify-content: center;
+
 }
 
 .dropdown-menu2{
-    background-color: pink;
+    /*background-color: pink;*/
     display: flex !important;
     flex-wrap: wrap;
     border-style: solid;
@@ -371,6 +399,18 @@ body {
     box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
     border-width: 4px;
     border-radius: 10px;
+}
+
+.ico-menu{
+  color:var(--color-primary);
+  background-color:#EEF3FF;
+  border-radius: 80px;
+  height:50px;
+  width:50px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size: 25px;
 }
 
 .menu-icon{
@@ -431,4 +471,13 @@ body {
 
 .btn-outline-danger{
   border:none;
+}
+
+.navbar{
+  background-color: var(--color-primary);
+  min-height: 5vh;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5) ;
+  padding-top: .25rem !important;
+  padding-bottom: .25rem !important;
+  height: 65px;
 }

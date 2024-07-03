@@ -5,7 +5,7 @@ import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, Dropdown} from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -201,7 +201,7 @@ export function NavBar() {
     };
 
     return (
-        <Navbar expand="lg" style={{ backgroundColor: "#1A3EC1", boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', minHeight: '5vh' }} className='px-1 py-1 fixed-top' variant="dark">
+        <Navbar expand="lg" className='fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
                 <Navbar.Brand href="/menu">
                     <img
@@ -218,17 +218,27 @@ export function NavBar() {
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link> */}          
                         
-                        <NavDropdown  title={<span> <i  className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
+                        <NavDropdown  
+                            title={<span> <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
                             </i> </span>}  >
                             {role === 1 && (
                                 <>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => setShowModal(true)} >
-                                    <i className={`bi bi-send-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>
+                                <Dropdown.Menu>
+                                    <Button className='btn-menu' onClick={() => setShowModal(true)}>
+                                        <div class='ico-menu'>
+                                        <i class="bi bi-send-fill"></i>
+                                        </div>
                                     Solicitudes
-                                </NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/favorites')}>
-                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Favoritos</NavDropdown.Item>
+                                    </Button>
+                                    <Button className='btn-menu' onClick={() => navigate('/favorites')} >
+                                        <div class='ico-menu'>
+                                        <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
+                                        </div>
+                                    Favoritos
+                                    </Button>
+                                </Dropdown.Menu>
                                 </>
+
                             )}
                             {role === 2 && (
                             <>
