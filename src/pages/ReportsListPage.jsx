@@ -105,14 +105,14 @@ export function ReportListPage() {
             <NavBar />
             <Container fluid className='my-3 p-5'>
                 <Col>
-                    <nav class aria-label="breadcrumb">
-                        <ol class="breadcrumb" style={{}}>
-                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                    <nav className aria-label="breadcrumb">
+                        <ol className="breadcrumb" style={{}}>
+                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
-                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                 </i>Menú Principal</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Reportes</li> {/* Colocar aqu los módulos */}
+                            <li className="breadcrumb-item active" aria-current="page">Reportes</li> {/* Colocar aqu los módulos */}
                         </ol>
                     </nav>
                 </Col>
@@ -173,7 +173,7 @@ export function ReportListPage() {
                                                             <td>{report.name}</td>
                                                             <td>
                                                                 <Link to={`/admin/report/${report.id}`} className="btn btn-link" style={{ textDecorationLine: 'none' }}>
-                                                                    <i class="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
+                                                                    <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                                     Editar Reporte
                                                                 </Link>
                                                             </td>
@@ -196,7 +196,7 @@ export function ReportListPage() {
                                                     <td>{report.name}</td>
                                                     <td>
                                                         <Button variant="link" onClick={() => handleShowModal('edit', group, true)} style={{textDecorationLine:'none'}} className="btn btn-link" >
-                                                            <i class="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
+                                                            <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                             Editar Reporte
                                                         </Button>
                                                     </td>

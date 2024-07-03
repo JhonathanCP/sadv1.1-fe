@@ -6,14 +6,12 @@ import { Link, Route, useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
-import Img from '../assets/hero-img.svg';
 import iconReport from '../assets/logo-microsoft-power-bi.svg';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar'
-import { Navbar, Nav, NavDropdown, Form, FormGroup, FormControl, FormLabel, Button, Container, Row, Col, NavItem, Breadcrumb, InputGroup } from 'react-bootstrap';
+import { Form, Container, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 
@@ -90,37 +88,36 @@ export function ModulePage() {
             };
 
             fetchGroups();
+
+            const fetchReportsAndFavorites = async () => {
+                try {
+                    const decodedToken = jwtDecode(localStorage.getItem('access'));
+                    setUsuario(decodedToken.username);
+                    setRole(decodedToken.role);
+                    setUserId(decodedToken.id);
+    
+                    const [reportRes, favRes] = await Promise.all([
+                        getUserReports(decodedToken.id),
+                        getUserFavorites(decodedToken.id)
+                    ]);
+    
+                    const favoriteIds = new Set(favRes.data.favoriteReports.map(fav => fav.id));
+                    const reportsWithFavorites = reportRes.data.reports.map(report => ({
+                        ...report,
+                        isFavorite: favoriteIds.has(report.id)
+                    }));
+    
+                    setReports(reportsWithFavorites.filter(report => report.ModuleId == id && report.active));
+                } catch (error) {
+                    console.error('Error al obtener la información:', error);
+                    toast.error('Error al cargar los reportes y favoritos');
+                }
+            };
+    
+            fetchReportsAndFavorites();
         }
     }, []);
 
-    useEffect(() => {
-        const fetchReportsAndFavorites = async () => {
-            try {
-                const decodedToken = jwtDecode(localStorage.getItem('access'));
-                setUsuario(decodedToken.username);
-                setRole(decodedToken.role);
-                setUserId(decodedToken.id);
-
-                const [reportRes, favRes] = await Promise.all([
-                    getUserReports(decodedToken.id),
-                    getUserFavorites(decodedToken.id)
-                ]);
-
-                const favoriteIds = new Set(favRes.data.favoriteReports.map(fav => fav.id));
-                const reportsWithFavorites = reportRes.data.reports.map(report => ({
-                    ...report,
-                    isFavorite: favoriteIds.has(report.id)
-                }));
-
-                setReports(reportsWithFavorites.filter(report => report.ModuleId == id && report.active));
-            } catch (error) {
-                console.error('Error al obtener la información:', error);
-                toast.error('Error al cargar los reportes y favoritos');
-            }
-        };
-
-        fetchReportsAndFavorites();
-    }, []);
 
     const handleLogout = () => {
         // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
@@ -189,14 +186,14 @@ export function ModulePage() {
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
                                 <Col>
-                                    <nav class aria-label="breadcrumb">
-                                        <ol class="breadcrumb" style={{}}>
-                                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                    <nav className aria-label="breadcrumb">
+                                        <ol className="breadcrumb" style={{}}>
+                                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                                 <a href="#">
-                                                    <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                                     </i>Menú Principal</a>
                                             </li>
-                                            <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                                            <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
                                         </ol>
                                     </nav>
                                 </Col>
@@ -232,8 +229,8 @@ export function ModulePage() {
                                                     )}
                                                 </span>
                                             ))}
-                                            <button onClick={() => toggleFavorite(report)} type="button" class="btn btn-outline-light dest-icon">
-                                                <i class={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
+                                            <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
+                                                <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
                                             </button>
                                         </div>
                                         <div className="icon">

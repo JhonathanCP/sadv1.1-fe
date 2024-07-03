@@ -80,14 +80,14 @@ export function ReportPage() {
             <NavBar />
             <Container fluid className='p-0 m-0' style={{ minHeight: '100vh' }}>
                 <Col>
-                    <nav class aria-label="breadcrumb">
-                        <ol class="breadcrumb" style={{}}>
-                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                    <nav className aria-label="breadcrumb">
+                        <ol className="breadcrumb" style={{}}>
+                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                             <a href="#">
-                            <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                            <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                             </i>Menú Principal</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                            <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
                         </ol>
                     </nav>
                 </Col>

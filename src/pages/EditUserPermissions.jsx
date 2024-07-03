@@ -129,17 +129,17 @@ export function EditUserPermissions() {
             <NavBar />
             <Container fluid className='my-3 p-5'>
             <Col>
-                <nav class aria-label="breadcrumb">
-                    <ol class="breadcrumb" style={{}}>
-                        <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                <nav className aria-label="breadcrumb">
+                    <ol className="breadcrumb" style={{}}>
+                        <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                             <a href="#">
-                            <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                            <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                             </i>Menú Principal</a>
                         </li>
-                        <li class="breadcrumb-item"  onClick={() => navigate('/admin/users')}>
+                        <li className="breadcrumb-item"  onClick={() => navigate('/admin/users')}>
                             <a href="#">
                             Usuarios</a></li>
-                        <li class="breadcrumb-item active">Editar permisos</li> 
+                        <li className="breadcrumb-item active">Editar permisos</li> 
                     </ol>
                 </nav>
             </Col>
@@ -192,13 +192,13 @@ export function EditUserPermissions() {
                                                     ) : (
                                                         report.hasPermission ? (
                                                             <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger">
-                                                                <i class="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
+                                                                <i className="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
                                                                 Quitar Permiso
                                                             </Button>
                                                             
                                                         ) : (
                                                             <Button onClick={() => handleAddPermission(report.id)} className="btn btn-link" variant="link" >
-                                                                <i class="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
+                                                                <i className="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
                                                                 Dar Permiso
                                                             </Button>
                                                         )
@@ -235,13 +235,13 @@ export function EditUserPermissions() {
                                                     ) : (
                                                         report.hasPermission ? (
                                                             <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger">
-                                                                <i class="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
+                                                                <i className="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
                                                                 Quitar Permiso
                                                             </Button>
                                                             
                                                         ) : (
                                                             <Button onClick={() => handleAddPermission(report.id)} className="btn btn-link" variant="link" >
-                                                                <i class="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
+                                                                <i className="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
                                                                 Dar Permiso
                                                             </Button>
                                                         )

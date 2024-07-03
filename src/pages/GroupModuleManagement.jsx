@@ -98,14 +98,14 @@ export function GroupModuleManagement() {
             <Container fluid className='my-3 p-5'>
                 <Row >
                     <Col>
-                        <nav class aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                        <nav className aria-label="breadcrumb">
+                            <ol className="breadcrumb">
+                                <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                     <a href="#">
-                                    <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                     </i>Menú Principal</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">Grupos y módulos</li> {/* Colocar aqui el nombre de los módulos */}
+                                <li className="breadcrumb-item active" aria-current="page">Grupos y módulos</li> {/* Colocar aqui el nombre de los módulos */}
                             </ol>
                         </nav>
                     </Col>
@@ -148,7 +148,7 @@ export function GroupModuleManagement() {
                                         <td >{group.description}</td>
                                         <td >
                                             <Button variant="link" onClick={() => handleShowModal('edit', group, true)} style={{textDecorationLine:'none'}} >
-                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar
                                             </Button>
                                         </td>
@@ -175,7 +175,7 @@ export function GroupModuleManagement() {
                                         <td >{module.description}</td>
                                         <td >
                                             <Button variant="link" onClick={() => handleShowModal('edit', module, false)} style={{textDecorationLine:'none'}}>
-                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar
                                             </Button>
                                         </td>

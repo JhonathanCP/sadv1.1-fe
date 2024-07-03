@@ -88,14 +88,14 @@ export function UserListPage() {
             <NavBar />
             <Container fluid className='my-3 p-5'>
                 <Col>
-                    <nav class aria-label="breadcrumb">
-                        <ol class="breadcrumb" style={{}}>
-                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                    <nav className aria-label="breadcrumb">
+                        <ol className="breadcrumb" style={{}}>
+                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
-                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                 </i>Menú Principal</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Usuarios</li> {/* Colocar aqui el nombre de los módulos */}
+                            <li className="breadcrumb-item active" aria-current="page">Usuarios</li> {/* Colocar aqui el nombre de los módulos */}
                         </ol>
                     </nav>
                 </Col>
@@ -166,7 +166,7 @@ export function UserListPage() {
                                         <td>{RoleToText(user.RoleId)}</td>
                                         <td>
                                             <Link to={`/admin/user/${user.id}`} className="btn btn-link" style={{textDecorationLine:'none'}}>
-                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar Permisos
                                             </Link>
                                         </td>
