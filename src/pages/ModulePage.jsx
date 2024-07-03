@@ -128,6 +128,7 @@ export function ModulePage() {
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
+                                <Col>
                                 <nav class aria-label="breadcrumb">
                                     <ol class="breadcrumb" style={{}}>
                                         <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
@@ -138,6 +139,8 @@ export function ModulePage() {
                                         <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
                                     </ol>
                                 </nav>
+                                </Col>                              
+                                
                                 <div className='d-flex' style={{ justifyContent: "flex-end" }}>
                                     <div className="search-bar d-flex" >
                                         <Form.Control
@@ -176,6 +179,10 @@ export function ModulePage() {
                                                     )}
                                                 </span>
                                             ))}
+                                            <button type="button" class="btn btn-outline-light dest-icon">
+                                            <i class="bi bi-star" style={{color:'#6C757D'}}></i>
+                                            {/*<i class="bi bi-star-fill" style={{color:'#F6D751'}}></i> -------------FAVORITO SELECCIONADO */}
+                                            </button>
                                         </div>
                                         <div className="icon">
                                             {/*<i className={`bi bi-${report.icon}`}></i>*/}
@@ -193,15 +200,15 @@ export function ModulePage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#1A3EC1", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.2</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-end">Versión: 1.2</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

@@ -6,7 +6,7 @@ import { getReports } from '../api/report.api';
 import { getModules } from '../api/module.api';
 import { getGroups } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Accordion,Table } from 'react-bootstrap';
 import { toast } from "react-hot-toast";
 import AOS from 'aos';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -128,19 +128,36 @@ export function EditUserPermissions() {
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
             <Container fluid className='my-3 p-5'>
+            <Col>
+                <nav class aria-label="breadcrumb">
+                    <ol class="breadcrumb" style={{}}>
+                        <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                            <a href="#">
+                            <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                            </i>Menú Principal</a>
+                        </li>
+                        <li class="breadcrumb-item"  onClick={() => navigate('/admin/users')}>
+                            <a href="#">
+                            Usuarios</a></li>
+                        <li class="breadcrumb-item active">Editar permisos</li> 
+                    </ol>
+                </nav>
+            </Col>
                 <Row>
                     <Col md={10}>
-                        <h2>Editar Permisos de: {usuario}</h2>
+                        <h2 className='custom-h2'>Editar Permisos de: {usuario}</h2>
                     </Col>
-                </Row>
-                <Row className="my-3">
-                    <Col md={12}>
-                        <Form.Control
-                            type="text"
-                            placeholder="Buscar por nombre o descripción"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
+
+                    <Col md={2}>
+                        <div className="search-bar d-flex" >
+                            <Form.Control
+                                type="text"
+                                placeholder="Buscar"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                            <i className="bi bi-search search-icon"></i>
+                        </div>    
                     </Col>
                 </Row>
                 {loading ? (
@@ -148,11 +165,54 @@ export function EditUserPermissions() {
                 ) : error ? (
                     <p>Error: {error}</p>
                 ) : (
-                    <div className="table-responsive">
-                        <table className="table">
-                            <tbody>
-                                {filteredModules.map((module) => (
-                                    <React.Fragment key={module.id}>
+                    <div>
+                        {filteredModules.map((module) => (
+                            <React.Fragment key={module.id}>            
+                                <Accordion style={{marginBottom:'5px'}}>
+                                    <Accordion.Item eventKey="0">
+                                        <Accordion.Header>
+                                            {/************************COLOCAR AQUI ICONO DEL MODULO*/}
+                                            {module.name}
+                                        </Accordion.Header>
+                                        <Accordion.Body>
+                                            <Table>
+                                                <tbody>
+                                                    {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
+                                                    <tr key={report.id}>
+                                                        <td style={{ paddingLeft: '40px' }}>{reportIndex + 1}</td>
+                                                        <td>{report.name}</td>
+                                                        {groups.filter(group => group.id === report.GroupId).map(group => (
+                                                        <td key={group.id}>
+                                                        <i className={`bi bi-${group.icon}`}></i> {group.name}
+                                                        </td>
+                                                    ))}
+                                                    <td>
+                                                    {report.free ? (
+                                                        <span className="text-success">Reporte Libre</span>
+                                                    ) : (
+                                                        report.hasPermission ? (
+                                                            <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger">
+                                                                <i class="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
+                                                                Quitar Permiso
+                                                            </Button>
+                                                            
+                                                        ) : (
+                                                            <Button onClick={() => handleAddPermission(report.id)} className="btn btn-link" variant="link" >
+                                                                <i class="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
+                                                                Dar Permiso
+                                                            </Button>
+                                                        )
+                                                        )}
+                                                    </td>
+                                                    </tr>
+                                                ))}
+                                                </tbody>
+                                            </Table>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+
+                                        {/**
                                         <tr>
                                             <td colSpan="12">
                                                 <Button variant="link" onClick={() => toggleModuleExpansion(module.id)} style={{ textDecoration: 'none', color: '#006CA6', fontWeight: 'bold' }}>
@@ -174,32 +234,38 @@ export function EditUserPermissions() {
                                                         <span className="text-success">Reporte Libre</span>
                                                     ) : (
                                                         report.hasPermission ? (
-                                                            <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-danger ml-2">
+                                                            <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger">
+                                                                <i class="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
                                                                 Quitar Permiso
                                                             </Button>
+                                                            
                                                         ) : (
-                                                            <Button onClick={() => handleAddPermission(report.id)} className="btn btn-primary">
-                                                                Agregar Permiso
+                                                            <Button onClick={() => handleAddPermission(report.id)} className="btn btn-link" variant="link" >
+                                                                <i class="bi bi-hand-thumbs-up" style={{paddingRight:'10px'}}></i>
+                                                                Dar Permiso
                                                             </Button>
                                                         )
                                                     )}
                                                 </td>
                                             </tr>
-                                        ))}
+
+                                            
+                                        ))} */}
+
+                                       
 
                                     </React.Fragment>
                                 ))}
-                            </tbody>
-                        </table>
+                            
                     </div>
                 )}
-                <Row className='mb-4 justify-content-center'>
+                {/** <Row className='mb-4 justify-content-center'>
                     <Col md={2} className='mb-2'>
                         <Button variant="dark" onClick={() => navigate('/admin/users')} className="w-100">
                             Volver
                         </Button>
                     </Col>
-                </Row>
+                </Row>*/}
             </Container>
             <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
                 <div className='container-fluid'>

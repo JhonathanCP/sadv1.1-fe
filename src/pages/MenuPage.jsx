@@ -242,14 +242,15 @@ export function MenuPage() {
             </footer>
 
             <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
-                <Modal.Header closeButton={false}>
+                <Modal.Header closeButton>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
+                    
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="rl">
                             <Form.Label>Régimen Laboral</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="RLId"
                                 value={userDetails.RLId || ''}
@@ -260,12 +261,12 @@ export function MenuPage() {
                                 {RLs.map((rl) => (
                                     <option key={rl.id} value={rl.id}>{rl.name}</option>
                                 ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.RLId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="position">
                             <Form.Label>Posición</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="PositionId"
                                 value={userDetails.PositionId || ''}
@@ -277,12 +278,12 @@ export function MenuPage() {
                                 {positions.map((position) => (
                                     <option key={position.id} value={position.id}>{position.name}</option>
                                 ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.PositionId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="mainDependency">
                             <Form.Label>Dependencia principal</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="MainDependencyId"
                                 value={selectedMainDependency || ''}
@@ -293,12 +294,12 @@ export function MenuPage() {
                                 {mainDependencies.map((mainDep) => (
                                     <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
                                 ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.MainDependencyId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="dependency">
                             <Form.Label>Dependencia secundaria</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="DependencyId"
                                 value={userDetails.DependencyId || ''}
@@ -312,12 +313,13 @@ export function MenuPage() {
                                     .map((dep) => (
                                         <option key={dep.id} value={dep.id}>{dep.name}</option>
                                     ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.DependencyId}</Form.Control.Feedback>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button variant="outline-primary" onClick={handleSaveUserDetails}>Cancelar</Button>
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>

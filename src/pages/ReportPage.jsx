@@ -9,7 +9,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar';
-import { Container, Col } from 'react-bootstrap';
+import { Container, Col, Breadcrumb } from 'react-bootstrap';
 
 export function ReportPage() {
     const { id } = useParams();
@@ -79,21 +79,34 @@ export function ReportPage() {
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
             <Container fluid className='p-0 m-0' style={{ minHeight: '100vh' }}>
-                <Col xs={12} className="pt-5 px-0 m-0 g-0" style={{ minHeight: '100vh' }}>
+                <Col>
+                    <nav class aria-label="breadcrumb">
+                        <ol class="breadcrumb" style={{}}>
+                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                            <a href="#">
+                            <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                            </i>Menú Principal</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                        </ol>
+                    </nav>
+                </Col>
+
+                <Col xs={12} className="px-0 m-0 g-0" style={{ minHeight: '100vh' }}>
                     {report.map((report) => (
                         <iframe key={report.id} src={report.link} style={{ width: '100%', height: '93.542vh', border: 'none' }}></iframe>
                     ))}
                 </Col>
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0 d-flex align-items-center" style={{ backgroundColor: "#0064AF", minHeight: '5vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-7">© GCTIC-EsSalud</div>
-                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-6">© GCTIC-EsSalud</div>
+                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

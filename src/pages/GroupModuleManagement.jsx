@@ -97,7 +97,19 @@ export function GroupModuleManagement() {
             <NavBar />
             <Container fluid className='my-3 p-5'>
                 <Row >
-                    <Col md={10} xs={12} className="mt-2 mb-2">
+                    <Col>
+                        <nav class aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                    <a href="#">
+                                    <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                    </i>Menú Principal</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Grupos y módulos</li> {/* Colocar aqui el nombre de los módulos */}
+                            </ol>
+                        </nav>
+                    </Col>
+                    {/**<Col md={10} xs={12} className="mt-2 mb-2">
                         <InputGroup>
                             <FormControl
                                 placeholder="Buscar por nombre o descripción"
@@ -105,15 +117,8 @@ export function GroupModuleManagement() {
                                 onChange={handleSearchChange}
                             />
                         </InputGroup>
-                    </Col>
-                    <Col md={2} xs={12} className="mt-2 mb-2">
-                        <Button variant="success" onClick={() => handleShowModal('createModule', null, false)}>
-                            Crear Módulo
-                        </Button>
-                        <Button variant="success" onClick={() => handleShowModal('createGroup', null, true)} className="ms-2">
-                            Crear Grupo
-                        </Button>
-                    </Col>
+                    </Col> */}
+
                 </Row>
                 {loading ? (
                     <div className="d-flex justify-content-center align-items-center" style={{ height: '70vh' }}>
@@ -125,15 +130,25 @@ export function GroupModuleManagement() {
                     <p>Error: {error}</p>
                 ) : (
                     <>
-                        <h4>Grupos</h4>
+                        <Row>
+                            <Col md={10} className='my-3'>
+                                <h2 className='custom-h2'>Grupos</h2>  
+                            </Col>
+                            <Col md={2} style={{alignContent:'center'}}>
+                                <Button variant="primary" onClick={() => handleShowModal('createGroup', null, true)} className="ms-2 ">
+                                    Crear Grupo
+                                </Button>
+                            </Col>
+                        </Row>
                         <Table responsive hover className='mt-3'>
                             <tbody>
                                 {filteredGroups.map((group) => (
                                     <tr key={group.id}>
-                                        <td><i className={`bi bi-${group.icon}`}></i> {group.name}</td>
-                                        <td>{group.description}</td>
-                                        <td>
-                                            <Button variant="primary" onClick={() => handleShowModal('edit', group, true)}>
+                                        <td ><i className={`bi bi-${group.icon}`}></i> {group.name}</td>
+                                        <td >{group.description}</td>
+                                        <td >
+                                            <Button variant="link" onClick={() => handleShowModal('edit', group, true)} style={{textDecorationLine:'none'}} >
+                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar
                                             </Button>
                                         </td>
@@ -141,15 +156,26 @@ export function GroupModuleManagement() {
                                 ))}
                             </tbody>
                         </Table>
-                        <h4>Módulos</h4>
+                        <Row>
+                            <Col md={10} className='my-3'>
+                                <h2 className='custom-h2'>Módulos</h2>
+                            </Col>
+                            <Col md={2} style={{alignContent:'center'}}>
+                                <Button variant="primary" onClick={() => handleShowModal('createModule', null, false)}>
+                                    Crear Módulo
+                                </Button>
+                            </Col>
+                        </Row>
+                        
                         <Table responsive hover className='mt-3'>
                             <tbody>
                                 {filteredModules.map((module) => (
                                     <tr key={module.id}>
-                                        <td><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
-                                        <td>{module.description}</td>
-                                        <td>
-                                            <Button variant="primary" onClick={() => handleShowModal('edit', module, false)}>
+                                        <td ><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
+                                        <td >{module.description}</td>
+                                        <td >
+                                            <Button variant="link" onClick={() => handleShowModal('edit', module, false)} style={{textDecorationLine:'none'}}>
+                                                <i class="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
                                                 Editar
                                             </Button>
                                         </td>
@@ -159,13 +185,16 @@ export function GroupModuleManagement() {
                         </Table>
                     </>
                 )}
+                {/**
                 <Row className='mb-4 justify-content-center'>
                     <Col md={2} className='mb-2'>
                         <Button variant="dark" onClick={() => navigate('/menu')} className="w-100">
                             Volver
                         </Button>
                     </Col>
-                </Row>
+                </Row>                 
+                 */}
+
             </Container>
 
             <Modal show={showModal} onHide={handleCloseModal} size="lg"
@@ -216,15 +245,15 @@ export function GroupModuleManagement() {
                     </Form>
                 </Modal.Body>
             </Modal>
-            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-6">© GCTIC-EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

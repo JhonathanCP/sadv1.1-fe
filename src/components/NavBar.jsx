@@ -5,10 +5,11 @@ import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, } from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
+import CloseButton from 'react-bootstrap/CloseButton';
 
 export function NavBar() {
     const [usuario, setUsuario] = useState('');
@@ -226,15 +227,15 @@ export function NavBar() {
                                     Solicitudes
                                 </NavDropdown.Item>
                                 <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/favorites')}>
-                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Destacados</NavDropdown.Item>
+                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Favoritos</NavDropdown.Item>
                                 </>
                             )}
                             {role === 2 && (
                             <>
                                 <NavDropdown.Item className="dropdown-item-menu" onClick={() => setShowModal(true)} >
                                     <i className={`bi bi-send-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Solicitudes</NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu">
-                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Destacados</NavDropdown.Item>
+                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/favorites')} >
+                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Favoritos</NavDropdown.Item>
                                 <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/users')} >
                                     <i className={`bi bi-people-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Usuarios</NavDropdown.Item>
                                 <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/groups-modules')} >
@@ -244,8 +245,7 @@ export function NavBar() {
                             </>
                             )}
                         </NavDropdown>
-
-                        <button type="button" className='btn btn-primary btn-primary-custom position-relative bi bi-bell-fill'>
+                        <button type="button" className='btn btn-secondary btn-primary-custom position-relative bi bi-bell-fill'>
                             <span className="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
                             <span className="visually-hidden">New alerts</span>
                             </span>
@@ -271,10 +271,11 @@ export function NavBar() {
                 </Modal.Footer>
             </Modal>
 
-
+            {/**MODAL ACTUALIZAR INFORMACION PERSONAL */}
             <Modal size="lg" show={showModal2} onHide={() => setShowModal2(false)} centered  keyboard={true}>
                 <Modal.Header closeButton={true}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
+                    return <CloseButton />;
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -296,7 +297,7 @@ export function NavBar() {
                         </Form.Group>
                         <Form.Group controlId="position">
                             <Form.Label>Posición</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="PositionId"
                                 value={userDetails.PositionId || ''}
@@ -305,15 +306,15 @@ export function NavBar() {
                                 disabled={userDetails.RLId=='4'}
                             >
                                 <option value="">Seleccione una posición</option>
-                                {positions.map((position) => (
-                                    <option key={position.id} value={position.id}>{position.name}</option>
+                                    {positions.map((position) => (
+                                <option key={position.id} value={position.id}>{position.name}</option>
                                 ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.PositionId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="mainDependency">
                             <Form.Label>Dependencia principal</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="MainDependencyId"
                                 value={selectedMainDependency || ''}
@@ -321,15 +322,15 @@ export function NavBar() {
                                 isInvalid={!!errors.MainDependencyId}
                             >
                                 <option value="">Seleccione una opción</option>
-                                {mainDependencies.map((mainDep) => (
-                                    <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
+                                    {mainDependencies.map((mainDep) => (
+                                <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
                                 ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.MainDependencyId}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="dependency">
                             <Form.Label>Dependencia secundaria</Form.Label>
-                            <Form.Control
+                            <Form.Select
                                 as="select"
                                 name="DependencyId"
                                 value={userDetails.DependencyId || ''}
@@ -343,12 +344,13 @@ export function NavBar() {
                                     .map((dep) => (
                                         <option key={dep.id} value={dep.id}>{dep.name}</option>
                                     ))}
-                            </Form.Control>
+                            </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.DependencyId}</Form.Control.Feedback>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button variant="secondary" onClick={handleSaveUserDetails}>Cancelar</Button>
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>

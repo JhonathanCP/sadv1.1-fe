@@ -11,7 +11,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
-import { Navbar, Nav, NavDropdown, Form, FormGroup, FormControl, FormLabel, Button, Container, Row, Col, NavItem, Breadcrumb, InputGroup } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormGroup, FormControl, FormLabel,
+    Button, Container, Row, Col, NavItem, Breadcrumb, InputGroup,Accordion } from 'react-bootstrap';
 
 export function FavoritesPage() {
     const [favoriteReports, setFavoriteReports] = useState([]);
@@ -68,7 +69,39 @@ export function FavoritesPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='px-0 mx-0 pb-2 sections-bg ' style={{ minHeight: '97vh' }}>
+            <Container fluid className='my-3 p-5'>
+                <Col>
+                    <nav class aria-label="breadcrumb">
+                        <ol class="breadcrumb" style={{}}>
+                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                <a href="#">
+                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                </i>Menú Principal</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Mis tableros favoritos</li> {/* Colocar aqui el nombre de los módulos */}
+                        </ol>
+                    </nav>
+                </Col>
+                <Row>
+                    <Col md={12} className='my-3'>
+                        <h2 className='custom-h2'>Mis tableros favoritos</h2> 
+                    </Col>                   
+                </Row>
+
+
+                <Accordion defaultActiveKey="0">
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>
+                             {/************************COLOCAR AQUI ICONO DEL MODULO*/}
+                            NOMBRE DEL MODULO
+                        </Accordion.Header> 
+                        <Accordion.Body>
+                        MODULOS AQUI
+                        
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+
                 <section id="services" className='services w-100'>
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
@@ -105,21 +138,19 @@ export function FavoritesPage() {
                                 </div>
                             ))}
                         </div>
-                        {/*<div className="d-flex justify-content-center mt-4">
-                            <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
-                        </div> */}
+
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0" style={{ backgroundColor: "#1A3EC1", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
-                        <div className="col-6">© GCTIC-EsSalud</div>
-                        <div className="col-6 text-center">Versión: 1.2</div>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                     <div className='row d-none d-md-flex'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
-                        <div className="col-2 text-end">Versión: 1.2</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
                     </div>
                 </div>
             </footer>

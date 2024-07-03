@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../api/user.api';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Pagination } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 import AOS from 'aos';
@@ -87,25 +87,38 @@ export function UserListPage() {
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
             <Container fluid className='my-3 p-5'>
-                <Row>
-                    <Col md={10}>
-                        <h2>Listado de Usuarios</h2>
+                <Col>
+                    <nav class aria-label="breadcrumb">
+                        <ol class="breadcrumb" style={{}}>
+                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                <a href="#">
+                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                </i>Menú Principal</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Usuarios</li> {/* Colocar aqui el nombre de los módulos */}
+                        </ol>
+                    </nav>
+                </Col>
+                <Row className="my-3">
+                    <Col md={8} >
+                        <h2 className='custom-h2'>Usuarios 
+                            (181) {/******contar aqui nro de usuarios */} </h2> 
                     </Col>
-                    <Col>
-                    <div className="search-bar d-flex" >
-                                        <Form.Control
-                                        type="search"
-                                        placeholder="Buscar reporte"
-                                        className="search-input"
-                                        aria-label="Buscar reporte"
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        onKeyDown={handleKeyPress}
-                                        />
-                                        <i onClick={handleSearch} className="bi bi-search search-icon"></i>
-                                    </div>
+                    <Col md={2} style={{alignContent:'center'}}>
+                        <div className="search-bar d-flex" >
+                            <Form.Control
+                            type="search"
+                            placeholder="Buscar reporte"
+                            className="search-input"
+                            aria-label="Buscar reporte"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            />
+                            <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                        </div>
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} style={{alignContent:'center'}}>
                         <Link to={`/admin/editar/user`} className="btn btn-primary">
                             Crear Usuario
                         </Link>
@@ -131,14 +144,14 @@ export function UserListPage() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th className='col-1'>Item</th>
-                                    <th className='col-1'>Username</th>
-                                    <th className='col-2'>Correo</th>
-                                    <th className='col-2'>DNI</th>
-                                    <th className='col-1'>LDAP</th>
-                                    <th className='col-1'>Estado</th>
-                                    <th className='col-1'>Perfil</th>
-                                    <th className='col-2'>Permisos</th>
+                                    <th className='col-1 table-header'>Item</th>
+                                    <th className='col-1 table-header'>Username</th>
+                                    <th className='col-2 table-header'>Correo</th>
+                                    <th className='col-2 table-header'>DNI</th>
+                                    <th className='col-1 table-header'>LDAP</th>
+                                    <th className='col-1 table-header'>Estado</th>
+                                    <th className='col-1 table-header'>Perfil</th>
+                                    <th className='col-2 table-header'>Permisos</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,15 +176,39 @@ export function UserListPage() {
                         </table>
                     </div>
                 )}
-                <Row className='mb-4 justify-content-center'>
+
+                <Row>
+                    <Pagination style={{display:'flex',justifyContent:'flex-end'}}>
+                        <Pagination.First />
+                        <Pagination.Prev />
+                        <Pagination.Item active>{1}</Pagination.Item>
+                        <Pagination.Ellipsis />
+
+                        <Pagination.Item>{10}</Pagination.Item>
+                        <Pagination.Item>{11}</Pagination.Item>
+                        <Pagination.Item>{12}</Pagination.Item>
+                        <Pagination.Item>{13}</Pagination.Item>
+                        <Pagination.Item>{14}</Pagination.Item>
+
+                        <Pagination.Ellipsis />
+                        <Pagination.Item>{20}</Pagination.Item>
+                        <Pagination.Next />
+                        <Pagination.Last />
+                    </Pagination>
+                </Row>
+
+                {/**
+                 <Row className='mb-4 justify-content-center'>
                     <Col md={2} className='mb-2'>
                         <Button variant="dark" onClick={() => navigate('/menu')} className="w-100">
                             Volver
                         </Button>
                     </Col>
                 </Row>
+                 */}
+                
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0" style={{ backgroundColor: "#0064AF", minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>
