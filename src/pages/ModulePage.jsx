@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUserReports } from '../api/user.api'
+import { getUserReports, addFavorite, removeFavorite, getUserFavorites } from '../api/user.api'
 import { getGroups } from '../api/group.api';
 import { jwtDecode } from "jwt-decode";
 import { Link, Route, useNavigate } from 'react-router-dom';
@@ -93,6 +93,35 @@ export function ModulePage() {
         }
     }, []);
 
+    useEffect(() => {
+        const fetchReportsAndFavorites = async () => {
+            try {
+                const decodedToken = jwtDecode(localStorage.getItem('access'));
+                setUsuario(decodedToken.username);
+                setRole(decodedToken.role);
+                setUserId(decodedToken.id);
+
+                const [reportRes, favRes] = await Promise.all([
+                    getUserReports(decodedToken.id),
+                    getUserFavorites(decodedToken.id)
+                ]);
+
+                const favoriteIds = new Set(favRes.data.favoriteReports.map(fav => fav.id));
+                const reportsWithFavorites = reportRes.data.reports.map(report => ({
+                    ...report,
+                    isFavorite: favoriteIds.has(report.id)
+                }));
+
+                setReports(reportsWithFavorites.filter(report => report.ModuleId == id && report.active));
+            } catch (error) {
+                console.error('Error al obtener la información:', error);
+                toast.error('Error al cargar los reportes y favoritos');
+            }
+        };
+
+        fetchReportsAndFavorites();
+    }, []);
+
     const handleLogout = () => {
         // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
         localStorage.removeItem('access');
@@ -107,6 +136,37 @@ export function ModulePage() {
             handleSearch();
         }
     };
+
+    const toggleFavorite = async (report) => {
+        try {
+            // Determinar la nueva acción basada en el estado actual de favorito
+            const newFavoriteStatus = !report.isFavorite;
+            const reportId = report.id
+            // Optimistically update the UI
+            setReports(reports.map(r => {
+                if (r.id === report.id) {
+                    return { ...r, isFavorite: newFavoriteStatus };
+                }
+                return r;
+            }));
+
+            // API call based on the new status
+            if (newFavoriteStatus) {
+                await addFavorite({userId, reportId});
+                toast.success('Reporte añadido a favoritos');
+            } else {
+                await removeFavorite(userId, reportId);
+                toast.success('Reporte eliminado de favoritos');
+            }
+        } catch (error) {
+            console.error('Error al actualizar el estado de favoritos:', error);
+            toast.error('Error al actualizar el estado de favoritos');
+            // Revertir en caso de error, manteniendo la UI consistente con el estado del servidor
+            setReports(reports);
+        }
+    };
+
+
 
     const handleSearch = () => {
         if (searchQuery.trim() !== '') {
@@ -129,18 +189,18 @@ export function ModulePage() {
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
                                 <Col>
-                                <nav class aria-label="breadcrumb">
-                                    <ol class="breadcrumb" style={{}}>
-                                        <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
-                                            <a href="#">
-                                                <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                                </i>Menú Principal</a>
-                                        </li>
-                                        <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
-                                    </ol>
-                                </nav>
-                                </Col>                              
-                                
+                                    <nav class aria-label="breadcrumb">
+                                        <ol class="breadcrumb" style={{}}>
+                                            <li class="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                                <a href="#">
+                                                    <i class="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                                    </i>Menú Principal</a>
+                                            </li>
+                                            <li class="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                                        </ol>
+                                    </nav>
+                                </Col>
+
                                 <div className='d-flex' style={{ justifyContent: "flex-end" }}>
                                     <div className="search-bar d-flex" >
                                         <Form.Control
@@ -158,14 +218,7 @@ export function ModulePage() {
 
                             </div>
                             {reports.sort((a, b) => a.GroupId - b.GroupId).map((report) => (
-                                <div
-                                    key={report.id}
-                                    className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4 pt-3"
-                                    onClick={() => navigate(`/report/${report.id}`)}
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title={report.description}
-                                >
+                                <div key={report.id} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4 pt-3" data-bs-toggle="tooltip" data-bs-placement="top" title={report.description}>
                                     <div className="service-item service-item-gray position-relative align-items-center justify-content-center">
                                         <div className="badges">
                                             {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-success mx-1">Nuevo</span>}
@@ -179,13 +232,11 @@ export function ModulePage() {
                                                     )}
                                                 </span>
                                             ))}
-                                            <button type="button" class="btn btn-outline-light dest-icon">
-                                            <i class="bi bi-star" style={{color:'#6C757D'}}></i>
-                                            {/*<i class="bi bi-star-fill" style={{color:'#F6D751'}}></i> -------------FAVORITO SELECCIONADO */}
+                                            <button onClick={() => toggleFavorite(report)} type="button" class="btn btn-outline-light dest-icon">
+                                                <i class={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
                                             </button>
                                         </div>
                                         <div className="icon">
-                                            {/*<i className={`bi bi-${report.icon}`}></i>*/}
                                             <img src={iconReport} style={{ width: "140.5px", height: "29.98px" }}
                                                 className="d-inline-block align-top img-fluid" />
                                         </div>
@@ -193,6 +244,7 @@ export function ModulePage() {
                                     </div>
                                 </div>
                             ))}
+
                         </div>
                         {/*<div className="d-flex justify-content-center mt-4">
                             <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
@@ -200,7 +252,7 @@ export function ModulePage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
