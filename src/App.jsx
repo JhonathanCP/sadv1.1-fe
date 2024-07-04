@@ -17,8 +17,9 @@ import { EditUserPermissions } from './pages/EditUserPermissions';
 import { ReportListPage } from './pages/ReportsListPage';
 import { ReportForm } from './pages/ReportForm';
 import { GroupModuleManagement } from './pages/GroupModuleManagement';
-import { AccessRequestForm } from './pages/AccessRequestForm'
+import { UserRequestForm } from './pages/UserRequestForm'
 import { FavoritesPage } from './pages/FavoritesPage';
+import { UserRequestsPage } from './pages/UserRequestsPage';
 import PrivateRoutes from './components/PrivateRoutes';
 import AdminRoutes from './components/AdminRoutes';
 
@@ -38,7 +39,8 @@ function App() {
                     <Route path="/module/:id" element={<ModulePage />} />
                     <Route path="/report/:id" element={<ReportPage />} />
                     <Route path="/reports" element={<ResultPage />} />
-                    <Route path="/access-request" element={<AccessRequestForm />} />
+                    <Route path="/create-request" element={<UserRequestForm />} />
+                    <Route path="/user-requests" element={<UserRequestsPage />} />
                     <Route path="/favorites" element={<FavoritesPage />}></Route>
                     <Route element={<AdminRoutes />}>
                         <Route path="/admin/users" element={<UserListPage />} />

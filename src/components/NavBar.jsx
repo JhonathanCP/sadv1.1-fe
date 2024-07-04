@@ -224,7 +224,7 @@ export function NavBar() {
                             {role === 1 && (
                                 <>
                                 <Dropdown.Menu>
-                                    <Button className='btn-menu' onClick={() => setShowModal(true)}>
+                                    <Button className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
                                         </div>

@@ -23,6 +23,9 @@ authApi.interceptors.request.use((config) => {
 // Obtener todas las solicitudes de acceso
 export const getAllAccessRequests = () => authApi.get("/");
 
+// Obtener todas las solicitudes de acceso
+export const getAccessRequestByUser = (userId) => authApi.get(`/user/${userId}`)
+
 // Obtener una solicitud de acceso por su ID
 export const getAccessRequestById = (id) => authApi.get(`/${id}`);
 
