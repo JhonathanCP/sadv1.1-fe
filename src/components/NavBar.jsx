@@ -223,8 +223,8 @@ export function NavBar() {
                             </i> </span>}  >
                             {role === 1 && (
                                 <>
-                                 <ListGroup >
-                                    <Button className='btn-menu' onClick={() => setShowModal(true)}>
+                                <Dropdown.Menu>
+                                    <Button className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
                                         </div>
@@ -236,7 +236,7 @@ export function NavBar() {
                                         </div>
                                     Favoritos
                                     </Button>
-                                    </ListGroup>
+                                    </Dropdown.Menu>
                                 </>
 
                             )}

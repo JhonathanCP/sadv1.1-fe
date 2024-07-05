@@ -153,9 +153,9 @@ export function FavoritesPage() {
                                                                         )}
                                                                     </span>
                                                                 ))}
-                                                                <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
-                                                                    <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
-                                                                </button>
+                                                                    {/* <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
+                                                                        <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
+                                                                    </button> */}
                                                             </div>
                                                             <div className="icon">
                                                                 <img src={iconReport} style={{ width: "140.5px", height: "29.98px" }}
