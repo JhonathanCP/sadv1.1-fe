@@ -162,7 +162,7 @@ export function UserRequestsPage() {
                                         <td>{getStateNameById(request.StateId)}</td>
                                         <td>
                                             <button className="btn btn-primary" onClick={() => handleViewDetails(request.id)}>
-                                                Ver detalles
+                                                Ver solicitudes
                                             </button>
                                         </td>
                                     </tr>

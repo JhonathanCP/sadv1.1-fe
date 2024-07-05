@@ -6,7 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Card, Col, Form, FormGroup, FormControl, FormLabel, Button, Container, Image, Modal, FormCheck } from 'react-bootstrap';
 import FondoSvg from '../assets/fondo.svg';
-import background from '../assets/background.png';
+import background from '../assets/wallpaper-sad.png';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { ManualComponent } from '../components/ManualComponent';
 import ComunicadoImage from '../assets/COMUNICADO.jpeg';  // Asegúrate de que la ruta es correcta
@@ -101,9 +101,9 @@ export function LoginPage() {
             <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
-                        <img src={Logo} alt="Logo" />
-                        <h1 className="d-block d-sm-none text-center">Sistema de Analítica de Datos</h1>
-                        <h1 className="d-none d-md-block">Sistema de Analítica de Datos</h1>
+                        <img src={Logo} alt="Logo"  style={{paddingBottom:'10px'}}/>
+                        <h1 className="d-block d-sm-none text-center">Explora EsSalud: Visualización y Análisis de Datos</h1>
+                        <h1 className="d-none d-md-block">Explora EsSalud: Visualización y Análisis de Datos</h1>
                         <p className="d-none d-sm-block">
                             Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
                             business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.

@@ -5,7 +5,8 @@ import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, Dropdown,DropdownButton,ListGroup} from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup,
+    Dropdown,DropdownButton,ListGroup, Row, Col} from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -218,43 +219,71 @@ export function NavBar() {
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link> */}          
                         
-                        <DropdownButton  
-                            title={<span> <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
-                            </i> </span>}  >
+                        <Dropdown >  
+                            <Dropdown.Toggle
+                            title={<span> </span>} >
+                                <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
+                                </i>
+                            </Dropdown.Toggle>
                             {role === 1 && (
                                 <>
-                                <Dropdown.Menu>
-                                    <Button className='btn-menu' onClick={() => navigate('/user-requests')}>
+                                <Dropdown.Menu className='dropdown-menu2'>
+                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
                                         </div>
                                     Solicitudes
-                                    </Button>
-                                    <Button className='btn-menu' onClick={() => navigate('/favorites')} >
+                                    </Dropdown.Item>
+                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
                                         <div class='ico-menu'>
                                         <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
                                         </div>
                                     Favoritos
-                                    </Button>
-                                    </Dropdown.Menu>
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
                                 </>
-
                             )}
                             {role === 2 && (
                             <>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => setShowModal(true)} >
-                                    <i className={`bi bi-send-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Solicitudes</NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/favorites')} >
-                                    <i className={`bi bi-star-fill`} style={{color:'#F6D751', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Favoritos</NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/users')} >
-                                    <i className={`bi bi-people-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Usuarios</NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/groups-modules')} >
-                                    <i className={`bi bi-collection-fill`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i> Grupos y módulos</NavDropdown.Item>
-                                <NavDropdown.Item className="dropdown-item-menu" onClick={() => navigate('/admin/reports')} >
-                                    <i className={`bi bi-clipboard2-data`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Reportes</NavDropdown.Item>
+                                <Dropdown.Menu className='dropdown-menu2' style={{width:'318px'}}>
+
+                                            <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)} >
+                                            <div class='ico-menu'>
+                                            <i className={`bi bi-send-fill`} ></i>
+                                            </div>
+                                            Solicitudes
+                                            </Dropdown.Item>
+                                                
+                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
+                                                <div class='ico-menu'>
+                                                <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
+                                                </div>
+                                                Favoritos
+                                            </Dropdown.Item>
+                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
+                                                <div class='ico-menu'>
+                                                <i className={`bi bi-people-fill`}></i>
+                                                </div>
+                                                Usuarios
+                                            </Dropdown.Item>
+                                        
+                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/groups-modules')}>
+                                                <div class='ico-menu'>
+                                                <i className={`bi bi-collection-fill`} ></i>
+                                                </div>
+                                                Grupos y<br/>módulos
+                                            </Dropdown.Item>
+                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/reports')} >
+                                                <div class='ico-menu'>
+                                                <i className={`bi bi-clipboard2-data`} ></i>
+                                                </div>
+                                                Reportes
+                                            </Dropdown.Item>
+     
+                                </Dropdown.Menu>
                             </>
                             )}
-                        </DropdownButton>
+                        </Dropdown>
                         <button type="button" className='btn btn-secondary btn-primary-custom position-relative bi bi-bell-fill'>
                             <span className="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
                             <span className="visually-hidden">New alerts</span>

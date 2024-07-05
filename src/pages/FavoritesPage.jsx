@@ -124,7 +124,7 @@ export function FavoritesPage() {
                         const module = modules.find(m => m.id === moduleId);
                         return (
                             <Accordion.Item eventKey={String(index)} key={moduleId}>
-                                <Accordion.Header>
+                                <Accordion.Header className='accordion-header'>
                                     {module ? `${module.name}` : 'Módulo Desconocido'}
                                 </Accordion.Header>
                                 <Accordion.Body>
