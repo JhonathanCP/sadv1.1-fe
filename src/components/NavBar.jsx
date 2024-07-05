@@ -5,7 +5,7 @@ import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, Dropdown} from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup, Dropdown,DropdownButton,ListGroup} from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -218,12 +218,12 @@ export function NavBar() {
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link> */}          
                         
-                        <NavDropdown  
+                        <DropdownButton  
                             title={<span> <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
                             </i> </span>}  >
                             {role === 1 && (
                                 <>
-                                <Dropdown.Menu>
+                                 <ListGroup >
                                     <Button className='btn-menu' onClick={() => setShowModal(true)}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
@@ -236,7 +236,7 @@ export function NavBar() {
                                         </div>
                                     Favoritos
                                     </Button>
-                                </Dropdown.Menu>
+                                    </ListGroup>
                                 </>
 
                             )}
@@ -254,7 +254,7 @@ export function NavBar() {
                                     <i className={`bi bi-clipboard2-data`} style={{color:'#0B38AB', backgroundColor:'#EEF3FF', borderRadius:"80px", height:'30px', width:'30px',display:'flex', justifyContent:'center', alignItems:'center'}}></i>Reportes</NavDropdown.Item>
                             </>
                             )}
-                        </NavDropdown>
+                        </DropdownButton>
                         <button type="button" className='btn btn-secondary btn-primary-custom position-relative bi bi-bell-fill'>
                             <span className="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
                             <span className="visually-hidden">New alerts</span>
