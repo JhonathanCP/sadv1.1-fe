@@ -127,7 +127,7 @@ export function EditUserPermissions() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
             <Col>
                 <nav className aria-label="breadcrumb">
                     <ol className="breadcrumb" style={{}}>

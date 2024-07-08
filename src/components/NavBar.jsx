@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, Route, useNavigate, useLocation } from 'react-router-dom';
 import { getUser, updateUser } from '../api/user.api';
 import { getDependencies, getDependency } from '../api/dependency.api';
@@ -195,11 +195,11 @@ export function NavBar() {
         }
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
+    const CustomNavbar = ({ role, usuario, handleLogout }) => { 
+        const [showModal, setShowModal] = useState(false); 
+        const [showModal2, setShowModal2] = useState(false); 
+        const navigate = useNavigate(); 
+    };  
 
     return (
         <Navbar expand="lg" className='fixed-top' variant="dark">
@@ -211,15 +211,15 @@ export function NavBar() {
                         className="d-inline-block align-top img-fluid"
                         alt="React Bootstrap logo"
                     />
+                    
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="navbarScroll">
-                    <Nav  className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}  navbarScroll>
+                <Navbar.Collapse id="navbarScroll"> 
+                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll> 
                         {/*<Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link> */}          
-                        
-                        <Dropdown >  
+                        <Dropdown>  
                             <Dropdown.Toggle
                             title={<span> </span>} >
                                 <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
@@ -227,7 +227,7 @@ export function NavBar() {
                             </Dropdown.Toggle>
                             {role === 1 && (
                                 <>
-                                <Dropdown.Menu className='dropdown-menu2'>
+                                <Dropdown.Menu className='dropdown-menu2'  style={{position:'absolute',left:'-140px'}}>
                                     <Dropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
@@ -245,9 +245,14 @@ export function NavBar() {
                             )}
                             {role === 2 && (
                             <>
-                                <Dropdown.Menu className='dropdown-menu2' style={{width:'318px'}}>
-
-                                            <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)} >
+                                <Dropdown.Menu className='dropdown-menu2' style={{width:'325px', position:'absolute',left:'-140px'}}>
+                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
+                                        <div class='ico-menu'>
+                                       <i className={`bi bi-people-fill`}></i>
+                                        </div>
+                                        Usuarios
+                                    </Dropdown.Item>
+                                    <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)}> 
                                             <div class='ico-menu'>
                                             <i className={`bi bi-send-fill`} ></i>
                                             </div>
@@ -260,12 +265,7 @@ export function NavBar() {
                                                 </div>
                                                 Favoritos
                                             </Dropdown.Item>
-                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
-                                                <div class='ico-menu'>
-                                                <i className={`bi bi-people-fill`}></i>
-                                                </div>
-                                                Usuarios
-                                            </Dropdown.Item>
+                                            
                                         
                                             <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/groups-modules')}>
                                                 <div class='ico-menu'>

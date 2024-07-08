@@ -86,7 +86,7 @@ export function UserListPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
                 <Col>
                     <nav className aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
@@ -102,7 +102,7 @@ export function UserListPage() {
                 <Row className="my-3">
                     <Col md={8} >
                         <h2 className='custom-h2'>Usuarios 
-                            (181) {/******contar aqui nro de usuarios */} </h2> 
+                            (181) {/*************************contar aqui nro de usuarios */} </h2> 
                     </Col>
                     <Col md={2} style={{alignContent:'center'}}>
                         <div className="search-bar d-flex" >
@@ -118,11 +118,12 @@ export function UserListPage() {
                             <i onClick={handleSearch} className="bi bi-search search-icon"></i>
                         </div>
                     </Col>
+                    {/**
                     <Col md={2} style={{alignContent:'center'}}>
                         <Link to={`/admin/editar/user`} className="btn btn-primary">
                             Crear Usuario
                         </Link>
-                    </Col>
+                    </Col> */}
                     
                 </Row>
                 {/** <Row className="my-3">

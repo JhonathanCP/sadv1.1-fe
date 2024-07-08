@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getModules, createModule, updateModule } from '../api/module.api';
 import { getGroups, createGroup, updateGroup } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Button, Table, Modal, Form, Spinner, InputGroup, FormControl } from 'react-bootstrap';
+import { Container, Row, Col, Button, Table, Modal, Form, Spinner,
+    InputGroup, FormControl,Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -95,7 +96,7 @@ export function GroupModuleManagement() {
     return (
         <div className='p-0'>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
                 <Row >
                     <Col>
                         <nav className aria-label="breadcrumb">
@@ -207,43 +208,58 @@ export function GroupModuleManagement() {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="formName">
-                            <Form.Label>Nombre</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formDescription">
-                            <Form.Label>Descripción</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formIcon">
-                            <Form.Label>Icono: (Solo introducir nombre del ícono) <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Ver íconos</a></Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="icon"
-                                value={formData.icon}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <div className='d-flex justify-content-center'>
-                            <Button variant="primary" type="submit" className="mt-3">
-                                {selectedModule ? 'Guardar' : 'Crear'}
-                            </Button>
-                        </div>
+                        <Row>
+                            <Col  md={8}>
+                                    <Form.Group controlId="formName">
+                                        <Form.Label>Nombre *</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </Form.Group>
+                                
+                                    <Form.Group controlId="formDescription">
+                                        <Form.Label>Descripción</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </Form.Group>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Group controlId="formIcon">
+                                    <Row  >
+                                        <Image src="holder.js/171x180" thumbnail className='d-flow' style={{height:'70px', alignContent:'center'}} />
+                                    </Row>
+                                    <Row  >
+                                        <Form.Label>Icono: (Solo nombre) <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Ver íconos</a></Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="icon"
+                                            value={formData.icon}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </Row>
+                                    
+                                    
+                                </Form.Group>
+                            </Col>  
+                        </Row>
                     </Form>
                 </Modal.Body>
+                <Modal.Footer>
+                            <Button  variant="outline-primary" >Cancelar</Button>
+                            <Button variant="primary" >
+                                {selectedModule ? 'Guardar' : 'Guardar'}
+                            </Button>
+                        </Modal.Footer>
             </Modal>
             <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>

@@ -99,7 +99,7 @@ export function FavoritesPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
                 <Col>
                     <nav className="breadcrumb" aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
@@ -153,9 +153,9 @@ export function FavoritesPage() {
                                                                         )}
                                                                     </span>
                                                                 ))}
-                                                                    {/* <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
+                                                                    <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
                                                                         <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
-                                                                    </button> */}
+                                                                    </button> 
                                                             </div>
                                                             <div className="icon">
                                                                 <img src={iconReport} style={{ width: "140.5px", height: "29.98px" }}

@@ -186,89 +186,113 @@ export function UserRequestForm() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
                 <Col>
                     <nav className aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
-                            <li className="breadcrumb-item">
+                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                     </i>Menú Principal</a>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">Crear solicitud de acceso</li>
+                            </li>                        
+                            <li className="breadcrumb-item" onClick={() => navigate('')}>
+                                <a href="#">
+                                    Mis solicitudes</a>
+                            </li>                        
+                            <li className="breadcrumb-item active" aria-current="page">Nueva solicitud de acceso</li>
                         </ol>
                     </nav>
                 </Col>
                 <Row>
-                    <Col md={12} className='my-3'>
-                        <h2 className='custom-h2'>Crear solicitud de acceso</h2>
+                    <Col md={10} className='my-3'>
+                        <h2 className='custom-h2'>Nueva solicitud de acceso</h2>
                     </Col>
+                    <Col  md={2}>
+                        <Button variant="primary" type="submit" className='mt-3'>
+                            Guardar solicitud
+                        </Button>
+                    </Col>
+
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group controlId="formNombreSolicitante">
-                                <Form.Label>Nombre del solicitante</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={nombreSolicitante}
-                                    onChange={(e) => setNombreSolicitante(e.target.value)}
-                                    readOnly
-                                />
-                            </Form.Group>
-
-                            <Form.Group controlId="formMainDependency">
-                                <Form.Label>Dependencia Principal</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    value={userMainDependency}
-                                    onChange={handleMainDependencyChange}
-                                    required
-                                >
-                                    <option value="">Selecciona una dependencia principal</option>
-                                    {mainDependencies.map(dep => (
-                                        <option key={dep.id} value={dep.id}>
-                                            {dep.name}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-
-                            <Form.Group controlId="formDependency">
-                                <Form.Label>Dependencia Secundaria</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    value={userDependency}
-                                    onChange={(e) => setUserDependency(e.target.value)}
-                                    required
-                                >
-                                    <option value="">Selecciona una dependencia secundaria</option>
-                                    {dependencies.map(dep => (
-                                        <option key={dep.id} value={dep.id}>
-                                            {dep.name}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-
-                            <Form.Group controlId="formEmailList">
-                                <Form.Label>Listado de correos</Form.Label>
-
-                                <InputGroup>
-                                    <FormControl
-                                        type="text"
-                                        value={emailInput}
-                                        onChange={handleEmailChange}
-                                        placeholder="Buscar correos"
-                                    />
-                                    <Dropdown.Menu show={emailInput.length > 0}>
-                                        {users.filter(user => user.username.includes(emailInput)).map(user => (
-                                            <Dropdown.Item key={user.id} onClick={() => handleEmailSelect(user.username)}>
-                                                {user.username}@essalud.gob.pe
-                                            </Dropdown.Item>
-                                        ))}
-                                    </Dropdown.Menu>
-                                </InputGroup>
+                        <Form onSubmit={handleSubmit} style={{display:'flex', gap:'20px', flexDirection:'column'}}>
+                            <Row  md={12}>
+                                <Col  md={4}>
+                                    <Form.Group controlId="formNombreSolicitante">
+                                        <Form.Label>Nombre del solicitante</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={nombreSolicitante}
+                                            onChange={(e) => setNombreSolicitante(e.target.value)}
+                                            readOnly
+                                        />
+                                    </Form.Group>
+                                </Col> 
+                                <Col  md={4}>
+                                    <Form.Group controlId="formMainDependency">
+                                        <Form.Label>Dependencia Principal</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            disabled
+                                            value={userMainDependency}
+                                            onChange={handleMainDependencyChange}
+                                            required
+                                        >
+                                            <option value="">Selecciona una dependencia principal</option>
+                                            {mainDependencies.map(dep => (
+                                                <option key={dep.id} value={dep.id}>
+                                                    {dep.name}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col  md={4}>
+                                    <Form.Group controlId="formDependency">
+                                        <Form.Label>Dependencia Secundaria</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            disabled
+                                            value={userDependency}
+                                            onChange={(e) => setUserDependency(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Selecciona una dependencia secundaria</option>
+                                            {dependencies.map(dep => (
+                                                <option key={dep.id} value={dep.id}>
+                                                    {dep.name}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>  
+                            </Row>
+                            <Form.Group controlId="formEmailList" >
+                                <Row>
+                                    <Col md={2} className='d-flex' style={{alignItems:'center'}}>
+                                        <Form.Label>Listado de correos *</Form.Label>
+                                    </Col>
+                                    <Col md={10}>
+                                        <InputGroup>
+                                        <FormControl
+                                            type="text"
+                                            value={emailInput}
+                                            onChange={handleEmailChange}
+                                            placeholder="Buscar correos"
+                                        />
+                                        <Dropdown.Menu show={emailInput.length > 0}>
+                                            {users.filter(user => user.username.includes(emailInput)).map(user => (
+                                                <Dropdown.Item key={user.id} onClick={() => handleEmailSelect(user.username)}>
+                                                    {user.username}@essalud.gob.pe
+                                                </Dropdown.Item>
+                                            ))}
+                                        </Dropdown.Menu>
+                                    </InputGroup>
+                                    </Col>
+                                </Row>
+                                
+                                
                                 <Form.Control
                                     as="textarea"
                                     rows={3}
@@ -281,25 +305,30 @@ export function UserRequestForm() {
                             <Form.Group controlId="formAcceptedTerms">
                                 <Form.Check
                                     type="checkbox"
-                                    label="He leído y acepto los Términos y Condiciones"
+                                    label="He leído y acepto los Términos y Condiciones *"
                                     checked={acceptedTerms}
                                     onChange={(e) => setAcceptedTerms(e.target.checked)}
                                     required
                                 />
                             </Form.Group>
-
-                            <h3>Listado de reportes a solicitar</h3>
-                            <Button variant="primary" onClick={handleOpenModal}>
-                                <i className="bi bi-search"></i> Buscar reportes
-                            </Button>
-
-                            <Table className="mt-3">
+                            <Row>
+                                <Col md={10} className='d-flex' style={{alignItems:'center'}}>
+                                <h4>Listado de reportes a solicitar</h4>
+                                </Col>
+                                <Col>
+                                    <Button variant="outline-primary" onClick={handleOpenModal}>
+                                        <i className="bi bi-search"></i> Buscar reportes
+                                    </Button>
+                                </Col>
+                            </Row>
+                            <Table className="table-responsive" style={{borderRadius:'6px'}}>
                                 <thead>
                                     <tr>
-                                        <th>Grupo</th>
-                                        <th>Módulo</th>
-                                        <th>Reporte</th>
-                                        <th>Descripción</th>
+                                        <th className='table-header'>Grupo</th>
+                                        <th className='table-header'>Módulo</th>
+                                        <th className='table-header'>Reporte</th>
+                                        <th className='table-header'>Descripción</th>
+                                        <th className='table-header'></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -313,15 +342,16 @@ export function UserRequestForm() {
                                                 <td>{module ? module.name : 'Desconocido'}</td>
                                                 <td>{report.name}</td>
                                                 <td>{report.description}</td>
+                                                <td>
+                                                <Button variant="link" style={{textDecorationLine:'none'}}>
+                                                <i class="bi bi-x-lg" style={{paddingRight:'10px'}}></i>
+                                                Quitar</Button>
+                                                </td>
                                             </tr>
                                         );
                                     })}
                                 </tbody>
                             </Table>
-
-                            <Button variant="primary" type="submit" className='mt-3'>
-                                Guardar solicitud
-                            </Button>
                         </Form>
                     </Col>
                 </Row>
@@ -329,7 +359,7 @@ export function UserRequestForm() {
 
             <Modal show={showModal} onHide={handleCloseModal} size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Catálogo de reportes SAD</Modal.Title>
+                    <Modal.Title>Catálogo de reportes</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Table>
@@ -360,20 +390,20 @@ export function UserRequestForm() {
                             ))}
                         </tbody>
                     </Table>
-                    <div className="d-flex justify-content-between">
-                        <Button variant="secondary" onClick={handleCloseModal}>Cancelar</Button>
-                        <Button variant="primary" onClick={handleSelectReports}>Seleccionar</Button>
-                    </div>
                     <div className="d-flex justify-content-center mt-3">
                         {[...Array(Math.ceil(modalReports.length / reportsPerPage)).keys()].map(page => (
                             <Button
                                 key={page + 1}
-                                variant={currentPage === page + 1 ? 'primary' : 'secondary'}
+                                variant={currentPage === page + 1 ? 'primary' : 'outline-secondary'}
                                 onClick={() => handlePageChange(page + 1)}
                             >
                                 {page + 1}
                             </Button>
                         ))}
+                    </div>
+                    <div className="d-flex justify-content-between">
+                        <Button variant="outline-primary" onClick={handleCloseModal}>Cancelar</Button>
+                        <Button variant="primary" onClick={handleSelectReports}>Seleccionar</Button>
                     </div>
                 </Modal.Body>
             </Modal>

@@ -27,7 +27,7 @@ section {
   background-color: var(--color-background-system);
   min-height: 58vh;
   display: flex;
-  align-items: center;
+  /*align-items: center;*/
   justify-content: center;
 }
 
@@ -84,6 +84,34 @@ section {
   margin-bottom: 20px;
   background-color: #E3FDFE;
   border-radius: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+.services .service-item .icon i {
+  color: var(--color-default);
+  font-size: 32px;
+  transition: ease-in-out 0.3s;
+  z-index: 2;
+  position: relative;
+  display: inline-block;
+}
+
+.services .service-item:hover .icon i {
+  animation: iconGrow 0.5s forwards;
+}
+
+@keyframes iconGrow {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(2);
+  }
 }
 
 .services .service-item-gray .icon {
@@ -93,16 +121,27 @@ section {
   margin-bottom: 20px;
   background-color: #F9F9F9;
   border-radius: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center
 }
 
-.services .service-item .icon i {
-  color: var(--color-default);
-  font-size: 32px;
-  transition: ease-in-out 0.3s;
-  z-index: 2;
-  position: relative;
-  
+.service-item-gray:hover .icon img {
+  animation: iconGrow 0.5s forwards;
 }
+
+@keyframes iconGrow {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
 
 /*.services .service-item .icon:before {
   position: absolute;
@@ -145,7 +184,9 @@ section {
   background: #35A2C1;
 }
 
-.services .service-item:hover h3 {
+
+
+.services .service-item:hover i {
   border-color: var(--color-primary);
 }
 
@@ -182,6 +223,9 @@ section {
   display: flex;
   align-items: left;
   justify-content: left;
+  justify-content: space-between;
+  padding-right: 20px;
+
 }
 
 .search-bar {
@@ -320,7 +364,7 @@ body {
 
 
 .banner-container{
-  padding: 20px 150px;
+  padding: 40px 100px !important;
   align-content: center;
 }
 
@@ -337,7 +381,7 @@ body {
   font-size: 12px;
 }
 
-.btn-menu{
+.btn-menu {
   display: flex;
   align-items: center !important;
   flex-direction: column;
@@ -349,20 +393,40 @@ body {
   color: var(--color-default);
   text-align: center;
   border-color: #FFFFFF;
+  transition: background-color 0.4s, color 0.4s;
+  position: relative;
+  overflow: hidden;
+  z-index: 1; /* Asegura que el contenido del botón esté en un nivel superior */
 }
 
-.btn-menu:hover{
-  display: flex;
-  align-items: center !important;
-  flex-direction: column;
-  border-radius: 8px;
-  width: 85px;
-  height: 100px;
-  justify-content: center;
-  background-color: #EEF3FF !important;
-  color: var(--color-default);
-  border-color:  #EEF3FF;
+.btn-menu:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background-color: #EEF3FF; /* El color del efecto radial */
+  transition: all 0.4s;
+  border-radius: 50%;
+  z-index: -1; /* Asegura que el pseudo-elemento esté en un nivel inferior */
+  transform: translate(-50%, -50%) scale(0.0);
 }
+
+.btn-menu:hover:before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn-menu:hover {
+  color: var(--color-default) !important;
+  border-color: #EEF3FF;
+}
+
+.btn-menu > * {
+  position: relative;
+  z-index: 2; /* Asegura que el contenido del botón esté en un nivel superior al pseudo-elemento */
+}
+
 /*
 .dropdown-item-menu{
   display: flex;
@@ -402,6 +466,7 @@ body {
     box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
     border-width: 4px;
     border-radius: 10px;
+    justify-content: center;
 }
 
 .ico-menu{
@@ -440,7 +505,7 @@ body {
 .table-responsive{
   border: 1px solid;
   border-color: #CED4DA;
-  border-radius: 6px;
+  border-radius: 6px !important;
   background-color: white;
   margin-bottom: 20px;
 }
@@ -498,3 +563,4 @@ body {
 .accordion-button{
   color: var(--color-primary) !important;
 }
+

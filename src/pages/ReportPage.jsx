@@ -78,7 +78,7 @@ export function ReportPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='p-0 m-0' style={{ minHeight: '100vh' }}>
+            <Container fluid className='mt-5 mb-1 p-5' style={{ minHeight: '100vh' }}>
                 <Col>
                     <nav className aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>

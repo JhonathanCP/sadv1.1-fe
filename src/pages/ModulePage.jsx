@@ -180,7 +180,7 @@ export function ModulePage() {
 
             <NavBar></NavBar>
 
-            <Container fluid className='px-0 mx-0 pb-2 row sections-bg' style={{ minHeight: '97vh' }}>
+            <Container fluid className='mt-5 mb-1 row sections-bg' style={{ minHeight: '97vh' }}>
                 <section id="services" className='services w-100'>
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
@@ -249,7 +249,7 @@ export function ModulePage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>

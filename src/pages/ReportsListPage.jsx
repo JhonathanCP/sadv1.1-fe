@@ -103,7 +103,7 @@ export function ReportListPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='my-3 p-5'>
+            <Container fluid className='mt-5 mb-1 p-5'>
                 <Col>
                     <nav className aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
@@ -258,7 +258,7 @@ export function ReportListPage() {
                             <Col>
                                 <Row>
                                     <Col md={2}>
-                                        <Image src="holder.js/171x180" thumbnail />
+                                        <Image src="holder.js/171x180" thumbnail  style={{height:'70px', alignContent:'center'}} className='d-flow' />
                                     </Col>
                                     <Col md={10}>
                                         <Form.Group controlId="formIcon">
@@ -374,12 +374,10 @@ export function ReportListPage() {
 
                         </Row>
                     </Form>
-
                 </Modal.Body>
-
                 <Modal.Footer>
-                <Button  variant="outline-primary" >Cancelar</Button>
-                <Button variant="primary">Guardar</Button>
+                    <Button  variant="outline-primary" >Cancelar</Button>
+                    <Button variant="primary">Guardar</Button>
                 </Modal.Footer>
       </Modal>
 

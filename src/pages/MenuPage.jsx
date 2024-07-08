@@ -218,7 +218,7 @@ export function MenuPage() {
                                 >
                                     <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="icon">
-                                            <i className={`bi bi-${module.icon}`}></i>
+                                            <i className={`bi bi-${module.icon}`} style={{color:'#1A3EC1'}}></i>
                                         </div>
                                         <h3>{module.name}</h3>
                                     </div>
