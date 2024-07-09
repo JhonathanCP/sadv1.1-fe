@@ -195,8 +195,8 @@ export function MenuPage() {
             <Container fluid fixed="true" style={{minHeight: '35vh' }} className='mt-5 banner-container'>
                 <Row className='px-5 py-5 d-flex banner'>
                     <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
-                        <h2 className='d-xl-none text-center'>Sistema de Analítica <span>de Datos</span></h2>
-                        <h2 className='d-none d-xl-block'>Sistema de Analítica <span>de Datos</span></h2>
+                        <h1 className='d-xl-none text-center' style={{fontWeight:'bold',}}>Explora EsSalud</h1>
+                        <h1 className='d-none d-xl-block'style={{fontWeight:'bold',}}>Explora EsSalud</h1>
                         <p className='d-none d-md-block d-xl-none text-center'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                         <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                     </Col>

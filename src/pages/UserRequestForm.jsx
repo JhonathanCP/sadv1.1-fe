@@ -12,7 +12,8 @@ import { toast } from 'react-hot-toast';
 import { NavBar } from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
 import {
-    Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl, Dropdown, DropdownButton, Badge
+    Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl,
+    Dropdown, DropdownButton, Badge, Pagination
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';

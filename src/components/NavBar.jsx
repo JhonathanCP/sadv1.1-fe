@@ -195,12 +195,6 @@ export function NavBar() {
         }
     };
 
-    const CustomNavbar = ({ role, usuario, handleLogout }) => { 
-        const [showModal, setShowModal] = useState(false); 
-        const [showModal2, setShowModal2] = useState(false); 
-        const navigate = useNavigate(); 
-    };  
-
     return (
         <Navbar expand="lg" className='fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
@@ -211,7 +205,7 @@ export function NavBar() {
                         className="d-inline-block align-top img-fluid"
                         alt="React Bootstrap logo"
                     />
-                    
+
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll"> 
@@ -228,18 +222,18 @@ export function NavBar() {
                             {role === 1 && (
                                 <>
                                 <Dropdown.Menu className='dropdown-menu2'  style={{position:'absolute',left:'-140px'}}>
-                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
+                                    <NavDropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
                                         </div>
                                     Solicitudes
-                                    </Dropdown.Item>
-                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
                                         <div class='ico-menu'>
                                         <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
                                         </div>
                                     Favoritos
-                                    </Dropdown.Item>
+                                    </NavDropdown.Item>
                                 </Dropdown.Menu>
                                 </>
                             )}
@@ -252,11 +246,11 @@ export function NavBar() {
                                         </div>
                                         Usuarios
                                     </Dropdown.Item>
-                                    <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)}> 
-                                            <div class='ico-menu'>
-                                            <i className={`bi bi-send-fill`} ></i>
-                                            </div>
-                                            Solicitudes
+                                            <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)}> 
+                                                <div class='ico-menu'>
+                                                <i className={`bi bi-send-fill`} ></i>
+                                                </div>
+                                                Solicitudes
                                             </Dropdown.Item>
                                                 
                                             <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
@@ -279,14 +273,13 @@ export function NavBar() {
                                                 </div>
                                                 Reportes
                                             </Dropdown.Item>
-     
                                 </Dropdown.Menu>
                             </>
                             )}
                         </Dropdown>
-                        <button type="button" className='btn btn-secondary btn-primary-custom position-relative bi bi-bell-fill'>
-                            <span className="position-absolute top-0 start-100 translate-middle p-2 bg-danger rounded-circle">
-                            <span className="visually-hidden">New alerts</span>
+                        <button type="button" className='btn btn-primary position-relative bi bi-bell-fill'>
+                            <span className="position-absolute translate-middle p-2 bg-danger rounded-circle">
+                            <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
 

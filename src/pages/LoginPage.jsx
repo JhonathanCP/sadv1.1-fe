@@ -101,13 +101,13 @@ export function LoginPage() {
             <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
                     <div className="text-white">
-                        <img src={Logo} alt="Logo"  style={{paddingBottom:'10px'}}/>
-                        <h1 className="d-block d-sm-none text-center">Explora EsSalud: Visualización y Análisis de Datos</h1>
-                        <h1 className="d-none d-md-block">Explora EsSalud: Visualización y Análisis de Datos</h1>
-                        <p className="d-none d-sm-block">
+                        <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}}/>
+                        <h1 className="d-block d-sm-none text-center" style={{fontWeight:'bold'}}>Explora EsSalud: <br/>Visualización y Análisis de Datos</h1>
+                        <h1 className="d-none d-md-block" style={{fontWeight:'bold',}}>Explora EsSalud:  <br/>Visualización y Análisis de Datos</h1>
+                        <h5 className="d-none d-sm-block" style={{paddingTop:'40px'}}>
                             Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
                             business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.
-                        </p>
+                        </h5>
                         {/* <div className="row">
                             <div className="container-fluid col-lg-12 col-md-12 col-sm-12 d-flex justify-content-md-start justify-content-center">
                                 <button type="button" className="btn btn-primary text-light mt-3 px-3 fw-medium" onClick={handleManualModal}>
