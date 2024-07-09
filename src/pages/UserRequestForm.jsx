@@ -13,7 +13,8 @@ import { NavBar } from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
 import {
     Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl,
-    Dropdown, DropdownButton, Badge, Pagination
+    Dropdown, DropdownButton, Badge, Pagination,
+    ModalFooter
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -204,7 +205,7 @@ export function UserRequestForm() {
                         </ol>
                     </nav>
                 </Col>
-                <Row>
+                <Row  style={{justifyContent:'end'}}>
                     <Col md={10} className='my-3'>
                         <h2 className='custom-h2'>Nueva solicitud de acceso</h2>
                     </Col>
@@ -316,13 +317,13 @@ export function UserRequestForm() {
                                 <Col md={10} className='d-flex' style={{alignItems:'center'}}>
                                 <h4>Listado de reportes a solicitar</h4>
                                 </Col>
-                                <Col>
+                                <Col md={2}>
                                     <Button variant="outline-primary" onClick={handleOpenModal}>
                                         <i className="bi bi-search"></i> Buscar reportes
                                     </Button>
                                 </Col>
                             </Row>
-                            <Table className="table-responsive" style={{borderRadius:'6px'}}>
+                            <Table responsive style={{borderRadius:'6px'}}>
                                 <thead>
                                     <tr>
                                         <th className='table-header'>Grupo</th>
@@ -391,6 +392,7 @@ export function UserRequestForm() {
                             ))}
                         </tbody>
                     </Table>
+
                     <div className="d-flex justify-content-center mt-3">
                         {[...Array(Math.ceil(modalReports.length / reportsPerPage)).keys()].map(page => (
                             <Button
@@ -402,11 +404,22 @@ export function UserRequestForm() {
                             </Button>
                         ))}
                     </div>
-                    <div className="d-flex justify-content-between">
+                    <Row>
+                    <Pagination style={{display:'flex',justifyContent:'flex-end'}}>
+                        <Pagination.Item active>{1}</Pagination.Item>
+                        <Pagination.Item>{2}</Pagination.Item>
+                        <Pagination.Item>{3}</Pagination.Item>
+                        <Pagination.Item>{4}</Pagination.Item>
+                        <Pagination.Item>{5}</Pagination.Item>
+                        <Pagination.Item>{6}</Pagination.Item>
+                        <Pagination.Item>{7}</Pagination.Item>
+                    </Pagination>
+                </Row>
+                </Modal.Body>
+                <ModalFooter>
                         <Button variant="outline-primary" onClick={handleCloseModal}>Cancelar</Button>
                         <Button variant="primary" onClick={handleSelectReports}>Seleccionar</Button>
-                    </div>
-                </Modal.Body>
+                </ModalFooter>
             </Modal>
         </div>
     );

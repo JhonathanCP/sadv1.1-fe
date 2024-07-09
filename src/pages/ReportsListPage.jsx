@@ -138,20 +138,8 @@ export function ReportListPage() {
                         <Link to={`/admin/create-report`} className="btn btn-primary">
                             Crear Reporte
                         </Link>
-                    </Col>
-                    
+                    </Col>                  
                 </Row>
-                {/**
-                <Row className="my-3">
-                    <Col md={12}>
-                        <Form.Control
-                            type="text"
-                            placeholder="Buscar por nombre o descripción"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
-                    </Col>
-                </Row> */}
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (

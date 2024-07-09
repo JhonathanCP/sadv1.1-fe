@@ -180,7 +180,7 @@ export function ModulePage() {
 
             <NavBar></NavBar>
 
-            <Container fluid className='mt-5 mb-1 row sections-bg' style={{ minHeight: '97vh' }}>
+            <Container fluid className='mt-5 mb-1 p-5' style={{ minHeight: '97vh' }}>
                 <section id="services" className='services w-100'>
                     <div className="container-fluid" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">

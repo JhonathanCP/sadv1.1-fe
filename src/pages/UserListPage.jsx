@@ -100,7 +100,7 @@ export function UserListPage() {
                     </nav>
                 </Col>
                 <Row className="my-3">
-                    <Col md={8} >
+                    <Col md={10} >
                         <h2 className='custom-h2'>Usuarios 
                             (181) {/*************************contar aqui nro de usuarios */} </h2> 
                     </Col>
@@ -108,9 +108,9 @@ export function UserListPage() {
                         <div className="search-bar d-flex" >
                             <Form.Control
                             type="search"
-                            placeholder="Buscar reporte"
+                            placeholder="Buscar usuario"
                             className="search-input"
-                            aria-label="Buscar reporte"
+                            aria-label="Buscar usuario"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyDown={handleKeyPress}
@@ -126,16 +126,6 @@ export function UserListPage() {
                     </Col> */}
                     
                 </Row>
-                {/** <Row className="my-3">
-                    <Col md={12}>
-                        <Form.Control
-                            type="text"
-                            placeholder="Buscar por nombre de usuario o correo"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
-                    </Col>
-                </Row>*/}
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (

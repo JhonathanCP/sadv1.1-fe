@@ -145,7 +145,7 @@ export function UserRequestsPage() {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <Table>
+                        <Table responsive>
                             <thead>
                                 <tr>
                                     <th>Nro.</th>

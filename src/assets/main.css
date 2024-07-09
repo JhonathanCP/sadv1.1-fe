@@ -116,7 +116,8 @@ section {
 
 .services .service-item-gray .icon {
   width: 64px;
-  height: 64px;
+  height: 64px !important;
+  min-height: 64px !important;
   position: relative;
   margin-bottom: 20px;
   background-color: #F9F9F9;
@@ -184,8 +185,6 @@ section {
   background: #35A2C1;
 }
 
-
-
 .services .service-item:hover i {
   border-color: var(--color-primary);
 }
@@ -225,7 +224,6 @@ section {
   justify-content: left;
   justify-content: space-between;
   padding-right: 20px;
-
 }
 
 .search-bar {
@@ -273,7 +271,6 @@ section {
   .banner-container{
     padding: 20px 50px !important;
   }
-
 }
 
 @media only screen and (max-width: 599px) {
@@ -298,7 +295,6 @@ section {
   }
 
 }
-
 
 .service-item:hover {
   /*transform: translateY(-5px);*/
@@ -350,18 +346,19 @@ body {
   font-family: calibri,sans-serif;
   background-color: var(--color-background-system);
   height: 100vh;
-  
- }
+}
 
 
 .btn-primary-custom{
   background-color: var(--color-primary);
   border-color: var(--color-primary);
+  height: 38px;
 }
 
 .btn-primary{
   background-color: var(--color-primary);
   border: none !important;
+  height: 38px;
 }
 
 .btn-outline-primary{
@@ -371,8 +368,6 @@ body {
 .img-banner{
   max-height: 220px;
 }
-
-
 
 .banner-container{
   padding: 40px 100px !important;
@@ -462,7 +457,6 @@ body {
 
 }*/
 
-
 .dropdown-menu2{
     background-color: #ffffff !important;
     display: flex !important;
@@ -483,7 +477,7 @@ body {
   color:var(--color-primary);
   background-color:#EEF3FF;
   border-radius: 80px;
-  height:50px;
+  min-height:50px !important;
   width:50px;
   display:flex;
   justify-content:center;
@@ -501,8 +495,6 @@ body {
    justify-Content:'center';
    align-Items:'center'
 }
-
-
 
 .custom-h2{
  color: var(--color-primary); 
@@ -529,8 +521,7 @@ body {
     align-items: center;
     width: 5px;
     justify-content: center;
-  
-  }
+}
 
 .dest-icon:hover{
   color: #F6D751 ;
@@ -545,8 +536,8 @@ body {
   text-decoration: none;
 }
 
-.btn-outline-danger{
-  border:none;
+.btn-link:hover{
+  background-color: #F9FAFB;
 }
 
 .navbar{
@@ -571,3 +562,7 @@ body {
   color: var(--color-primary) !important;
 }
 
+/****NOTIFICACIONES****/
+.toast-container{
+  background-color: pink!important;
+}

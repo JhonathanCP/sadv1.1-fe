@@ -191,7 +191,7 @@ export function EditUserPermissions() {
                                                         <span className="text-success">Reporte Libre</span>
                                                     ) : (
                                                         report.hasPermission ? (
-                                                            <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger">
+                                                            <Button onClick={() => handleRemovePermission(report.id)} className="btn btn-outline-danger" variant="outline-danger" style={{border:'none'}}>
                                                                 <i className="bi bi-hand-thumbs-down" style={{paddingRight:'10px'}}></i>
                                                                 Quitar Permiso
                                                             </Button>

@@ -131,8 +131,8 @@ export function GroupModuleManagement() {
                     <p>Error: {error}</p>
                 ) : (
                     <>
-                        <Row>
-                            <Col md={10} className='my-3'>
+                        <Row  className='my-3'>
+                            <Col md={10} >
                                 <h2 className='custom-h2'>Grupos</h2>  
                             </Col>
                             <Col md={2} style={{alignContent:'center'}}>
@@ -141,7 +141,7 @@ export function GroupModuleManagement() {
                                 </Button>
                             </Col>
                         </Row>
-                        <Table responsive hover className='mt-3'>
+                        <Table responsive className='mt-3'>
                             <tbody>
                                 {filteredGroups.map((group) => (
                                     <tr key={group.id}>
@@ -168,7 +168,7 @@ export function GroupModuleManagement() {
                             </Col>
                         </Row>
                         
-                        <Table responsive hover className='mt-3'>
+                        <Table responsive className='mt-3'>
                             <tbody>
                                 {filteredModules.map((module) => (
                                     <tr key={module.id}>

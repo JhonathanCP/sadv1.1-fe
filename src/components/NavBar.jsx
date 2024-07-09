@@ -6,7 +6,7 @@ import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup,
-    Dropdown,DropdownButton,ListGroup, Row, Col} from 'react-bootstrap';
+    Dropdown,DropdownButton,ListGroup, Row, Col, Toast,ToastContainer} from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
@@ -195,6 +195,12 @@ export function NavBar() {
         }
     };
 
+    const [showA, setShowA] = useState(true);
+    const [showB, setShowB] = useState(true);
+  
+    const toggleShowA = () => setShowA(!showA);
+    const toggleShowB = () => setShowB(!showB);
+
     return (
         <Navbar expand="lg" className='fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
@@ -205,7 +211,6 @@ export function NavBar() {
                         className="d-inline-block align-top img-fluid"
                         alt="React Bootstrap logo"
                     />
-
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll"> 
@@ -277,12 +282,12 @@ export function NavBar() {
                             </>
                             )}
                         </Dropdown>
-                        <button type="button" className='btn btn-primary position-relative bi bi-bell-fill'>
+                        <button type="button" className='btn btn-primary bi bi-bell-fill' style={{maxWidth:'40px'}}
+                        onClick={toggleShowA} >
                             <span className="position-absolute translate-middle p-2 bg-danger rounded-circle">
                             <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
-
                         <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
                             <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
@@ -291,6 +296,24 @@ export function NavBar() {
 
                 </Navbar.Collapse>
             </Container>
+            
+            <ToastContainer>
+                <Toast show={showA} onClose={toggleShowA}>
+                    Notificaciones
+                <Toast.Header>
+                    <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded me-2"
+                    alt=""
+                    />
+                    <strong className="me-auto">Bootstrap</strong>
+                    <small>11 mins ago</small>
+                </Toast.Header>
+                <Toast.Body>Woohoo, you're reading this text in a Toast!</Toast.Body>
+                </Toast>
+            </ToastContainer>
+
+            {/*********************** MODAL SOLICITUD DE ACCESO **********************/}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Descargar Solicitud de Acceso</Modal.Title>
@@ -303,7 +326,7 @@ export function NavBar() {
                 </Modal.Footer>
             </Modal>
 
-            {/**MODAL ACTUALIZAR INFORMACION PERSONAL */}
+            {/*****************MODAL ACTUALIZAR INFORMACION PERSONAL ****************/}
             <Modal size="lg" show={showModal2} onHide={() => setShowModal2(false)} centered  keyboard={true}>
                 <Modal.Header closeButton={true}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
@@ -386,6 +409,9 @@ export function NavBar() {
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>
+
+           
         </Navbar>
+        
     );
 }
