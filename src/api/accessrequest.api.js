@@ -38,6 +38,10 @@ export const updateAccessRequest = (id, accessRequestData) => authApi.put(`/${id
 // Eliminar una solicitud de acceso
 export const deleteAccessRequest = (id) => authApi.delete(`/${id}`);
 
+export const approveAccessRequest = (id) => authApi.put(`/${id}/approve`);
+
+export const denyAccessRequest = (id) => authApi.put(`/${id}/deny`);
+
 // Subir un archivo PDF para una solicitud de acceso existente
 export const uploadPdfForAccessRequest = (id, pdfFile) => {
     const formData = new FormData();

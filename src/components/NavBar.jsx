@@ -246,11 +246,11 @@ export function NavBar() {
                                         </div>
                                         Usuarios
                                     </Dropdown.Item>
-                                            <Dropdown.Item className='btn-menu' onClick={() => setShowModal(true)}> 
-                                                <div class='ico-menu'>
-                                                <i className={`bi bi-send-fill`} ></i>
-                                                </div>
-                                                Solicitudes
+                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/access-requests')}> 
+                                            <div class='ico-menu'>
+                                            <i className={`bi bi-send-fill`} ></i>
+                                            </div>
+                                            Solicitudes
                                             </Dropdown.Item>
                                                 
                                             <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >

@@ -20,6 +20,7 @@ import { GroupModuleManagement } from './pages/GroupModuleManagement';
 import { UserRequestForm } from './pages/UserRequestForm'
 import { FavoritesPage } from './pages/FavoritesPage';
 import { UserRequestsPage } from './pages/UserRequestsPage';
+import { AdminRequestsPage } from './pages/AdminRequestPage';
 import PrivateRoutes from './components/PrivateRoutes';
 import AdminRoutes from './components/AdminRoutes';
 
@@ -49,6 +50,7 @@ function App() {
                         <Route path="/admin/report/:id" element={<ReportForm />} />
                         <Route path="/admin/create-report" element={<ReportForm />} />
                         <Route path="/admin/groups-modules" element={<GroupModuleManagement />} />
+                        <Route path="/admin/access-requests" element={<AdminRequestsPage />} />
                     </Route>
                 </Route>
             </Routes>
