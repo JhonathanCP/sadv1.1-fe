@@ -271,6 +271,10 @@ section {
   .banner-container{
     padding: 20px 50px !important;
   }
+
+  .btn-menu-movil{
+    display:flex;
+  }
 }
 
 @media only screen and (max-width: 599px) {
@@ -294,6 +298,17 @@ section {
     padding: 20px 50px !important;
   }
 
+  .menu-movil{
+    display:flex;
+  }
+
+  .btn-menu-web{
+    display: none;
+  }
+
+  .img-banner{
+    display: none;
+  }
 }
 
 .service-item:hover {
@@ -347,6 +362,17 @@ body {
   background-color: var(--color-background-system);
   height: 100vh;
 }
+
+.menu-movil{
+  display:none;
+}
+
+.btn-menu-movil{
+  border-color: #5569b1 !important;
+  color: rgb(255, 255, 255) !important;
+  
+}
+
 
 
 .btn-primary-custom{

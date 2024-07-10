@@ -201,8 +201,10 @@ export function NavBar() {
     const toggleShowA = () => setShowA(!showA);
     const toggleShowB = () => setShowB(!showB);
 
+    const [menuMovil, setMenuMovil]=useState(false);
+
     return (
-        <Navbar expand="lg" className='fixed-top' variant="dark">
+        <Navbar className='fixed-top' variant="dark">
             <Container fluid className='px-4 mx-5'>
                 <Navbar.Brand href="/menu">
                     <img
@@ -218,8 +220,8 @@ export function NavBar() {
                         {/*<Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
                             <i className={`bi bi-house`}></i> Volver al menú principal
                         </Nav.Link> */}          
-                        <Dropdown>  
-                            <Dropdown.Toggle
+                        <Dropdown className='btn-menu-web'>  
+                            <Dropdown.Toggle 
                             title={<span> </span>} >
                                 <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
                                 </i>
@@ -257,15 +259,12 @@ export function NavBar() {
                                             </div>
                                             Solicitudes
                                             </Dropdown.Item>
-                                                
                                             <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
                                                 <div class='ico-menu'>
                                                 <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
                                                 </div>
                                                 Favoritos
-                                            </Dropdown.Item>
-                                            
-                                        
+                                            </Dropdown.Item>                                        
                                             <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/groups-modules')}>
                                                 <div class='ico-menu'>
                                                 <i className={`bi bi-collection-fill`} ></i>
@@ -288,7 +287,15 @@ export function NavBar() {
                             <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
-                        <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
+                        <a className='menu-movil'>
+                            {
+                                menuMovil ? (<Button variant="outline-light" className='btn-menu-movil'>
+                                <i class="bi bi-x-lg"></i></Button>
+                                ):(<Button variant="outline-light" className='btn-menu-movil'>
+                                <i class="bi bi-list"></i></Button>)
+                            }
+                        </a>
+                        <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web'>
                             <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
                         </NavDropdown>
