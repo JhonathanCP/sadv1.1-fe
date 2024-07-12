@@ -192,7 +192,7 @@ export function MenuPage() {
     return (
         <div className='p-0' style={{backgroundColor: "#FBFCFE", height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid fixed="true" style={{minHeight: '35vh' }} className='mt-5 banner-container'>
+            <Container fluid fixed="true" style={{minHeight: '35vh' }} className='banner-container'>
                 <Row className='px-5 py-5 d-flex banner'>
                     <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
                         <h1 className='d-xl-none text-center' style={{fontWeight:'bold',}}>Explora EsSalud</h1>
@@ -205,10 +205,10 @@ export function MenuPage() {
                     </Col>
                 </Row>
             </Container>
-            <Container fluid className='px-0 mx-0 pb-4 pt-0 mt-0 sections-bg'>
+            <Container fluid className='px-0 mx-0 pb-4 pt-0 '>
 
                 <section id="services" className='services'>
-                    <div className="container-fluid" data-aos="fade-up">
+                    <div className="" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             {modules.sort((a, b) => a.id - b.id).map((module) => (
                                 <div

@@ -84,7 +84,7 @@ export function LoginPage() {
         <div
             //style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             style={{ backgroundImage: `url(${background})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
-            className="container-fluid d-flex align-items-center justify-content-center"
+            className="d-flex text-login "
         >
             <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
                 <Modal.Header closeButton>
@@ -98,10 +98,10 @@ export function LoginPage() {
                     </Button>
                 </Modal.Footer> */}
             </Modal>
-            <div className='row'>
-                <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
-                    <div className="text-white">
-                        <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}}/>
+            <div className='container fluid container-background-login '>
+                
+                    <div className="container fluid text-login">
+                        <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}} className='logo-essalud'/>
                         <h1 className="d-block d-sm-none text-center" style={{fontWeight:'bold'}}>Explora EsSalud: <br/>Visualización y Análisis de Datos</h1>
                         <h1 className="d-none d-md-block" style={{fontWeight:'bold',}}>Explora EsSalud:  <br/>Visualización y Análisis de Datos</h1>
                         <h5 className="d-none d-sm-block" style={{paddingTop:'40px'}}>
@@ -116,8 +116,8 @@ export function LoginPage() {
                             </div>
                         </div> */}
                     </div>
-                </div>
-                <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
+                
+                <div className="container-fluid col-lg-5 col-md-6 col-xs-12 form-login">
                     <div className="card p-4" style={{ width: '24rem' }}>
                         <form onSubmit={handleLogin} className="my-2">
                             <div className="text-center my-4">

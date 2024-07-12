@@ -198,10 +198,11 @@ export function NavBar() {
     const [showA, setShowA] = useState(true);
     const [showB, setShowB] = useState(true);
   
-    const toggleShowA = () => setShowA(!showA);
-    const toggleShowB = () => setShowB(!showB);
-
     const [menuMovil, setMenuMovil]=useState(false);
+
+    const cambioMenuMovil =()=>{
+        setMenuMovil(!menuMovil);
+    };
 
     return (
         <Navbar className='fixed-top' variant="dark">
@@ -216,10 +217,7 @@ export function NavBar() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll"> 
-                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll> 
-                        {/*<Nav.Link hidden={window.location.pathname === '/menu'} onClick={() => navigate('/menu')}>
-                            <i className={`bi bi-house`}></i> Volver al menú principal
-                        </Nav.Link> */}          
+                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>         
                         <Dropdown className='btn-menu-web'>  
                             <Dropdown.Toggle 
                             title={<span> </span>} >
@@ -228,7 +226,8 @@ export function NavBar() {
                             </Dropdown.Toggle>
                             {role === 1 && (
                                 <>
-                                <Dropdown.Menu className='dropdown-menu2'  style={{position:'absolute',left:'-140px'}}>
+                                
+                                <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')}   style={{position:'absolute',left:'-140px'}}>
                                     <NavDropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
                                         <div class='ico-menu'>
                                         <i class="bi bi-send-fill"></i>
@@ -246,7 +245,7 @@ export function NavBar() {
                             )}
                             {role === 2 && (
                             <>
-                                <Dropdown.Menu className='dropdown-menu2' style={{width:'325px', position:'absolute',left:'-140px'}}>
+                                <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{width:'325px', position:'absolute',left:'-140px'}}>
                                     <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
                                         <div class='ico-menu'>
                                        <i className={`bi bi-people-fill`}></i>
@@ -277,22 +276,23 @@ export function NavBar() {
                                                 </div>
                                                 Reportes
                                             </Dropdown.Item>
+                                            <Dropdown.Item></Dropdown.Item>
                                 </Dropdown.Menu>
                             </>
                             )}
                         </Dropdown>
                         <button type="button" className='btn btn-primary bi bi-bell-fill' style={{maxWidth:'40px'}}
-                        onClick={toggleShowA} >
+                            >
                             <span className="position-absolute translate-middle p-2 bg-danger rounded-circle">
                             <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
-                        <a className='menu-movil'>
+                        <a className='' onClick={()=>cambioMenuMovil()}>
                             {
-                                menuMovil ? (<Button variant="outline-light" className='btn-menu-movil'>
-                                <i class="bi bi-x-lg"></i></Button>
-                                ):(<Button variant="outline-light" className='btn-menu-movil'>
-                                <i class="bi bi-list"></i></Button>)
+                                menuMovil ? (<Button variant="button" className='btn-menu-movil'>
+                                <i className="bi bi-x-lg"></i></Button>
+                                ):(<Button variant="button" className='btn-menu-movil'>
+                                <i className="bi bi-list"></i></Button>)
                             }
                         </a>
                         <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web'>
@@ -303,22 +303,6 @@ export function NavBar() {
 
                 </Navbar.Collapse>
             </Container>
-            
-            <ToastContainer>
-                <Toast show={showA} onClose={toggleShowA}>
-                    Notificaciones
-                <Toast.Header>
-                    <img
-                    src="holder.js/20x20?text=%20"
-                    className="rounded me-2"
-                    alt=""
-                    />
-                    <strong className="me-auto">Bootstrap</strong>
-                    <small>11 mins ago</small>
-                </Toast.Header>
-                <Toast.Body>Woohoo, you're reading this text in a Toast!</Toast.Body>
-                </Toast>
-            </ToastContainer>
 
             {/*********************** MODAL SOLICITUD DE ACCESO **********************/}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
