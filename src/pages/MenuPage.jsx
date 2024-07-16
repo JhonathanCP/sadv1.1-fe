@@ -28,6 +28,7 @@ export function MenuPage() {
     const [RLs, setRLs] = useState([]);
     const [positions, setPositions] = useState([]);
     const [selectedMainDependency, setSelectedMainDependency] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -189,14 +190,30 @@ export function MenuPage() {
         navigate("/login");
     };
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
+    const handleSearch = () => {
+        if (searchQuery.trim() !== '') {
+            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
+            window.location.replace(searchUrl); // Reload the page
+        } else {
+            // Show error message or handle empty search query
+
+        }
+    };
+
     return (
-        <div className='p-0' style={{backgroundColor: "#FBFCFE", height: "100%" }}>
+        <div className='p-0' style={{ backgroundColor: "#FBFCFE", height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid fixed="true" style={{minHeight: '35vh' }} className='banner-container'>
+            <Container fluid style={{ minHeight: '35vh' }} className='banner-container'>
                 <Row className='px-5 py-5 d-flex banner'>
                     <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
-                        <h1 className='d-xl-none text-center' style={{fontWeight:'bold',}}>Explora EsSalud</h1>
-                        <h1 className='d-none d-xl-block'style={{fontWeight:'bold',}}>Explora EsSalud</h1>
+                        <h1 className='d-xl-none text-center' style={{ fontWeight: 'bold', }}>Explora EsSalud</h1>
+                        <h1 className='d-none d-xl-block' style={{ fontWeight: 'bold', }}>Explora EsSalud</h1>
                         <p className='d-none d-md-block d-xl-none text-center'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                         <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                     </Col>
@@ -205,8 +222,21 @@ export function MenuPage() {
                     </Col>
                 </Row>
             </Container>
-            <Container fluid className='px-0 mx-0 pb-4 pt-0 '>
-
+            <Container fluid className='px-5 pt-1 pb-5'>
+                <div className='d-flex' style={{ justifyContent: "flex-end" }}>
+                    <div className="search-bar d-flex" >
+                        <Form.Control
+                            type="search"
+                            placeholder="Buscar reporte"
+                            className="search-input"
+                            aria-label="Buscar reporte"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                        />
+                        <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                    </div>
+                </div>
                 <section id="services" className='services'>
                     <div className="" data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
@@ -218,7 +248,7 @@ export function MenuPage() {
                                 >
                                     <div className="service-item position-relative align-items-center justify-content-center">
                                         <div className="icon">
-                                            <i className={`bi bi-${module.icon}`} style={{color:'#1A3EC1'}}></i>
+                                            <i className={`bi bi-${module.icon}`} style={{ color: '#1A3EC1' }}></i>
                                         </div>
                                         <h3>{module.name}</h3>
                                     </div>
@@ -228,7 +258,7 @@ export function MenuPage() {
                     </div>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
@@ -244,7 +274,7 @@ export function MenuPage() {
             <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
-                    
+
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

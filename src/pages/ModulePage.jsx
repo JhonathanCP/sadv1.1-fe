@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getUserReports, addFavorite, removeFavorite, getUserFavorites } from '../api/user.api'
+import { getUserReports, addFavorite, removeFavorite, getUserFavorites, getUserModules } from '../api/user.api'
 import { getGroups } from '../api/group.api';
+import { getModule } from '../api/module.api';
 import { jwtDecode } from "jwt-decode";
 import { Link, Route, useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
@@ -18,11 +19,12 @@ import { useParams } from 'react-router-dom';
 export function ModulePage() {
     const { id } = useParams();
     const [reports, setReports] = useState([]);
+    const [module, setModule] = useState([]);
     const [groups, setGroups] = useState([]);
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
+    // const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
     // Obtener la fecha actual
     const currentDate = new Date();
@@ -69,6 +71,8 @@ export function ModulePage() {
             const fetchInfo = async () => {
                 try {
                     const response = await getUserReports(decodedToken.id);
+                    const moduleResponse = await getModule(id);
+                    setModule(moduleResponse.data);
                     const filteredReportes = response.data.reports.filter(report => report.ModuleId == id && report.active);
                     setReports(filteredReportes);
                 } catch (error) {
@@ -77,7 +81,7 @@ export function ModulePage() {
             };
 
             fetchInfo();
-
+            console.log(module);
             const fetchGroups = async () => {
                 try {
                     const response = await getGroups();
@@ -128,11 +132,11 @@ export function ModulePage() {
         navigate("/login");
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
+    // const handleKeyPress = (event) => {
+    //     if (event.key === 'Enter') {
+    //         handleSearch();
+    //     }
+    // };
 
     const toggleFavorite = async (report) => {
         try {
@@ -165,15 +169,15 @@ export function ModulePage() {
 
 
 
-    const handleSearch = () => {
-        if (searchQuery.trim() !== '') {
-            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
-            window.location.replace(searchUrl); // Reload the page
-        } else {
-            // Show error message or handle empty search query
+    // const handleSearch = () => {
+    //     if (searchQuery.trim() !== '') {
+    //         const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
+    //         window.location.replace(searchUrl); // Reload the page
+    //     } else {
+    //         // Show error message or handle empty search query
 
-        }
-    };
+    //     }
+    // };
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
@@ -182,7 +186,7 @@ export function ModulePage() {
 
             <Container fluid className='mt-5 mb-1 p-5' style={{ minHeight: '97vh' }}>
                 <section id="services" className='services w-100'>
-                    <div className="container-fluid" data-aos="fade-up">
+                    <Container fluid data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
                                 <Col>
@@ -193,12 +197,12 @@ export function ModulePage() {
                                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                                     </i>Menú Principal</a>
                                             </li>
-                                            <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                                            <li className="breadcrumb-item active" aria-current="page">{module.name}</li> {/* Colocar aqui el nombre de los módulos */}
                                         </ol>
                                     </nav>
                                 </Col>
 
-                                <div className='d-flex' style={{ justifyContent: "flex-end" }}>
+                                {/* <div className='d-flex' style={{ justifyContent: "flex-end" }}>
                                     <div className="search-bar d-flex" >
                                         <Form.Control
                                             type="search"
@@ -211,7 +215,7 @@ export function ModulePage() {
                                         />
                                         <i onClick={handleSearch} className="bi bi-search search-icon"></i>
                                     </div>
-                                </div>
+                                </div> */}
 
                             </div>
                             {reports.sort((a, b) => a.GroupId - b.GroupId).map((report) => (
@@ -246,11 +250,11 @@ export function ModulePage() {
                         {/*<div className="d-flex justify-content-center mt-4">
                             <Button variant="primary" className='mx-2' onClick={() => navigate('/menu')}>Volver al menú principal</Button>
                         </div> */}
-                    </div>
+                    </Container>
                 </section>
             </Container>
             <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
-                <div className='container-fluid'>
+                <Container fluid>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
                         <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
@@ -259,7 +263,7 @@ export function ModulePage() {
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
                         <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
-                </div>
+                </Container>
             </footer>
         </div>
 

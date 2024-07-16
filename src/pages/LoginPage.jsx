@@ -22,6 +22,7 @@ export function LoginPage() {
     const handleManualModal = () => setShowManualModal(true); // Nuevo controlador
     const handleCloseManualModal = () => setShowManualModal(false); // Nuevo controlador
     const [showComunicadoModal, setShowComunicadoModal] = useState(true);  // Estado para controlar la visibilidad del modal
+    const [showPassword, setShowPassword] = useState(false);  // Estado para manejar la visibilidad de la contraseña
     const navigate = useNavigate();
 
     const handleCloseComunicado = () => {
@@ -80,6 +81,10 @@ export function LoginPage() {
         });
     };
 
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
         <div
             //style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
@@ -133,9 +138,17 @@ export function LoginPage() {
                             <div className="form-group my-4">
                                 <label htmlFor="password">Contraseña</label>
                                 <div className="input-group">
-                                    <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange}>
-                                    </input>
-                                    <span className="input-group-text bi bi-eye-slash" id="basic-addon2" ></span>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className="form-control"
+                                        id="password"
+                                        name="password"
+                                        value={credentials.password}
+                                        onChange={handleChange}
+                                    />
+                                    <span className="input-group-text" id="basic-addon2" onClick={toggleShowPassword}>
+                                        <i className={`bi ${showPassword ? "bi-eye" : "bi-eye-slash"}`}></i>
+                                    </span>
                                 </div>
                             </div>
                             <button type="submit" className="btn btn-primary btn-primary-custom w-100 mt-3">Ingresar</button>

@@ -5,12 +5,17 @@ import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup,
-    Dropdown,DropdownButton,ListGroup, Row, Col, Toast,ToastContainer} from 'react-bootstrap';
+import {
+    Navbar, Nav, NavDropdown, Form, FormControl, Button, Container, Modal, InputGroup,
+    Dropdown, DropdownButton, ListGroup, Row, Col, Toast, ToastContainer
+} from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
 import CloseButton from 'react-bootstrap/CloseButton';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'jquery/dist/jquery.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
 
 export function NavBar() {
     const [usuario, setUsuario] = useState('');
@@ -121,13 +126,13 @@ export function NavBar() {
         setUserDetails(prev => ({ ...prev, MainDependencyId: mainDependencyId, DependencyId: '' })); // Clear DependencyId when MainDependency changes
         fetchDependencies(mainDependencyId);
     };
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === "dni" && (value.length > 8 || !/^\d*$/.test(value))) {
             return; // Prevents input if not digits or if more than 8 digits
         }
-    
+
         if (name === "RLId") {
             if (value === '4') {
                 // Set generic user details if RLId is '4'
@@ -152,7 +157,7 @@ export function NavBar() {
             setUserDetails(prev => ({ ...prev, [name]: value }));
         }
     };
-    
+
 
 
     const validateForm = () => {
@@ -191,21 +196,21 @@ export function NavBar() {
             window.location.replace(searchUrl); // Reload the page
         } else {
             // Show error message or handle empty search query
-            
+
         }
     };
 
     const [showA, setShowA] = useState(true);
     const [showB, setShowB] = useState(true);
-  
-    const [menuMovil, setMenuMovil]=useState(false);
 
-    const cambioMenuMovil =()=>{
+    const [menuMovil, setMenuMovil] = useState(false);
+
+    const cambioMenuMovil = () => {
         setMenuMovil(!menuMovil);
     };
 
     return (
-        <Navbar className='fixed-top' variant="dark">
+        <Navbar className='fixed-top' variant="dark" expand="lg">
             <Container fluid className='px-4 mx-5'>
                 <Navbar.Brand href="/menu">
                     <img
@@ -215,84 +220,84 @@ export function NavBar() {
                         alt="React Bootstrap logo"
                     />
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="navbarScroll" />
-                <Navbar.Collapse id="navbarScroll"> 
-                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>         
-                        <Dropdown className='btn-menu-web'>  
-                            <Dropdown.Toggle 
-                            title={<span> </span>} >
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }}>
+                        <Dropdown className='btn-menu-web'>
+                            <Dropdown.Toggle
+                                title={<span> </span>} >
                                 <i className="bi bi-grid-3x3-gap-fill" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Más opciones">
                                 </i>
                             </Dropdown.Toggle>
                             {role === 1 && (
                                 <>
-                                
-                                <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')}   style={{position:'absolute',left:'-140px'}}>
-                                    <NavDropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
-                                        <div class='ico-menu'>
-                                        <i class="bi bi-send-fill"></i>
-                                        </div>
-                                    Solicitudes
-                                    </NavDropdown.Item>
-                                    <NavDropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
-                                        <div class='ico-menu'>
-                                        <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
-                                        </div>
-                                    Favoritos
-                                    </NavDropdown.Item>
-                                </Dropdown.Menu>
+
+                                    <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{ position: 'absolute', left: '-140px' }}>
+                                        <NavDropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
+                                            <div className='ico-menu'>
+                                                <i className="bi bi-send-fill"></i>
+                                            </div>
+                                            Solicitudes
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
+                                            <div className='ico-menu'>
+                                                <i className={`bi bi-star-fill`} style={{ color: '#F6D751' }}></i>
+                                            </div>
+                                            Favoritos
+                                        </NavDropdown.Item>
+                                    </Dropdown.Menu>
                                 </>
                             )}
                             {role === 2 && (
-                            <>
-                                <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{width:'325px', position:'absolute',left:'-140px'}}>
-                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
-                                        <div class='ico-menu'>
-                                       <i className={`bi bi-people-fill`}></i>
-                                        </div>
-                                        Usuarios
-                                    </Dropdown.Item>
-                                    <Dropdown.Item className='btn-menu' onClick={() => navigate('/access-requests')}> 
-                                            <div class='ico-menu'>
-                                            <i className={`bi bi-send-fill`} ></i>
+                                <>
+                                    <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{ width: '325px', position: 'absolute', left: '-140px' }}>
+                                        <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
+                                            <div className='ico-menu'>
+                                                <i className={`bi bi-people-fill`}></i>
+                                            </div>
+                                            Usuarios
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className='btn-menu' onClick={() => navigate('/access-requests')}>
+                                            <div className='ico-menu'>
+                                                <i className={`bi bi-send-fill`} ></i>
                                             </div>
                                             Solicitudes
-                                            </Dropdown.Item>
-                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
-                                                <div class='ico-menu'>
-                                                <i className={`bi bi-star-fill`} style={{color:'#F6D751'}}></i>
-                                                </div>
-                                                Favoritos
-                                            </Dropdown.Item>                                        
-                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/groups-modules')}>
-                                                <div class='ico-menu'>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className='btn-menu' onClick={() => navigate('/favorites')} >
+                                            <div className='ico-menu'>
+                                                <i className={`bi bi-star-fill`} style={{ color: '#F6D751' }}></i>
+                                            </div>
+                                            Favoritos
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/groups-modules')}>
+                                            <div className='ico-menu'>
                                                 <i className={`bi bi-collection-fill`} ></i>
-                                                </div>
-                                                Grupos y<br/>módulos
-                                            </Dropdown.Item>
-                                            <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/reports')} >
-                                                <div class='ico-menu'>
+                                            </div>
+                                            Grupos y<br />módulos
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/reports')} >
+                                            <div className='ico-menu'>
                                                 <i className={`bi bi-clipboard2-data`} ></i>
-                                                </div>
-                                                Reportes
-                                            </Dropdown.Item>
-                                            <Dropdown.Item></Dropdown.Item>
-                                </Dropdown.Menu>
-                            </>
+                                            </div>
+                                            Reportes
+                                        </Dropdown.Item>
+                                        <Dropdown.Item></Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </>
                             )}
                         </Dropdown>
-                        <button type="button" className='btn btn-primary bi bi-bell-fill' style={{maxWidth:'40px'}}
-                            >
+                        <button type="button" className='btn btn-primary bi bi-bell-fill' style={{ maxWidth: '40px' }}
+                        >
                             <span className="position-absolute translate-middle p-2 bg-danger rounded-circle">
-                            <span className="visually-hidden">Notificaciones</span>
+                                <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
-                        <a className='' onClick={()=>cambioMenuMovil()}>
+                        <a className='' onClick={() => cambioMenuMovil()}>
                             {
                                 menuMovil ? (<Button variant="button" className='btn-menu-movil'>
-                                <i className="bi bi-x-lg"></i></Button>
-                                ):(<Button variant="button" className='btn-menu-movil'>
-                                <i className="bi bi-list"></i></Button>)
+                                    <i className="bi bi-x-lg"></i></Button>
+                                ) : (<Button variant="button" className='btn-menu-movil'>
+                                    <i className="bi bi-list"></i></Button>)
                             }
                         </a>
                         <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web'>
@@ -304,28 +309,15 @@ export function NavBar() {
                 </Navbar.Collapse>
             </Container>
 
-            {/*********************** MODAL SOLICITUD DE ACCESO **********************/}
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Descargar Solicitud de Acceso</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Button variant="primary" onClick={handleDownload}>Descargar Archivo</Button>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
-                </Modal.Footer>
-            </Modal>
-
             {/*****************MODAL ACTUALIZAR INFORMACION PERSONAL ****************/}
-            <Modal size="lg" show={showModal2} onHide={() => setShowModal2(false)} centered  keyboard={true}>
+            <Modal size="lg" show={showModal2} onHide={() => setShowModal2(false)} centered keyboard={true}>
                 <Modal.Header closeButton={true}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
                     return <CloseButton />;
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                    <Form.Group controlId="rl">
+                        <Form.Group controlId="rl">
                             <Form.Label>Régimen Laboral</Form.Label>
                             <Form.Control
                                 as="select"
@@ -349,11 +341,11 @@ export function NavBar() {
                                 value={userDetails.PositionId || ''}
                                 onChange={handleInputChange}
                                 isInvalid={!!errors.PositionId}
-                                disabled={userDetails.RLId=='4'}
+                                disabled={userDetails.RLId == '4'}
                             >
                                 <option value="">Seleccione una posición</option>
-                                    {positions.map((position) => (
-                                <option key={position.id} value={position.id}>{position.name}</option>
+                                {positions.map((position) => (
+                                    <option key={position.id} value={position.id}>{position.name}</option>
                                 ))}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.PositionId}</Form.Control.Feedback>
@@ -368,8 +360,8 @@ export function NavBar() {
                                 isInvalid={!!errors.MainDependencyId}
                             >
                                 <option value="">Seleccione una opción</option>
-                                    {mainDependencies.map((mainDep) => (
-                                <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
+                                {mainDependencies.map((mainDep) => (
+                                    <option key={mainDep.id} value={mainDep.id}>{mainDep.name}</option>
                                 ))}
                             </Form.Select>
                             <Form.Control.Feedback type="invalid">{errors.MainDependencyId}</Form.Control.Feedback>
@@ -401,8 +393,8 @@ export function NavBar() {
                 </Modal.Footer>
             </Modal>
 
-           
+
         </Navbar>
-        
+
     );
 }

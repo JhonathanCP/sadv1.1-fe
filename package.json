@@ -15,6 +15,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "compromise": "^14.13.0",
+    "jquery": "^3.7.1",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
     "jwt-decode": "^4.0.0",
