@@ -39,10 +39,10 @@ export function NavBar() {
             setUsuario(decodedToken.username);
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
-            fetchUserDetails(decodedToken.id);
-            fetchRLs();
-            fetchPositions();
-            fetchMainDependencies();
+            // fetchUserDetails(decodedToken.id);
+            // fetchRLs();
+            // fetchPositions();
+            // fetchMainDependencies();
         }
     }, []);
 
@@ -240,7 +240,7 @@ export function NavBar() {
                             <i onClick={handleSearch} className="bi bi-search search-icon"></i>
                         </div>
                         <NavDropdown title={<span><i className="bi bi-person"></i> {usuario}</span>} id="navbarScrollingDropdown">
-                            <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
+                            {/* <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item> */}
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>

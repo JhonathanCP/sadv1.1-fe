@@ -21,7 +21,7 @@ export function MenuPage() {
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
     const [userDetails, setUserDetails] = useState({});
     const [mainDependencies, setMainDependencies] = useState([]);
     const [dependencies, setDependencies] = useState([]);
@@ -54,27 +54,27 @@ export function MenuPage() {
             setRole(decodedToken.role);
             setUserId(decodedToken.id);
 
-            fetchUserDetails(decodedToken.id);
+            // fetchUserDetails(decodedToken.id);
 
-            const fetchRLs = async () => {
-                try {
-                    const response = await getRLs();
-                    setRLs(response.data);
-                } catch (error) {
-                    console.error('Error al obtener los régimenes laborales:', error);
-                }
-            };
-            const fetchPositions = async () => {
-                try {
-                    const response = await getPositions();
-                    setPositions(response.data);
-                } catch (error) {
-                    console.error('Error al obtener los posiciones:', error);
-                }
-            };
+            // const fetchRLs = async () => {
+            //     try {
+            //         const response = await getRLs();
+            //         setRLs(response.data);
+            //     } catch (error) {
+            //         console.error('Error al obtener los régimenes laborales:', error);
+            //     }
+            // };
+            // const fetchPositions = async () => {
+            //     try {
+            //         const response = await getPositions();
+            //         setPositions(response.data);
+            //     } catch (error) {
+            //         console.error('Error al obtener los posiciones:', error);
+            //     }
+            // };
 
-            fetchRLs();
-            fetchPositions();
+            // fetchRLs();
+            // fetchPositions();
 
             const fetchModules = async () => {
                 try {
@@ -92,95 +92,95 @@ export function MenuPage() {
         }
     }, []);
 
-    const fetchUserDetails = async (id) => {
-        try {
-            const response = await getUser(id);
-            const userData = response.data;
+    // const fetchUserDetails = async (id) => {
+    //     try {
+    //         const response = await getUser(id);
+    //         const userData = response.data;
 
-            if (!userData.DependencyId || !userData.RLId || !userData.PositionId) {
-                fetchMainDependencies();
-                setShowModal(true);
-            }
-        } catch (error) {
-            console.error('Error al obtener los detalles del usuario:', error);
-        }
-    };
+    //         if (!userData.DependencyId || !userData.RLId || !userData.PositionId) {
+    //             fetchMainDependencies();
+    //             setShowModal(true);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error al obtener los detalles del usuario:', error);
+    //     }
+    // };
 
-    const fetchMainDependencies = async () => {
-        try {
-            const response = await getMainDependencies();
-            setMainDependencies(response.data);
-        } catch (error) {
-            console.error('Error al obtener MainDependencies:', error);
-        }
-    };
+    // const fetchMainDependencies = async () => {
+    //     try {
+    //         const response = await getMainDependencies();
+    //         setMainDependencies(response.data);
+    //     } catch (error) {
+    //         console.error('Error al obtener MainDependencies:', error);
+    //     }
+    // };
 
-    const fetchDependencies = async (mainDependencyId) => {
-        try {
-            const response = await getDependencies(mainDependencyId);
-            setDependencies(response.data);
-        } catch (error) {
-            console.error('Error al obtener Dependencies:', error);
-        }
-    };
+    // const fetchDependencies = async (mainDependencyId) => {
+    //     try {
+    //         const response = await getDependencies(mainDependencyId);
+    //         setDependencies(response.data);
+    //     } catch (error) {
+    //         console.error('Error al obtener Dependencies:', error);
+    //     }
+    // };
 
-    const handleMainDependencyChange = (e) => {
-        const mainDependencyId = e.target.value;
-        setSelectedMainDependency(mainDependencyId);
-        setUserDetails({ ...userDetails, MainDependencyId: mainDependencyId, DependencyId: '' });
-        fetchDependencies(mainDependencyId);
-    };
+    // const handleMainDependencyChange = (e) => {
+    //     const mainDependencyId = e.target.value;
+    //     setSelectedMainDependency(mainDependencyId);
+    //     setUserDetails({ ...userDetails, MainDependencyId: mainDependencyId, DependencyId: '' });
+    //     fetchDependencies(mainDependencyId);
+    // };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
+    // const handleInputChange = (e) => {
+    //     const { name, value } = e.target;
 
-        if (name == "RLId" && value == '4') {
-            // Establece los valores predeterminados para el régimen laboral '4'
-            setUserDetails({
-                ...userDetails,
-                RLId: '4', // Suponiendo que el ID '4' es correcto
-                PositionId: '4', // Suponiendo que el ID '4' es correcto
-                isGeneric: true
-            });
-        } else if (name == "RLId" && userDetails.isGeneric) {
-            // Restablece si se cambia de '4' a otro valor y estaba previamente en genérico
-            setUserDetails({
-                ...userDetails,
-                RLId: value,
-                PositionId: userDetails.PositionId,
-                isGeneric: false
-            });
-        } else {
-            // Actualiza normalmente si no es el campo especial
-            setUserDetails({ ...userDetails, [name]: value });
-        }
-    };
+    //     if (name == "RLId" && value == '4') {
+    //         // Establece los valores predeterminados para el régimen laboral '4'
+    //         setUserDetails({
+    //             ...userDetails,
+    //             RLId: '4', // Suponiendo que el ID '4' es correcto
+    //             PositionId: '4', // Suponiendo que el ID '4' es correcto
+    //             isGeneric: true
+    //         });
+    //     } else if (name == "RLId" && userDetails.isGeneric) {
+    //         // Restablece si se cambia de '4' a otro valor y estaba previamente en genérico
+    //         setUserDetails({
+    //             ...userDetails,
+    //             RLId: value,
+    //             PositionId: userDetails.PositionId,
+    //             isGeneric: false
+    //         });
+    //     } else {
+    //         // Actualiza normalmente si no es el campo especial
+    //         setUserDetails({ ...userDetails, [name]: value });
+    //     }
+    // };
 
 
-    const validateForm = () => {
-        const newErrors = {};
-        if (!userDetails.MainDependencyId) newErrors.MainDependencyId = 'Dependencia principal es requerida';
-        if (!userDetails.DependencyId) newErrors.DependencyId = 'Dependencia secundaria es requerida';
-        if (!userDetails.RLId) newErrors.RLId = 'Régimen laboral es requerido';
-        if (!userDetails.PositionId) newErrors.PositionId = 'Posición es requerida';
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+    // const validateForm = () => {
+    //     const newErrors = {};
+    //     if (!userDetails.MainDependencyId) newErrors.MainDependencyId = 'Dependencia principal es requerida';
+    //     if (!userDetails.DependencyId) newErrors.DependencyId = 'Dependencia secundaria es requerida';
+    //     if (!userDetails.RLId) newErrors.RLId = 'Régimen laboral es requerido';
+    //     if (!userDetails.PositionId) newErrors.PositionId = 'Posición es requerida';
+    //     setErrors(newErrors);
+    //     return Object.keys(newErrors).length === 0;
+    // };
 
-    const handleSaveUserDetails = async () => {
-        if (!validateForm()) {
-            return;
-        }
+    // const handleSaveUserDetails = async () => {
+    //     if (!validateForm()) {
+    //         return;
+    //     }
 
-        try {
-            await updateUser(userId, userDetails);
-            toast.success("Información actualizada exitosamente");
-            setShowModal(false);
-        } catch (error) {
-            console.error('Error al actualizar la información del usuario:', error);
-            toast.error("Error al actualizar la información");
-        }
-    };
+    //     try {
+    //         await updateUser(userId, userDetails);
+    //         toast.success("Información actualizada exitosamente");
+    //         setShowModal(false);
+    //     } catch (error) {
+    //         console.error('Error al actualizar la información del usuario:', error);
+    //         toast.error("Error al actualizar la información");
+    //     }
+    // };
 
     const handleLogout = () => {
         localStorage.removeItem('access');
@@ -240,7 +240,7 @@ export function MenuPage() {
                 </div>
             </footer>
 
-            <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
+            {/* <Modal size="lg" show={showModal} onHide={() => setShowModal(false)} centered backdrop="static" keyboard={false}>
                 <Modal.Header closeButton={false}>
                     <Modal.Title>Actualizar Información Personal</Modal.Title>
                 </Modal.Header>
@@ -319,7 +319,7 @@ export function MenuPage() {
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }

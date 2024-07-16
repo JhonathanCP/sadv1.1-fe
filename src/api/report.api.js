@@ -3,11 +3,11 @@ import axios from "axios";
 const URL =
     process.env.NODE_ENV === "production"
         ? import.meta.env.VITE_BACKEND_URL
-        : "http://10.0.28.15:3000";
+        : "https://sad.essalud.gob.pe/api";
 
 const authApi = axios.create({
-    // baseURL: 'http://10.0.28.15:3000/reports/',
-    baseURL: 'http://10.0.28.15:3000/report/',
+    // baseURL: 'https://sad.essalud.gob.pe/api/reports/',
+    baseURL: 'https://sad.essalud.gob.pe/api/report/',
 });
 
 // Interceptor para incluir el token en los encabezados de todas las solicitudes
