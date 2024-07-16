@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUserReports } from '../api/user.api';
 import { postAccessAudit } from '../api/accessaudit.api';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -76,29 +76,30 @@ export function ReportPage() {
     }, [loading, report, navigate]);
 
     return (
-        <div className='p-0' style={{ height: "100%" }}>
+        <div className='p-0 m-0 g-0'>
             <NavBar />
-            <Container fluid className='mt-5 mb-1 p-5' style={{ minHeight: '100vh' }}>
+            <Container fluid className='mt-5 px-5 pt-4 mb-0 pb-0' style={{ maxHeight: '4.5vh' }}>
                 <Col>
                     <nav className aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
-                            <a href="#">
-                            <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                            </i>Menú Principal</a>
+                                <a href="#">
+                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                    </i>Menú Principal</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
                         </ol>
                     </nav>
                 </Col>
-
-                <Col xs={12} className="px-0 m-0 g-0" style={{ minHeight: '100vh' }}>
+            </Container>
+            <Container fluid>
+                <Col xs={12} className="px-0 mx-0 g-0">
                     {report.map((report) => (
-                        <iframe key={report.id} src={report.link} style={{ width: '100%', height: '93.542vh', border: 'none' }}></iframe>
+                        <iframe key={report.id} src={report.link} style={{ width: '100%', minHeight: '80vh', maxHeight: '90vh', border: 'none' }} className="px-0 mx-0 g-0"></iframe>
                     ))}
                 </Col>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ maxHeight: '5vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>

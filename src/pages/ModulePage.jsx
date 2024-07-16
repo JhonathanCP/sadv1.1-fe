@@ -219,7 +219,7 @@ export function ModulePage() {
 
                             </div>
                             {reports.sort((a, b) => a.GroupId - b.GroupId).map((report) => (
-                                <div key={report.id} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4 pt-3" data-bs-toggle="tooltip" data-bs-placement="top" title={report.description}>
+                                <div key={report.id} onClick={() => navigate(`/report/${report.id}`)} className="col-lg-3 col-md-6 align-items-center justify-content-center mt-4 pt-3" data-bs-toggle="tooltip" data-bs-placement="top" title={report.description}>
                                     <div className="service-item service-item-gray position-relative align-items-center justify-content-center">
                                         <div className="badges">
                                             {(new Date(report.createdAt) >= twoWeeksAgo && report.version.startsWith('1.0')) && <span className="badge rounded-pill text-bg-success mx-1">Nuevo</span>}
