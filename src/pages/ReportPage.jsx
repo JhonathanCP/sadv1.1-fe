@@ -78,34 +78,36 @@ export function ReportPage() {
     return (
         <div className='p-0 m-0 g-0'>
             <NavBar />
-            <Container fluid className='mt-5 px-5 pt-4 mb-0 pb-0' style={{ maxHeight: '4.5vh' }}>
-                <Col>
-                    <nav className aria-label="breadcrumb">
-                        <ol className="breadcrumb" style={{}}>
-                            <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
-                                <a href="#">
-                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                    </i>Menú Principal</a>
-                            </li>
-                            <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
-                        </ol>
-                    </nav>
-                </Col>
+            <Container fluid className='m-0 p-0'>
+                <Container fluid className='d-md-flex mt-0 px-5 mb-0 pb-0 d-flex align-items-end' style={{ minHeight: '10.5vh' }}>
+                    <Col>
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb p-0 m-0 g-0">
+                                <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
+                                    <a href="#">
+                                        <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                        </i>Menú Principal</a>
+                                </li>
+                                <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                            </ol>
+                        </nav>
+                    </Col>
+                </Container>
+                <Container fluid className='d-md-flex p-0 m-0' style={{ minHeight: '80vh' }}>
+                    <Col xs={12} className="pt-0 px-0 m-0 g-0" style={{ minHeight: '80vh' }}>
+                        {report.map((report) => (
+                            <iframe key={report.id} src={report.link} style={{ width: '100%', height: '87.57vh', border: 'none' }}></iframe>
+                        ))}
+                    </Col>
+                </Container>
             </Container>
-            <Container fluid>
-                <Col xs={12} className="px-0 mx-0 g-0">
-                    {report.map((report) => (
-                        <iframe key={report.id} src={report.link} style={{ width: '100%', minHeight: '80vh', maxHeight: '90vh', border: 'none' }} className="px-0 mx-0 g-0"></iframe>
-                    ))}
-                </Col>
-            </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ maxHeight: '5vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0 d-flex align-items-center footer" style={{ minHeight: '5vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>
                         <div className="col-6 text-center">Versión: 1.1.0.20240527</div>
                     </div>
-                    <div className='row d-none d-md-flex'>
+                    <div className='row d-none d-md-flex align-items-center justify-content-left'>
                         <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
                         <div className="col-2 text-end">Versión: 1.1.0.20240527</div>
                     </div>
