@@ -20,11 +20,15 @@ export function LoginPage() {
     const [showManualModal, setShowManualModal] = useState(false);
     const handleManualModal = () => setShowManualModal(true); // Nuevo controlador
     const handleCloseManualModal = () => setShowManualModal(false); // Nuevo controlador
-    const [showComunicadoModal, setShowComunicadoModal] = useState(true);  // Estado para controlar la visibilidad del modal
+    const [showComunicadoModal, setShowComunicadoModal] = useState(false);  // Estado para controlar la visibilidad del modal
     const navigate = useNavigate();
 
     const handleCloseComunicado = () => {
         setShowComunicadoModal(false);  // Función para cerrar el modal
+    };
+
+    const handleOpenComunicado = () => {
+        setShowComunicadoModal(true);  // Función para cerrar el modal
     };
 
     useEffect(() => {
@@ -115,8 +119,8 @@ export function LoginPage() {
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
-                    <div className="card p-4" style={{ width: '24rem' }}>
-                        <form onSubmit={handleLogin} className="my-2">
+                    <div className="card px-4 pt-4" style={{ width: '22.5rem' }}>
+                        <form onSubmit={handleLogin} className="mt-2">
                             <div className="text-center my-2">
                                 <img src={Logo} alt="Logo" />
                             </div>
@@ -132,7 +136,7 @@ export function LoginPage() {
                                 <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange} />
                             </div>
                             <button type="submit" className="btn btn-primary w-100 mt-3">Ingresar</button>
-                            <ManualComponent show={showManualModal} handleClose={handleCloseManualModal} />
+                            <p className='text-center fst-italic'><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={handleOpenComunicado}><i className='bi bi-info-circle'></i>Instrucciones de ingreso</a></p>
                         </form>
                     </div>
                 </div>
