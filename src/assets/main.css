@@ -623,3 +623,28 @@ body {
 .toast-container{
   background-color: pink!important;
 }
+
+.favorites .icon-and-name {
+  display: flex;
+  align-items: center;
+}
+
+.favorites .icon-background {
+  width: 35px; /* Tamaño ajustado para la bolita */
+  height: 35px;
+  background-color: #E3FDFE;
+  border-radius: 50%; /* Bordes redondeados para hacer una bolita */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px; /* Espacio entre el icono y el texto */
+}
+
+.favorites .icon-background i {
+  font-size: 20px; /* Ajustar el tamaño del icono según sea necesario */
+}
+
+.favorites span {
+  font-size: 16px; /* Ajustar el tamaño de la fuente según sea necesario */
+}
+

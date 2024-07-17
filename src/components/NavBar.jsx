@@ -14,8 +14,6 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
 import CloseButton from 'react-bootstrap/CloseButton';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'jquery/dist/jquery.min.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
 
 export function NavBar() {
     const [usuario, setUsuario] = useState('');
@@ -203,12 +201,6 @@ export function NavBar() {
     const [showA, setShowA] = useState(true);
     const [showB, setShowB] = useState(true);
 
-    const [menuMovil, setMenuMovil] = useState(false);
-
-    const cambioMenuMovil = () => {
-        setMenuMovil(!menuMovil);
-    };
-
     return (
         <Navbar className='fixed-top' variant="dark" expand="lg">
             <Container fluid className='px-4 mx-5'>
@@ -232,7 +224,7 @@ export function NavBar() {
                             {role === 1 && (
                                 <>
 
-                                    <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{ position: 'absolute', left: '-140px' }}>
+                                    <Dropdown.Menu className='menu2' style={{ position: 'absolute', left: '-140px' }}>
                                         <NavDropdown.Item className='btn-menu' onClick={() => navigate('/user-requests')}>
                                             <div className='ico-menu'>
                                                 <i className="bi bi-send-fill"></i>
@@ -250,7 +242,7 @@ export function NavBar() {
                             )}
                             {role === 2 && (
                                 <>
-                                    <Dropdown.Menu className={menuMovil ? ('menu2open') : ('menu2')} style={{ width: '325px', position: 'absolute', left: '-140px' }}>
+                                    <Dropdown.Menu className='menu2' style={{ width: '325px', position: 'absolute', left: '-140px' }}>
                                         <Dropdown.Item className='btn-menu' onClick={() => navigate('/admin/users')} >
                                             <div className='ico-menu'>
                                                 <i className={`bi bi-people-fill`}></i>
@@ -292,14 +284,6 @@ export function NavBar() {
                                 <span className="visually-hidden">Notificaciones</span>
                             </span>
                         </button>
-                        <a className='' onClick={() => cambioMenuMovil()}>
-                            {
-                                menuMovil ? (<Button variant="button" className='btn-menu-movil'>
-                                    <i className="bi bi-x-lg"></i></Button>
-                                ) : (<Button variant="button" className='btn-menu-movil'>
-                                    <i className="bi bi-list"></i></Button>)
-                            }
-                        </a>
                         <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web'>
                             <NavDropdown.Item onClick={() => setShowModal2(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
@@ -392,8 +376,6 @@ export function NavBar() {
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>
-
-
         </Navbar>
 
     );

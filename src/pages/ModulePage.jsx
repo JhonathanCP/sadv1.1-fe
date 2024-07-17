@@ -99,25 +99,25 @@ export function ModulePage() {
                     setUsuario(decodedToken.username);
                     setRole(decodedToken.role);
                     setUserId(decodedToken.id);
-    
+
                     const [reportRes, favRes] = await Promise.all([
                         getUserReports(decodedToken.id),
                         getUserFavorites(decodedToken.id)
                     ]);
-    
+
                     const favoriteIds = new Set(favRes.data.favoriteReports.map(fav => fav.id));
                     const reportsWithFavorites = reportRes.data.reports.map(report => ({
                         ...report,
                         isFavorite: favoriteIds.has(report.id)
                     }));
-    
+
                     setReports(reportsWithFavorites.filter(report => report.ModuleId == id && report.active));
                 } catch (error) {
                     console.error('Error al obtener la información:', error);
                     toast.error('Error al cargar los reportes y favoritos');
                 }
             };
-    
+
             fetchReportsAndFavorites();
         }
     }, []);
@@ -138,7 +138,8 @@ export function ModulePage() {
     //     }
     // };
 
-    const toggleFavorite = async (report) => {
+    const toggleFavorite = async (event, report) => {
+        event.stopPropagation();        
         try {
             // Determinar la nueva acción basada en el estado actual de favorito
             const newFavoriteStatus = !report.isFavorite;
@@ -153,7 +154,7 @@ export function ModulePage() {
 
             // API call based on the new status
             if (newFavoriteStatus) {
-                await addFavorite({userId, reportId});
+                await addFavorite({ userId, reportId });
                 toast.success('Reporte añadido a favoritos');
             } else {
                 await removeFavorite(userId, reportId);
@@ -184,14 +185,14 @@ export function ModulePage() {
 
             <NavBar></NavBar>
 
-            <Container fluid className='mt-5 mb-1 p-5' style={{ minHeight: '97vh' }}>
+            <Container fluid className='mt-0 px-5 mb-0 pb-0'>
                 <section id="services" className='services w-100'>
                     <Container fluid data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
-                                <Col>
-                                    <nav className aria-label="breadcrumb">
-                                        <ol className="breadcrumb" style={{}}>
+                                <Col className="d-flex align-items-end" style={{ minHeight: '11vh' }}>
+                                    <nav aria-label="breadcrumb">
+                                        <ol className="breadcrumb p-0 m-0 g-0">
                                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                                 <a href="#">
                                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
@@ -233,7 +234,7 @@ export function ModulePage() {
                                                     )}
                                                 </span>
                                             ))}
-                                            <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
+                                            <button onClick={(event) => toggleFavorite(event, report)} type="button" className="btn btn-outline-light dest-icon">
                                                 <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
                                             </button>
                                         </div>
@@ -253,7 +254,7 @@ export function ModulePage() {
                     </Container>
                 </section>
             </Container>
-            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-0 m-0 footer" style={{ minHeight: '2vh' }}>
                 <Container fluid>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-6">© GCTIC-EsSalud</div>

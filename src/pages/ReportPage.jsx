@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUserReports } from '../api/user.api';
+import { getModule } from '../api/module.api';
 import { postAccessAudit } from '../api/accessaudit.api';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
@@ -14,6 +15,7 @@ import { Container, Col, Breadcrumb } from 'react-bootstrap';
 export function ReportPage() {
     const { id } = useParams();
     const [report, setReport] = useState([]);
+    const [module, setModule] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ export function ReportPage() {
             const fetchInfo = async () => {
                 try {
                     const response = await getUserReports(decodedToken.id);
-                    const reportData = response.data.reports.filter(report => report.id == id);
+                    const reportData = response.data.reports.find(report => report.id == id);
                     setReport(reportData);
                     setLoading(false); // Marcar la carga como completada
 
@@ -58,6 +60,8 @@ export function ReportPage() {
             };
 
             fetchInfo();
+
+            console.log(report.ModuleId)
         }
     }, [id]); // Agrega 'id' como dependencia para que useEffect se ejecute cuando cambie
 
@@ -75,6 +79,23 @@ export function ReportPage() {
         }
     }, [loading, report, navigate]);
 
+    useEffect(() => {
+        const fetchModule = async () => {
+            try {
+                const response = await getModule(report.ModuleId);
+                console.error('Error al obtener la información:');
+                const moduleData = response.data;
+                setModule(moduleData)
+                setLoading(false); // Marcar la carga como completada
+
+            } catch (error) {
+                console.error('Error al obtener la información:', error);
+            }
+        };
+
+        fetchModule();
+    })
+
     return (
         <div className='p-0 m-0 g-0'>
             <NavBar />
@@ -84,20 +105,23 @@ export function ReportPage() {
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb p-0 m-0 g-0">
                                 <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
-                                    <a href="#">
+                                    <a href="">
                                         <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                         </i>Menú Principal</a>
                                 </li>
-                                <li className="breadcrumb-item active" aria-current="page">Administrativo</li> {/* Colocar aqui el nombre de los módulos */}
+                                <li className="breadcrumb-item" onClick={() => navigate(`/module/${module.id}`)}>
+                                    <a href="">
+                                        <i className={`bi bi-${module.icon}`} style={{ paddingRight: '5px' }}>
+                                        </i>{module.name}</a>
+                                </li>
+                                <li className="breadcrumb-item active" aria-current="page">{report.name}</li> {/* Colocar aqui el nombre de los módulos */}
                             </ol>
                         </nav>
                     </Col>
                 </Container>
                 <Container fluid className='d-md-flex p-0 m-0' style={{ minHeight: '80vh' }}>
                     <Col xs={12} className="pt-0 px-0 m-0 g-0" style={{ minHeight: '80vh' }}>
-                        {report.map((report) => (
-                            <iframe key={report.id} src={report.link} style={{ width: '100%', height: '87.57vh', border: 'none' }}></iframe>
-                        ))}
+                        <iframe key={report.id} src={report.link} style={{ width: '100%', height: '87.57vh', border: 'none' }}></iframe>
                     </Col>
                 </Container>
             </Container>

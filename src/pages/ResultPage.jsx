@@ -178,14 +178,14 @@ export function ResultPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar></NavBar>
-            <Container fluid className='mt-5 mb-0 p-5 pb-0'>
+            <Container fluid className='mt-0 px-5 mb-0 pb-0'>
                 <section id="services" className='services w-100'>
                     <Container fluid data-aos="fade-up">
                         <div className="row align-items-center justify-content-center px-4" data-aos="fade-up" data-aos-delay="100">
                             <div className='w-100'>
-                                <Col>
+                                <Col className="d-flex align-items-end" style={{ minHeight: '11vh' }}>
                                     <nav aria-label="breadcrumb">
-                                        <ol className="breadcrumb" style={{}}>
+                                        <ol className="breadcrumb p-0 m-0 g-0">
                                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                                 <a href="#">
                                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>

@@ -74,7 +74,7 @@ export function AdminRequestsPage() {
         try {
             await approveAccessRequest(requestId);
             toast.success('Solicitud aprobada correctamente');
-            setAccessRequests(accessRequests.map(request => request.id === requestId ? { ...request, StateId: states.find(s => s.name === 'Aprobado').id } : request));
+            setAccessRequests(accessRequests.map(request => request.id === requestId ? { ...request, StateId: states.find(s => s.name === 'APROBADO').id } : request));
             handleCloseModal();
             //location.reload();
         } catch (error) {
@@ -87,7 +87,7 @@ export function AdminRequestsPage() {
         try {
             await denyAccessRequest(requestId);
             toast.success('Solicitud denegada correctamente');
-            setAccessRequests(accessRequests.map(request => request.id === requestId ? { ...request, StateId: states.find(s => s.name === 'Denegado').id } : request));
+            setAccessRequests(accessRequests.map(request => request.id === requestId ? { ...request, StateId: states.find(s => s.name === 'DENEGADO').id } : request));
             handleCloseModal();
             //location.reload();
         } catch (error) {
@@ -101,7 +101,7 @@ export function AdminRequestsPage() {
             <NavBar />
             <Container fluid className='mt-5 mb-1 p-5'>
                 <Col>
-                    <nav className aria-label="breadcrumb">
+                    <nav aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item">
                                 <a href="#">
@@ -140,7 +140,7 @@ export function AdminRequestsPage() {
                                             <td>{getStateNameById(request.StateId)}</td>
                                             <td>
                                                 <Button variant="link" onClick={() => handleViewDetails(request.id, request.StateId)} className="btn btn-link" style={{textDecorationLine:'none'}}>
-                                                <i class="bi bi-filetype-pdf" style={{paddingRight:'10px'}}></i>Ver solicitud</Button>
+                                                <i className="bi bi-filetype-pdf" style={{paddingRight:'10px'}}></i>Ver solicitud</Button>
                                             </td>
                                         </tr>
                                     ))}

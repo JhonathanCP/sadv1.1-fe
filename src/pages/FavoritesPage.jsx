@@ -18,11 +18,8 @@ import {
 
 export function FavoritesPage() {
     const [favoriteReports, setFavoriteReports] = useState([]);
-    const [reports, setReports] = useState([]);
     const [groups, setGroups] = useState([]);
     const [modules, setModules] = useState([]);
-    const [usuario, setUsuario] = useState('');
-    const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
     const navigate = useNavigate();
     const currentDate = new Date();
@@ -45,7 +42,7 @@ export function FavoritesPage() {
                         getModules(),
                         getGroups()
                     ]);
-                    setFavoriteReports(favResponse.data.favoriteReports);
+                    setFavoriteReports(favResponse.data.favoriteReports.map(report => ({ ...report, isFavorite: true })));
                     setModules(modResponse.data);
                     setGroups(grpResponse.data);
                 } catch (error) {
@@ -58,32 +55,25 @@ export function FavoritesPage() {
         }
     }, []);
 
-    const toggleFavorite = async (report) => {
+    const toggleFavorite = async (event, report) => {
+        event.stopPropagation();
         try {
-            // Determinar la nueva acción basada en el estado actual de favorito
             const newFavoriteStatus = !report.isFavorite;
             const reportId = report.id;
             // Optimistically update the UI
-            setFavoriteReports(favoriteReports.map(r => {
-                if (r.id === report.id) {
-                    return { ...r, isFavorite: newFavoriteStatus };
-                }
-                return r;
-            }));
+            setFavoriteReports(favoriteReports.filter(r => r.id !== reportId));
 
-            // API call based on the new status
             if (newFavoriteStatus) {
                 await addFavorite({ userId, reportId });
                 toast.success('Reporte añadido a favoritos');
             } else {
-                await removeFavorite({ userId, reportId });
+                await removeFavorite(userId, reportId);
                 toast.success('Reporte eliminado de favoritos');
             }
         } catch (error) {
             console.error('Error al actualizar el estado de favoritos:', error);
             toast.error('Error al actualizar el estado de favoritos');
-            // Revertir en caso de error, manteniendo la UI consistente con el estado del servidor
-            setFavoriteReports(favoriteReports);
+            setFavoriteReports(favoriteReports.map(r => r.id === report.id ? { ...r, isFavorite: !report.isFavorite } : r));
         }
     };
 
@@ -99,10 +89,10 @@ export function FavoritesPage() {
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='mt-5 mb-1 p-5'>
-                <Col>
-                    <nav className="breadcrumb" aria-label="breadcrumb">
-                        <ol className="breadcrumb" style={{}}>
+            <Container fluid className='px-5'>
+                <Col className="d-flex align-items-end" style={{ minHeight: '11vh' }}>
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb p-0 m-0 g-0">
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}></i>Menú Principal
@@ -125,7 +115,16 @@ export function FavoritesPage() {
                         return (
                             <Accordion.Item eventKey={String(index)} key={moduleId}>
                                 <Accordion.Header className='accordion-header'>
-                                    {module ? `${module.name}` : 'Módulo Desconocido'}
+                                    {module ? (
+                                        <div className="favorites">
+                                            <div className="icon-and-name">
+                                                <div className="icon-background">
+                                                    <i className={`bi bi-${module.icon}`} ></i>
+                                                </div>
+                                                <span>{module.name}</span>
+                                            </div>
+                                        </div>
+                                    ) : 'Módulo Desconocido'}
                                 </Accordion.Header>
                                 <Accordion.Body>
                                     <section id="services" className='services w-100'>
@@ -153,9 +152,9 @@ export function FavoritesPage() {
                                                                         )}
                                                                     </span>
                                                                 ))}
-                                                                    <button onClick={() => toggleFavorite(report)} type="button" className="btn btn-outline-light dest-icon">
-                                                                        <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
-                                                                    </button> 
+                                                                <button onClick={(event) => toggleFavorite(event, report)} type="button" className="btn btn-outline-light dest-icon">
+                                                                    <i className={report.isFavorite ? "bi bi-star-fill" : "bi bi-star"} style={{ color: report.isFavorite ? '#F6D751' : '#6C757D' }}></i>
+                                                                </button>
                                                             </div>
                                                             <div className="icon">
                                                                 <img src={iconReport} style={{ width: "140.5px", height: "29.98px" }}
