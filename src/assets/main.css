@@ -295,11 +295,6 @@ section {
     display: flex;
   }
   
-
-  .btn-menu-web{
-    display: none;
-  }
-
   .img-banner{
     display: none;
   }
@@ -500,34 +495,22 @@ body {
   z-index: 2; /* Asegura que el contenido del botón esté en un nivel superior al pseudo-elemento */
 }
 
-.menu2{
-    background-color: #ffffff !important;
-    display: flex !important;
-    flex-wrap: wrap;
-    border-style: solid;
-    flex-direction: row;
-    padding: 10px;
-    gap: 20px;
-    width: max-content;
-    border-color: #E8F0FC;
-    box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
-    border-width: 4px;
-    border-radius: 10px;
-    justify-content: center;
-}
-
-.menu2open{
-  background-color: var(--color-primary);
+.menu2 {
+  background-color: #ffffff !important;
   display: flex !important;
   flex-wrap: wrap;
-  flex-direction: column;
-  padding: 10px;
-  gap: 20px;
-  width: max-content;
-  border-radius: 0px;
+  border-style: solid;
+  flex-direction: row;
+  padding: 0px;
+  gap: 0px;
+  border-color: #E8F0FC;
+  box-shadow: 0 0 20px rgba(109, 142, 186, 0.25);
+  border-width: 4px;
+  border-radius: 10px;
   justify-content: center;
+  position: relative;
+  z-index: 1000;
 }
-
 
 
 .ico-menu{
@@ -546,8 +529,8 @@ body {
   color:'#0B38AB';
   background-Color:'#EEF3FF';
    border-Radius:"80px";
-   height:'30px';
-   width:'30px';
+   height:'20px';
+   width:'20px';
    display:'flex';
    justify-Content:'center';
    align-Items:'center'
@@ -601,9 +584,8 @@ body {
   background-color: var(--color-primary);
   min-height: 5vh;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5) ;
-  padding-top: .25rem !important;
-  padding-bottom: .25rem !important;
-  height: 65px;
+  padding-top: .15rem !important;
+  padding-bottom: .15rem !important;
 }
 
 .accordion-button:not(.collapsed){

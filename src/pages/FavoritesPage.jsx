@@ -29,6 +29,20 @@ export function FavoritesPage() {
 
     useEffect(() => {
         AOS.init();
+
+        const expirationTime = localStorage.getItem('expirationTime');
+        if (expirationTime) {
+            const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+            if (currentTime > expirationTime) {
+                toast('Sesión expirada', {
+                    icon: '👏',
+                });
+                // El token ha expirado, cierra sesión
+                handleLogout();
+            }
+        }
+
+
         const token = localStorage.getItem('access');
         if (token) {
             const decodedToken = jwtDecode(token);
@@ -85,6 +99,15 @@ export function FavoritesPage() {
             moduleMap.set(report.ModuleId, [report]);
         }
     });
+
+    const handleLogout = () => {
+        // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
+        localStorage.removeItem('access');
+        localStorage.removeItem('expirationTime');
+        // Redirige al inicio de sesión u otra página
+        toast.success("Sesión terminada");
+        navigate("/login");
+    };
 
     return (
         <div className='p-0' style={{ height: "100%" }}>

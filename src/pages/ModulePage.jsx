@@ -81,7 +81,6 @@ export function ModulePage() {
             };
 
             fetchInfo();
-            console.log(module);
             const fetchGroups = async () => {
                 try {
                     const response = await getGroups();

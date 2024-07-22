@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { getReports } from '../api/report.api';
+import { getReports, getReport, updateReport, createReport, deleteReport } from '../api/report.api';
 import { getModules } from '../api/module.api';
+import { getGroups } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Form, Button,Accordion,Table,Modal,FloatingLabel,Image } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Form, Button, Accordion, Table, Modal, FloatingLabel, Image } from 'react-bootstrap';
 import { toast } from "react-hot-toast";
 import AOS from 'aos';
 import 'bootstrap-icons/font/bootstrap-icons.css';  // Importamos Bootstrap Icons
 
 export function ReportListPage() {
     const [modules, setModules] = useState([]);
-    const navigate = useNavigate();
+    const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [expandedModules, setExpandedModules] = useState({});
-    const [searchQuery, setSearchQuery] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState('create');
+    const [currentReport, setCurrentReport] = useState({});
 
     useEffect(() => {
         const successMessage = localStorage.getItem('successMessage');
@@ -40,6 +42,7 @@ export function ReportListPage() {
             try {
                 const modulesResponse = await getModules();
                 const reportsResponse = await getReports();
+                const groupsResponse = await getGroups();
 
                 const modulesData = modulesResponse.data.map(module => ({
                     ...module,
@@ -47,6 +50,7 @@ export function ReportListPage() {
                 }));
 
                 setModules(modulesData);
+                setGroups(groupsResponse.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -74,31 +78,71 @@ export function ReportListPage() {
         }));
     };
 
-    const filteredModules = modules.filter(module =>
-        module.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        module.reports.some(report => 
-            report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            report.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredModules = modules.map(module => ({
+        ...module,
+        reports: module.reports.filter(report =>
+            report.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
-    );
+    })).filter(module => module.reports.length > 0);
 
-    const handleSearch = () => {
-        if (searchQuery.trim() !== '') {
-            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
-            window.location.replace(searchUrl); // Reload the page
+    const handleShowModal = async (type, report = {}) => {
+        setModalType(type);
+        if (type === 'edit') {
+            try {
+                const response = await getReport(report.id);
+                setCurrentReport(response.data);
+            } catch (error) {
+                toast.error('Error al obtener los detalles del reporte');
+            }
         } else {
-            // Show error message or handle empty search query
-            
+            setCurrentReport(report);
+        }
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCurrentReport({});
+    };
+
+    const handleSaveReport = async (e) => {
+        e.preventDefault();
+
+        const formattedReport = {
+            ...currentReport,
+            ModuleId: currentReport.ModuleId ? parseInt(currentReport.ModuleId, 10) : null,
+        };
+
+        try {
+            if (modalType === 'edit') {
+                await updateReport(currentReport.id, formattedReport);
+                toast.success('Reporte actualizado con éxito');
+            } else {
+                await createReport(formattedReport);
+                toast.success('Reporte creado con éxito');
+            }
+            handleCloseModal();
+            const reportsResponse = await getReports();
+            const modulesResponse = await getModules();
+            const modulesData = modulesResponse.data.map(module => ({
+                ...module,
+                reports: reportsResponse.data.filter(report => report.ModuleId === module.id)
+            }));
+            setModules(modulesData);
+        } catch (error) {
+            toast.error(`Error al ${modalType === 'edit' ? 'actualizar' : 'crear'} el reporte`);
         }
     };
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
+    const handleAccessLevelChange = (e) => {
+        const value = e.target.value;
+        setCurrentReport({
+            ...currentReport,
+            free: value === 'free',
+            limited: value === 'limited',
+            restricted: value === 'restricted'
+        });
     };
-
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
@@ -109,108 +153,84 @@ export function ReportListPage() {
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
-                                <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                </i>Menú Principal</a>
+                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                    </i>Menú Principal</a>
                             </li>
-                            <li className="breadcrumb-item active" aria-current="page">Reportes</li> {/* Colocar aqu los módulos */}
+                            <li className="breadcrumb-item active" aria-current="page">Reportes</li>
                         </ol>
                     </nav>
                 </Col>
                 <Row className="my-3">
                     <Col md={8} >
-                        <h2 className='custom-h2'>Reportes</h2> 
+                        <h2 className='custom-h2'>Reportes</h2>
                     </Col>
-                    <Col md={2} style={{alignContent:'center'}}>
-                        <div className="search-bar d-flex" >
+                    <Col md={2} style={{ alignContent: 'center' }}>
+                        <div className="search-bar d-flex">
                             <Form.Control
-                            type="search"
-                            placeholder="Buscar reporte"
-                            className="search-input"
-                            aria-label="Buscar reporte"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={handleKeyPress}
+                                type="search"
+                                placeholder="Buscar reporte"
+                                className="search-input"
+                                aria-label="Buscar reporte"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
                             />
-                            <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                            <i className="bi bi-search search-icon"></i>
                         </div>
                     </Col>
-                    <Col md={2} style={{alignContent:'center'}}>
-                        <Link to={`/admin/create-report`} className="btn btn-primary">
+                    <Col md={2} style={{ alignContent: 'center' }}>
+                        <Button className="btn btn-primary" onClick={() => handleShowModal('create')}>
                             Crear Reporte
-                        </Link>
-                    </Col>                  
+                        </Button>
+                    </Col>
                 </Row>
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (
                     <p>Error: {error}</p>
                 ) : (
-
-                <div>
-                    {filteredModules.map((module) => (
-                        <React.Fragment key={module.id}>
-                            {/**<tr>
-                                <td colSpan="3">
-                                    <Button variant="link" onClick={() => toggleModuleExpansion(module.id)} style={{ textDecoration: 'none', color: '#00527E', fontWeight: 'bold' }}>
-                                        <i className={`bi ${expandedModules[module.id] ? 'bi-dash-square' : 'bi-plus-square'}`}></i> Módulo: {module.name}
-                                    </Button>
-                                </td>
-                                {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
+                    <div>
+                        {filteredModules.map((module) => (
+                            <React.Fragment key={module.id}>
+                                <Accordion style={{ marginBottom: '5px' }}>
+                                    <Accordion.Item eventKey={module.id.toString()}>
+                                        <Accordion.Header className='accordion-header' onClick={() => toggleModuleExpansion(module.id)}>
+                                            {module ? (
+                                                <div className="favorites">
+                                                    <div className="icon-and-name">
+                                                        <div className="icon-background">
+                                                            <i className={`bi bi-${module.icon}`} ></i>
+                                                        </div>
+                                                        <span>{module.name}</span>
+                                                    </div>
+                                                </div>
+                                            ) : 'Módulo Desconocido'}
+                                        </Accordion.Header>
+                                        <Accordion.Body>
+                                            <Table>
+                                                <tbody>
+                                                    {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
                                                         <tr key={report.id}>
                                                             <td style={{ paddingLeft: '40px' }}>{reportIndex + 1}</td>
                                                             <td>{report.name}</td>
                                                             <td>
-                                                                <Link to={`/admin/report/${report.id}`} className="btn btn-link" style={{ textDecorationLine: 'none' }}>
+                                                                <Button variant="link" onClick={() => handleShowModal('edit', report)} style={{ textDecorationLine: 'none' }} className="btn btn-link" >
                                                                     <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                                     Editar Reporte
-                                                                </Link>
+                                                                </Button>
                                                             </td>
                                                         </tr>
-
                                                     ))}
-                            </tr>  */}
-                            <Accordion style={{marginBottom:'5px'}}>
-                                <Accordion.Item eventKey="0">
-                                    <Accordion.Header> 
-                                        {/************************COLOCAR AQUI ICONO DEL MODULO*/}
-                                        {module.name}
-                                    </Accordion.Header>
-                                    <Accordion.Body>
-                                    <Table>
-                                        <tbody>
-                                            {expandedModules[module.id] && module.reports.map((report, reportIndex) => (
-                                                <tr key={report.id}>
-                                                    <td style={{ paddingLeft: '40px' }}>{reportIndex + 1}</td>
-                                                    <td>{report.name}</td>
-                                                    <td>
-                                                        <Button variant="link" onClick={() => handleShowModal('edit', group, true)} style={{textDecorationLine:'none'}} className="btn btn-link" >
-                                                            <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
-                                                            Editar Reporte
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                                ))}
-                                            </tbody>
-                                    </Table>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Accordion>
-                        </React.Fragment>
+                                                </tbody>
+                                            </Table>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+                            </React.Fragment>
                         ))}
-                </div>
+                    </div>
                 )}
-                {/**
-                <Row className='mb-4 justify-content-center'>
-                    <Col md={2} className='mb-2'>
-                        <Button variant="dark" onClick={() => navigate('/menu')} className="w-100">
-                            Volver
-                        </Button>
-                    </Col>
-                </Row> 
-                 */}
-
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0.footer" style={{ minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>
@@ -223,14 +243,13 @@ export function ReportListPage() {
                 </div>
             </footer>
 
-
-{/************* MODAL NUEVO REPORTE ********************/}
-            <Modal>
+            {/************* MODAL NUEVO REPORTE ********************/}
+            <Modal show={showModal} onHide={handleCloseModal} size='xl' centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Nuevo reporte</Modal.Title>
+                    <Modal.Title>{modalType === 'create' ? 'Nuevo Reporte' : 'Editar Reporte'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form onSubmit={handleSaveReport}>
                         <Row>
                             <Col md={6}>
                                 <Form.Group controlId="formName">
@@ -239,6 +258,8 @@ export function ReportListPage() {
                                         type="text"
                                         placeholder="Ingresar"
                                         name="name"
+                                        value={currentReport.name || ''}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, name: e.target.value })}
                                         required
                                     />
                                 </Form.Group>
@@ -246,7 +267,7 @@ export function ReportListPage() {
                             <Col>
                                 <Row>
                                     <Col md={2}>
-                                        <Image src="holder.js/171x180" thumbnail  style={{height:'70px', alignContent:'center'}} className='d-flow' />
+                                        <i thumbnail className={`bi bi-${currentReport.icon}`} style={{ fontSize: '3rem', color: 'cornflowerblue'}}/>
                                     </Col>
                                     <Col md={10}>
                                         <Form.Group controlId="formIcon">
@@ -254,15 +275,14 @@ export function ReportListPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="icon"
-                                                value
-                                                onChange
+                                                value={currentReport.icon || ''}
+                                                onChange={(e) => setCurrentReport({ ...currentReport, icon: e.target.value })}
                                                 required
-                                                />
+                                            />
                                         </Form.Group>
-                                    </Col>                                
-                                </Row>        
+                                    </Col>
+                                </Row>
                             </Col>
-                            
                         </Row>
                         <Row>
                             <Col>
@@ -272,20 +292,28 @@ export function ReportListPage() {
                                         type="text"
                                         name="version"
                                         placeholder="Ingresar"
+                                        value={currentReport.version || ''}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, version: e.target.value })}
                                         required
                                     />
                                 </Form.Group>
                             </Col>
                             <Col>
-                                <Form.Group controlId="formModule">
+                                <Form.Group controlId="formGroup">
                                     <Form.Label>Grupo *</Form.Label>
                                     <Form.Select
-                                        type="text"
-                                        placeholder="Ingresar"
-                                        name="link"
+                                        name="group"
+                                        value={currentReport.GroupId || ''}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, GroupId: e.target.value })}
                                         required
-                                    />
-
+                                    >
+                                        <option value="">Seleccionar Grupo</option>
+                                        {groups.map((group) => (
+                                            <option key={group.id} value={group.id}>
+                                                {group.name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -297,6 +325,8 @@ export function ReportListPage() {
                                         type="text"
                                         placeholder="Ingresar"
                                         name="link"
+                                        value={currentReport.link || ''}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, link: e.target.value })}
                                         required
                                     />
                                 </Form.Group>
@@ -307,11 +337,17 @@ export function ReportListPage() {
                                     <Form.Select
                                         as="select"
                                         name="ModuleId"
-                                        value
-                                        onChange
+                                        value={currentReport.ModuleId || ''}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, ModuleId: e.target.value })}
                                         required
-                                    />
-                                        
+                                    >
+                                        <option value="">Seleccionar Módulo</option>
+                                        {modules.map((module) => (
+                                            <option key={module.id} value={module.id}>
+                                                {module.name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Form.Group>
                             </Col>
                         </Row>
@@ -319,13 +355,12 @@ export function ReportListPage() {
                             <Col>
                                 <Form.Group controlId="formDescription">
                                     <Form.Label>Descripción</Form.Label>
-                                    <FloatingLabel
-                                        controlId=""
-                                        label=""
-                                        className=""
-                                    >
+                                    <FloatingLabel controlId="floatingTextarea" label="">
                                         <Form.Control
-                                        as="textarea"/>
+                                            as="textarea"
+                                            value={currentReport.description || ''}
+                                            onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
+                                        />
                                     </FloatingLabel>
                                 </Form.Group>
                             </Col>
@@ -334,8 +369,8 @@ export function ReportListPage() {
                                     <Form.Label>Nivel de acceso</Form.Label>
                                     <Form.Select
                                         as="select"
-                                        value
-                                        onChange
+                                        value={currentReport.free ? 'free' : currentReport.limited ? 'limited' : currentReport.restricted ? 'restricted' : ''}
+                                        onChange={handleAccessLevelChange}
                                         required
                                     >
                                         <option value="">Seleccionar Nivel de Acceso</option>
@@ -354,21 +389,19 @@ export function ReportListPage() {
                                         type="checkbox"
                                         label="Activo"
                                         name="active"
-                                        checked
-                                        onChange
-                                    />        
+                                        checked={currentReport.active || false}
+                                        onChange={(e) => setCurrentReport({ ...currentReport, active: e.target.checked })}
+                                    />
                                 </Form.Group>
                             </Col>
-
                         </Row>
+                        <Modal.Footer>
+                            <Button variant="outline-primary" onClick={handleCloseModal}>Cancelar</Button>
+                            <Button variant="primary" type="submit">Guardar</Button>
+                        </Modal.Footer>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button  variant="outline-primary" >Cancelar</Button>
-                    <Button variant="primary">Guardar</Button>
-                </Modal.Footer>
-      </Modal>
-
+            </Modal>
         </div>
     );
 }

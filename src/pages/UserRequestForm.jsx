@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { createAccessRequest } from '../api/accessrequest.api';
 import { getReports } from '../api/report.api';
@@ -7,19 +6,21 @@ import { getMainDependencies } from '../api/maindependency.api';
 import { getDependencies } from '../api/dependency.api';
 import { getGroups } from '../api/group.api';
 import { getModules } from '../api/module.api';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import { NavBar } from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
 import {
     Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl,
-    Dropdown, DropdownButton, Badge, Pagination,
-    ModalFooter
+    Dropdown, ModalFooter, Pagination
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'aos/dist/aos.css';
 import '../assets/main.css';
+import Lottie from 'react-lottie';
+import successAlert from '../assets/allerts/success-allert.json';
+import warningAlert from '../assets/allerts/warning-allert.json';
 
 export function UserRequestForm() {
     const [reports, setReports] = useState([]);
@@ -31,7 +32,6 @@ export function UserRequestForm() {
     const [userDependency, setUserDependency] = useState('');
     const [userMainDependency, setUserMainDependency] = useState('');
     const [nombreSolicitante, setNombreSolicitante] = useState('');
-    const [area, setArea] = useState('');
     const [emailList, setEmailList] = useState([]);
     const [emailInput, setEmailInput] = useState('');
     const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -40,11 +40,23 @@ export function UserRequestForm() {
     const [groups, setGroups] = useState([]);
     const [modules, setModules] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const reportsPerPage = 5;
+    const reportsPerPage = 7;
+    const [showWarning, setShowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('access');
+        const expirationTime = localStorage.getItem('expirationTime');
+        if (expirationTime) {
+            const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+            if (currentTime > expirationTime) {
+                toast('Sesión expirada', {
+                    icon: '👏',
+                });
+                handleLogout();
+            }
+        }
         if (token) {
             const decodedToken = jwtDecode(token);
             const userId = decodedToken.id;
@@ -102,6 +114,13 @@ export function UserRequestForm() {
         setEmailInput('');
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('access');
+        localStorage.removeItem('expirationTime');
+        toast.success("Sesión terminada");
+        navigate("/login");
+    };
+
     const handleEmailRemove = (email) => {
         setEmailList(emailList.filter(e => e !== email));
         const username = email.split('@')[0];
@@ -117,6 +136,21 @@ export function UserRequestForm() {
             return;
         }
 
+        if (emailList.length === 0) {
+            toast.error('Debe agregar al menos un correo electrónico a la lista');
+            return;
+        }
+
+        if (selectedReports.length === 0) {
+            toast.error('Debe seleccionar al menos un reporte');
+            return;
+        }
+
+        setShowWarning(true);
+    };
+
+    const handleAcceptWarning = async () => {
+        setShowWarning(false);
         try {
             const token = localStorage.getItem('access');
             const decodedToken = jwtDecode(token);
@@ -124,15 +158,13 @@ export function UserRequestForm() {
 
             const newAccessRequest = {
                 nombreSolicitante,
-                area,
                 UserId: userId,
                 ReportIds: selectedReports,
                 requestedUserIds: selectedUsers
             };
 
             await createAccessRequest(newAccessRequest);
-            toast.success('Solicitud de acceso creada exitosamente');
-            navigate('/user-requests'); // Redirige a la página de solicitudes del usuario después de crear la solicitud
+            setShowSuccess(true);
         } catch (error) {
             console.error('Error al crear la solicitud de acceso:', error);
             toast.error('Error al crear la solicitud de acceso');
@@ -178,60 +210,71 @@ export function UserRequestForm() {
         }));
     };
 
+    const handleRemoveReport = (reportId) => {
+        setSelectedReports(selectedReports.filter(id => id !== reportId));
+    };
+
     const paginatedReports = modalReports.slice(
         (currentPage - 1) * reportsPerPage,
         currentPage * reportsPerPage
     );
 
-    const selectedReportsSet = new Set(selectedReports);
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: showWarning ? warningAlert : successAlert,
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    };
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='mt-5 mb-1 p-5'>
-                <Col>
-                    <nav className aria-label="breadcrumb">
+            <Container fluid className='mt-0 p-5 mb-0'>
+                <Col className="d-flex align-items-end" style={{ minHeight: '8vh' }}>
+                    <nav aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
                                     </i>Menú Principal</a>
-                            </li>                        
-                            <li className="breadcrumb-item" onClick={() => navigate('')}>
+                            </li>
+                            <li className="breadcrumb-item" onClick={() => navigate('/user-requests')}>
                                 <a href="#">
                                     Mis solicitudes</a>
-                            </li>                        
+                            </li>
                             <li className="breadcrumb-item active" aria-current="page">Nueva solicitud de acceso</li>
                         </ol>
                     </nav>
                 </Col>
-                <Row  style={{justifyContent:'end'}}>
+                <Row style={{ justifyContent: 'end' }}>
                     <Col md={10} className='my-3'>
                         <h2 className='custom-h2'>Nueva solicitud de acceso</h2>
                     </Col>
-                    <Col  md={2}>
-                        <Button variant="primary" type="submit" className='mt-3'>
+                    <Col md={2}>
+                        <Button variant="primary" onClick={handleSubmit} className='mt-3'>
                             Guardar solicitud
                         </Button>
                     </Col>
-
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <Form onSubmit={handleSubmit} style={{display:'flex', gap:'20px', flexDirection:'column'}}>
-                            <Row  md={12}>
-                                <Col  md={4}>
+                        <Form onSubmit={handleSubmit} style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+                            <Row md={12}>
+                                <Col md={4}>
                                     <Form.Group controlId="formNombreSolicitante">
-                                        <Form.Label>Nombre del solicitante</Form.Label>
+                                        <Form.Label>Usuario del solicitante</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            disabled
                                             value={nombreSolicitante}
                                             onChange={(e) => setNombreSolicitante(e.target.value)}
                                             readOnly
                                         />
                                     </Form.Group>
-                                </Col> 
-                                <Col  md={4}>
+                                </Col>
+                                <Col md={4}>
                                     <Form.Group controlId="formMainDependency">
                                         <Form.Label>Dependencia Principal</Form.Label>
                                         <Form.Control
@@ -250,7 +293,7 @@ export function UserRequestForm() {
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
-                                <Col  md={4}>
+                                <Col md={4}>
                                     <Form.Group controlId="formDependency">
                                         <Form.Label>Dependencia Secundaria</Form.Label>
                                         <Form.Control
@@ -268,40 +311,46 @@ export function UserRequestForm() {
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
-                                </Col>  
+                                </Col>
                             </Row>
-                            <Form.Group controlId="formEmailList" >
+                            <Form.Group controlId="formEmailList">
                                 <Row>
-                                    <Col md={2} className='d-flex' style={{alignItems:'center'}}>
+                                    <Col md={2} className='d-flex' style={{ alignItems: 'center' }}>
                                         <Form.Label>Listado de correos *</Form.Label>
                                     </Col>
                                     <Col md={10}>
                                         <InputGroup>
-                                        <FormControl
-                                            type="text"
-                                            value={emailInput}
-                                            onChange={handleEmailChange}
-                                            placeholder="Buscar correos"
-                                        />
-                                        <Dropdown.Menu show={emailInput.length > 0}>
-                                            {users.filter(user => user.username.includes(emailInput)).map(user => (
-                                                <Dropdown.Item key={user.id} onClick={() => handleEmailSelect(user.username)}>
-                                                    {user.username}@essalud.gob.pe
-                                                </Dropdown.Item>
-                                            ))}
-                                        </Dropdown.Menu>
-                                    </InputGroup>
+                                            <FormControl
+                                                type="text"
+                                                value={emailInput}
+                                                onChange={handleEmailChange}
+                                                placeholder="Buscar correos"
+                                            />
+                                            <Dropdown.Menu show={emailInput.length > 0} style={{ maxHeight: '200px', overflowY: 'auto' }} className='mt-5'>
+                                                {users.filter(user => user.username.includes(emailInput)).length > 0 ? (
+                                                    users.filter(user => user.username.includes(emailInput)).slice(0, 10).map(user => (
+                                                        <Dropdown.Item key={user.id} onClick={() => handleEmailSelect(user.username)}>
+                                                            {user.username}@essalud.gob.pe
+                                                        </Dropdown.Item>
+                                                    ))
+                                                ) : (
+                                                    <Dropdown.Item disabled>No se encontraron coincidencias</Dropdown.Item>
+                                                )}
+                                            </Dropdown.Menu>
+                                        </InputGroup>
                                     </Col>
                                 </Row>
-                                
-                                
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    value={emailList.join('; ')}
-                                    readOnly
-                                    className="mt-2"
-                                />
+
+                                <div className="form-control my-4" style={{ height: 'auto', minHeight: '60px', overflowY: 'auto' }}>
+                                    {emailList.map(email => (
+                                        <span key={email} className="badge rounded-pill text-bg-light me-2">
+                                            {email}
+                                            <Button variant="link" size="sm" onClick={() => handleEmailRemove(email)} style={{ textDecoration: 'none', paddingLeft: '5px' }}>
+                                                <i className="bi bi-x-circle-fill"></i>
+                                            </Button>
+                                        </span>
+                                    ))}
+                                </div>
                             </Form.Group>
 
                             <Form.Group controlId="formAcceptedTerms">
@@ -314,8 +363,8 @@ export function UserRequestForm() {
                                 />
                             </Form.Group>
                             <Row>
-                                <Col md={10} className='d-flex' style={{alignItems:'center'}}>
-                                <h4>Listado de reportes a solicitar</h4>
+                                <Col md={10} className='d-flex' style={{ alignItems: 'center' }}>
+                                    <h4>Listado de reportes a solicitar</h4>
                                 </Col>
                                 <Col md={2}>
                                     <Button variant="outline-primary" onClick={handleOpenModal}>
@@ -323,7 +372,7 @@ export function UserRequestForm() {
                                     </Button>
                                 </Col>
                             </Row>
-                            <Table responsive style={{borderRadius:'6px'}}>
+                            <Table responsive style={{ borderRadius: '6px' }}>
                                 <thead>
                                     <tr>
                                         <th className='table-header'>Grupo</th>
@@ -345,9 +394,10 @@ export function UserRequestForm() {
                                                 <td>{report.name}</td>
                                                 <td>{report.description}</td>
                                                 <td>
-                                                <Button variant="link" style={{textDecorationLine:'none'}}>
-                                                <i class="bi bi-x-lg" style={{paddingRight:'10px'}}></i>
-                                                Quitar</Button>
+                                                    <Button variant="link" onClick={() => handleRemoveReport(report.id)} style={{ textDecoration: 'none' }}>
+                                                        <i className="bi bi-x-lg" style={{ paddingRight: '10px' }}></i>
+                                                        Quitar
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         );
@@ -359,12 +409,25 @@ export function UserRequestForm() {
                 </Row>
             </Container>
 
-            <Modal show={showModal} onHide={handleCloseModal} size='lg'>
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{ minHeight: '2vh' }}>
+                <div className='container-fluid'>
+                    <div className='row d-flex d-sm-none justify-content-left'>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                    </div>
+                    <div className='row d-none d-md-flex'>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                    </div>
+                </div>
+            </footer>
+
+            <Modal show={showModal} onHide={handleCloseModal} size='xl' centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Catálogo de reportes</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Table>
+                    <Table responsive>
                         <thead>
                             <tr>
                                 <th>Grupo</th>
@@ -392,34 +455,64 @@ export function UserRequestForm() {
                             ))}
                         </tbody>
                     </Table>
-
-                    <div className="d-flex justify-content-center mt-3">
-                        {[...Array(Math.ceil(modalReports.length / reportsPerPage)).keys()].map(page => (
-                            <Button
-                                key={page + 1}
-                                variant={currentPage === page + 1 ? 'primary' : 'outline-secondary'}
-                                onClick={() => handlePageChange(page + 1)}
-                            >
-                                {page + 1}
-                            </Button>
-                        ))}
-                    </div>
                     <Row>
-                    <Pagination style={{display:'flex',justifyContent:'flex-end'}}>
-                        <Pagination.Item active>{1}</Pagination.Item>
-                        <Pagination.Item>{2}</Pagination.Item>
-                        <Pagination.Item>{3}</Pagination.Item>
-                        <Pagination.Item>{4}</Pagination.Item>
-                        <Pagination.Item>{5}</Pagination.Item>
-                        <Pagination.Item>{6}</Pagination.Item>
-                        <Pagination.Item>{7}</Pagination.Item>
-                    </Pagination>
-                </Row>
+                        <Pagination style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Pagination.First onClick={() => handlePageChange(1)} />
+                            <Pagination.Prev onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)} />
+                            {currentPage > 2 && (
+                                <>
+                                    <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
+                                    {currentPage > 3 && <Pagination.Ellipsis />}
+                                </>
+                            )}
+                            {Array.from({ length: Math.ceil(modalReports.length / reportsPerPage) }, (_, index) => {
+                                const page = index + 1;
+                                if (page === currentPage || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                                    return (
+                                        <Pagination.Item key={page} active={page === currentPage} onClick={() => handlePageChange(page)}>
+                                            {page}
+                                        </Pagination.Item>
+                                    );
+                                }
+                                return null;
+                            })}
+                            {currentPage < Math.ceil(modalReports.length / reportsPerPage) - 1 && (
+                                <>
+                                    {currentPage < Math.ceil(modalReports.length / reportsPerPage) - 2 && <Pagination.Ellipsis />}
+                                    <Pagination.Item onClick={() => handlePageChange(Math.ceil(modalReports.length / reportsPerPage))}>
+                                        {Math.ceil(modalReports.length / reportsPerPage)}
+                                    </Pagination.Item>
+                                </>
+                            )}
+                            <Pagination.Next onClick={() => handlePageChange(currentPage < Math.ceil(modalReports.length / reportsPerPage) ? currentPage + 1 : Math.ceil(modalReports.length / reportsPerPage))} />
+                            <Pagination.Last onClick={() => handlePageChange(Math.ceil(modalReports.length / reportsPerPage))} />
+                        </Pagination>
+                    </Row>
                 </Modal.Body>
                 <ModalFooter>
-                        <Button variant="outline-primary" onClick={handleCloseModal}>Cancelar</Button>
-                        <Button variant="primary" onClick={handleSelectReports}>Seleccionar</Button>
+                    <Button variant="outline-primary" onClick={handleCloseModal}>Cancelar</Button>
+                    <Button variant="primary" onClick={handleSelectReports}>Seleccionar</Button>
                 </ModalFooter>
+            </Modal>
+
+            {/* Alert Modal */}
+            <Modal show={showWarning || showSuccess} onHide={() => { setShowWarning(false); setShowSuccess(false); }} centered>
+                <Modal.Body>
+                    <Lottie options={defaultOptions} height={200} width={200} />
+                    {showWarning && (
+                        <>
+                            <p>¿Estás seguro de que deseas guardar la solicitud?</p>
+                            <Button variant="secondary" onClick={() => setShowWarning(false)}>Cancelar</Button>
+                            <Button variant="primary" onClick={handleAcceptWarning}>Aceptar</Button>
+                        </>
+                    )}
+                    {showSuccess && (
+                        <>
+                            <p>Solicitud guardada con éxito.</p>
+                            <Button variant="primary" onClick={() => { setShowSuccess(false); navigate('/user-requests'); }}>Cerrar</Button>
+                        </>
+                    )}
+                </Modal.Body>
             </Modal>
         </div>
     );

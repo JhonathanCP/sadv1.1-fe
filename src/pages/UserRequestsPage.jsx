@@ -23,6 +23,19 @@ export function UserRequestsPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        const expirationTime = localStorage.getItem('expirationTime');
+        if (expirationTime) {
+            const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+            if (currentTime > expirationTime) {
+                toast('Sesión expirada', {
+                    icon: '👏',
+                });
+                // El token ha expirado, cierra sesión
+                handleLogout();
+            }
+        }
+
         const token = localStorage.getItem('access');
         if (token) {
             const decodedToken = jwtDecode(token);
@@ -117,17 +130,27 @@ export function UserRequestsPage() {
         }
     };
 
+    const handleLogout = () => {
+        // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
+        localStorage.removeItem('access');
+        localStorage.removeItem('expirationTime');
+        // Redirige al inicio de sesión u otra página
+        toast.success("Sesión terminada");
+        navigate("/login");
+    };
+
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='mt-5 mb-1 p-5'>
-                <Col>
-                    <nav className aria-label="breadcrumb">
+            <Container fluid className='mt-0 p-5 mb-0'>
+                <Col className="d-flex align-items-end" style={{ minHeight: '8vh' }}>
+                    <nav aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
-                                <a href="#" >
+                                <a href="" >
                                     <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                    </i>Menú Principal</a>
+                                    </i>Menú Principal
+                                </a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">Mis solicitudes</li>
                         </ol>
@@ -173,7 +196,20 @@ export function UserRequestsPage() {
                 </Row>
             </Container>
 
-            <Modal show={showModal} onHide={handleCloseModal} size="xl">
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{ minHeight: '2vh' }}>
+                <div className='container-fluid'>
+                    <div className='row d-flex d-sm-none justify-content-left'>
+                        <div className="col-7">© GCTIC-EsSalud</div>
+                        <div className="col-5 text-center">Versión: 1.1.0.20240527</div>
+                    </div>
+                    <div className='row d-none d-md-flex'>
+                        <div className="col-10">© Gerencia Central de Tecnologías de Información y Comunicaciones - EsSalud</div>
+                        <div className="col-2 text-center">Versión: 1.1.0.20240527</div>
+                    </div>
+                </div>
+            </footer>
+
+            <Modal show={showModal} onHide={handleCloseModal} size="xl" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Detalles de la Solicitud</Modal.Title>
                 </Modal.Header>

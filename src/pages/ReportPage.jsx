@@ -14,8 +14,8 @@ import { Container, Col, Breadcrumb } from 'react-bootstrap';
 
 export function ReportPage() {
     const { id } = useParams();
-    const [report, setReport] = useState([]);
-    const [module, setModule] = useState([]);
+    const [report, setReport] = useState({});
+    const [module, setModule] = useState({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -43,11 +43,11 @@ export function ReportPage() {
             const fetchInfo = async () => {
                 try {
                     const response = await getUserReports(decodedToken.id);
-                    const reportData = response.data.reports.find(report => report.id == id);
+                    const reportData = response.data.reports.find(report => report.id === parseInt(id));
                     setReport(reportData);
                     setLoading(false); // Marcar la carga como completada
 
-                    if (reportData.length > 0) {
+                    if (reportData) {
                         // Enviar los datos de auditoría de acceso
                         await postAccessAudit({
                             userId: decodedToken.id,
@@ -60,8 +60,6 @@ export function ReportPage() {
             };
 
             fetchInfo();
-
-            console.log(report.ModuleId)
         }
     }, [id]); // Agrega 'id' como dependencia para que useEffect se ejecute cuando cambie
 
@@ -74,33 +72,32 @@ export function ReportPage() {
 
     // Redireccionar solo si no hay informes y la carga está completa
     useEffect(() => {
-        if (!loading && report.length === 0) {
+        if (!loading && !report) {
             navigate('/menu');
         }
     }, [loading, report, navigate]);
 
     useEffect(() => {
         const fetchModule = async () => {
-            try {
-                const response = await getModule(report.ModuleId);
-                console.error('Error al obtener la información:');
-                const moduleData = response.data;
-                setModule(moduleData)
-                setLoading(false); // Marcar la carga como completada
-
-            } catch (error) {
-                console.error('Error al obtener la información:', error);
+            if (report.ModuleId) {
+                try {
+                    const response = await getModule(report.ModuleId);
+                    const moduleData = response.data;
+                    setModule(moduleData);
+                } catch (error) {
+                    console.error('Error al obtener la información del módulo:', error);
+                }
             }
         };
 
         fetchModule();
-    })
+    }, [report.ModuleId]); // Ejecutar solo cuando report.ModuleId cambie
 
     return (
         <div className='p-0 m-0 g-0'>
             <NavBar />
             <Container fluid className='m-0 p-0'>
-                <Container fluid className='d-md-flex mt-0 px-5 mb-0 pb-0 d-flex align-items-end' style={{ minHeight: '10.5vh' }}>
+                <Container fluid className='d-md-flex px-5 d-flex align-items-end' style={{ minHeight: '12vh' }}>
                     <Col>
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb p-0 m-0 g-0">
@@ -121,7 +118,7 @@ export function ReportPage() {
                 </Container>
                 <Container fluid className='d-md-flex p-0 m-0' style={{ minHeight: '80vh' }}>
                     <Col xs={12} className="pt-0 px-0 m-0 g-0" style={{ minHeight: '80vh' }}>
-                        <iframe key={report.id} src={report.link} style={{ width: '100%', height: '87.57vh', border: 'none' }}></iframe>
+                        <iframe key={report.id} src={report.link} style={{ width: '100%', height: '86.5vh', border: 'none' }}></iframe>
                     </Col>
                 </Container>
             </Container>

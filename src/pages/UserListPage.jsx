@@ -13,7 +13,8 @@ export function UserListPage() {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [usersPerPage] = useState(11);
 
     useEffect(() => {
 
@@ -55,6 +56,7 @@ export function UserListPage() {
             user.username.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredUsers(results);
+        setCurrentPage(1); // Reset to first page on search
     }, [searchTerm, users]);
 
     const handleSearchChange = (event) => {
@@ -67,33 +69,27 @@ export function UserListPage() {
 
     const RoleToText = (value) => value == 1 ? "Usuario" : "Administrador";
 
-    const handleSearch = () => {
-        if (searchQuery.trim() !== '') {
-            const searchUrl = `/reports?key=${encodeURIComponent(searchQuery.trim())}`;
-            window.location.replace(searchUrl); // Reload the page
-        } else {
-            // Show error message or handle empty search query
-            
-        }
-    };
+    // Get current users
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            handleSearch();
-        }
-    };
+    // Change page
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
             <NavBar />
-            <Container fluid className='mt-5 mb-1 p-5'>
-                <Col>
-                    <nav className aria-label="breadcrumb">
+            <Container fluid className='mt-0 p-5 mb-0'>
+                <Col className="d-flex align-items-end" style={{ minHeight: '8vh' }}>
+                    <nav aria-label="breadcrumb">
                         <ol className="breadcrumb" style={{}}>
                             <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                 <a href="#">
-                                <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                </i>Menú Principal</a>
+                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                    </i>Menú Principal</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">Usuarios</li> {/* Colocar aqui el nombre de los módulos */}
                         </ol>
@@ -101,21 +97,21 @@ export function UserListPage() {
                 </Col>
                 <Row className="my-3">
                     <Col md={10} >
-                        <h2 className='custom-h2'>Usuarios 
-                            (181) {/*************************contar aqui nro de usuarios */} </h2> 
+                        <h2 className='custom-h2'>Usuarios
+                            ({filteredUsers.length}) {/* Mostrar la cantidad de usuarios filtrados */}
+                        </h2>
                     </Col>
-                    <Col md={2} style={{alignContent:'center'}}>
+                    <Col md={2} style={{ alignContent: 'center' }}>
                         <div className="search-bar d-flex" >
                             <Form.Control
-                            type="search"
-                            placeholder="Buscar usuario"
-                            className="search-input"
-                            aria-label="Buscar usuario"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={handleKeyPress}
+                                type="search"
+                                placeholder="Buscar usuario"
+                                className="search-input"
+                                aria-label="Buscar usuario"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
                             />
-                            <i onClick={handleSearch} className="bi bi-search search-icon"></i>
+                            <i className="bi bi-search search-icon"></i>
                         </div>
                     </Col>
                     {/**
@@ -124,7 +120,7 @@ export function UserListPage() {
                             Crear Usuario
                         </Link>
                     </Col> */}
-                    
+
                 </Row>
                 {loading ? (
                     <p>Loading...</p>
@@ -138,7 +134,7 @@ export function UserListPage() {
                                     <th className='col-1 table-header'>Item</th>
                                     <th className='col-1 table-header'>Username</th>
                                     <th className='col-2 table-header'>Correo</th>
-                                    <th className='col-2 table-header'>DNI</th>
+                                    {/* <th className='col-2 table-header'>DNI</th> */}
                                     <th className='col-1 table-header'>LDAP</th>
                                     <th className='col-1 table-header'>Estado</th>
                                     <th className='col-1 table-header'>Perfil</th>
@@ -146,18 +142,18 @@ export function UserListPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredUsers.map((user, index) => (
+                                {currentUsers.map((user, index) => (
                                     <tr key={user.id}>
-                                        <td>{index + 1}</td>
+                                        <td>{indexOfFirstUser + index + 1}</td>
                                         <td>{user.username}</td>
                                         <td>{user.email}</td>
-                                        <td>{user.dni}</td>
+                                        {/* <td>{user.dni}</td> */}
                                         <td>{booleanToText(user.ldap)}</td>
                                         <td>{activeStatusToText(user.active)}</td>
                                         <td>{RoleToText(user.RoleId)}</td>
                                         <td>
-                                            <Link to={`/admin/user/${user.id}`} className="btn btn-link" style={{textDecorationLine:'none'}}>
-                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                            <Link to={`/admin/user/${user.id}`} className="btn btn-link" style={{ textDecorationLine: 'none' }}>
+                                                <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                 Editar Permisos
                                             </Link>
                                         </td>
@@ -169,37 +165,40 @@ export function UserListPage() {
                 )}
 
                 <Row>
-                    <Pagination style={{display:'flex',justifyContent:'flex-end'}}>
-                        <Pagination.First />
-                        <Pagination.Prev />
-                        <Pagination.Item active>{1}</Pagination.Item>
-                        <Pagination.Ellipsis />
-
-                        <Pagination.Item>{10}</Pagination.Item>
-                        <Pagination.Item>{11}</Pagination.Item>
-                        <Pagination.Item>{12}</Pagination.Item>
-                        <Pagination.Item>{13}</Pagination.Item>
-                        <Pagination.Item>{14}</Pagination.Item>
-
-                        <Pagination.Ellipsis />
-                        <Pagination.Item>{20}</Pagination.Item>
-                        <Pagination.Next />
-                        <Pagination.Last />
+                    <Pagination style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Pagination.First onClick={() => paginate(1)} />
+                        <Pagination.Prev onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)} />
+                        {currentPage > 2 && (
+                            <>
+                                <Pagination.Item onClick={() => paginate(1)}>1</Pagination.Item>
+                                {currentPage > 3 && <Pagination.Ellipsis />}
+                            </>
+                        )}
+                        {Array.from({ length: totalPages }, (_, index) => {
+                            const page = index + 1;
+                            if (page === currentPage || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                                return (
+                                    <Pagination.Item key={page} active={page === currentPage} onClick={() => paginate(page)}>
+                                        {page}
+                                    </Pagination.Item>
+                                );
+                            }
+                            return null;
+                        })}
+                        {currentPage < totalPages - 1 && (
+                            <>
+                                {currentPage < totalPages - 2 && <Pagination.Ellipsis />}
+                                <Pagination.Item onClick={() => paginate(totalPages)}>{totalPages}</Pagination.Item>
+                            </>
+                        )}
+                        <Pagination.Next onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)} />
+                        <Pagination.Last onClick={() => paginate(totalPages)} />
                     </Pagination>
                 </Row>
 
-                {/**
-                 <Row className='mb-4 justify-content-center'>
-                    <Col md={2} className='mb-2'>
-                        <Button variant="dark" onClick={() => navigate('/menu')} className="w-100">
-                            Volver
-                        </Button>
-                    </Col>
-                </Row>
-                 */}
-                
+
             </Container>
-            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{ minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>

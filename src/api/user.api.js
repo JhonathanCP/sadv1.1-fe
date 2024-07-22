@@ -21,6 +21,7 @@ authApi.interceptors.request.use((config) => {
 export const getUsers = () => authApi.get("/");
 export const getUser = (userId) => authApi.get(`/${userId}/`);
 export const updateUser = (userId, data) => authApi.put(`/${userId}/`, data);
+export const addAll = (userId) => authApi.post(`/${userId}/add-all/`);
 export const addReport = (data) => authApi.post(`/add-report/`, data);
 export const removeReport = (userId, reportId) => authApi.delete(`/${userId}/delete-report/${reportId}`);
 export const getUserModules = (userId) => authApi.get(`/${userId}/get-modules/`);
