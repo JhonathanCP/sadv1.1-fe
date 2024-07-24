@@ -12,7 +12,7 @@ import 'aos/dist/aos.css';
 import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar'
-import { Form, Container, Col } from 'react-bootstrap';
+import { Container, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 

@@ -216,6 +216,14 @@ export function MenuPage() {
                         <h1 className='d-none d-xl-block' style={{ fontWeight: 'bold', }}>Explora EsSalud</h1>
                         <p className='d-none d-md-block d-xl-none text-center'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
                         <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
+                        <h5 className='pt-3 d-xl-none text-center' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
+                        <h5 className='pt-3 d-none d-xl-block' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
+                        <div className='d-flex justify-content-center d-xl-none'>
+                            <Button href='https://www.datosabiertos.gob.pe/group/seguro-social-de-salud-essalud' target="_blank" variant="outline-light">Explora datos abiertos de Essalud <i className="bi bi-box-arrow-up-right"></i></Button>
+                        </div>
+                        <div className='d-none d-xl-block'>
+                            <Button href='https://www.datosabiertos.gob.pe/group/seguro-social-de-salud-essalud' target="_blank" variant="outline-light">Explora datos abiertos de Essalud <i className="bi bi-box-arrow-up-right"></i></Button>
+                        </div>
                     </Col>
                     <Col xs={12} md={12} xl={5} className='px-5 py-0 d-flex align-items-center justify-content-center'>
                         <img src={Img} className="img-fluid img-banner" alt="" data-aos="zoom-out" data-aos-delay="250" />
@@ -224,7 +232,7 @@ export function MenuPage() {
             </Container>
             <Container fluid className='px-5 pt-1 pb-5'>
                 <div className='d-flex' style={{ justifyContent: "flex-end" }}>
-                    <div className="search-bar d-flex" >
+                    <div className="search-bar d-flex">
                         <Form.Control
                             type="search"
                             placeholder="Buscar reporte"
