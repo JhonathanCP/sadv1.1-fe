@@ -4,11 +4,11 @@ import { login } from '../api/auth.api';
 import { toast } from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Row, Card, Col, Form, FormGroup, FormControl, FormLabel, Button, Container, Image, Modal, FormCheck } from 'react-bootstrap';
+import { Image, Modal, Button } from 'react-bootstrap';
 import FondoSvg from '../assets/fondo.svg';
 import Logo from '../assets/logo-essalud.svg';
-import { ManualComponent } from '../components/ManualComponent';
 import ComunicadoImage from '../assets/COMUNICADO.jpeg';  // Asegúrate de que la ruta es correcta
+import NewsImage from '../assets/COMUNICADO.png';  // Asegúrate de que la ruta es correcta
 
 export function LoginPage() {
     const [credentials, setCredentials] = useState({
@@ -17,18 +17,20 @@ export function LoginPage() {
         systemcode: 'SAD'
     });
     const [error, setError] = useState(null);
-    const [showManualModal, setShowManualModal] = useState(false);
-    const handleManualModal = () => setShowManualModal(true); // Nuevo controlador
-    const handleCloseManualModal = () => setShowManualModal(false); // Nuevo controlador
-    const [showComunicadoModal, setShowComunicadoModal] = useState(false);  // Estado para controlar la visibilidad del modal
+    const [showNewsModal, setShowNewsModal] = useState(true);  // Estado para controlar la visibilidad del modal de noticias
+    const [showComunicadoModal, setShowComunicadoModal] = useState(false);  // Estado para controlar la visibilidad del modal de comunicado
     const navigate = useNavigate();
 
+    const handleCloseNews = () => {
+        setShowNewsModal(false);  // Función para cerrar el modal de noticias
+    };
+
     const handleCloseComunicado = () => {
-        setShowComunicadoModal(false);  // Función para cerrar el modal
+        setShowComunicadoModal(false);  // Función para cerrar el modal de comunicado
     };
 
     const handleOpenComunicado = () => {
-        setShowComunicadoModal(true);  // Función para cerrar el modal
+        setShowComunicadoModal(true);  // Función para abrir el modal de comunicado
     };
 
     useEffect(() => {
@@ -88,17 +90,20 @@ export function LoginPage() {
             style={{ backgroundImage: `url(${FondoSvg})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             className="container-fluid d-flex align-items-center justify-content-center"
         >
+            <Modal size='xl' show={showNewsModal} onHide={handleCloseNews} centered>
+                <Modal.Body className="p-0">
+                    <Button onClick={handleCloseNews} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1 }} className="btn btn-light">
+                    <i class="bi bi-x-lg"></i>
+                    </Button>
+                    <Image src={NewsImage} alt="Noticias" fluid style={{ width: '100%', height: '100%' }} />
+                </Modal.Body>
+            </Modal>
             <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
                 <Modal.Header closeButton>
                 </Modal.Header>
                 <Modal.Body>
                     <Image src={ComunicadoImage} alt="Comunicado" fluid />
                 </Modal.Body>
-                {/* <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseComunicado}>
-                        Cerrar
-                    </Button>
-                </Modal.Footer> */}
             </Modal>
             <div className='row'>
                 <div className="container-fluid col-lg-7 col-md-6 col-xs-12 d-flex justify-content-center align-items-center p-5">
@@ -109,13 +114,6 @@ export function LoginPage() {
                             Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
                             business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.
                         </p>
-                        {/* <div className="row">
-                            <div className="container-fluid col-lg-12 col-md-12 col-sm-12 d-flex justify-content-md-start justify-content-center">
-                                <button type="button" className="btn btn-primary text-light mt-3 px-3 fw-medium" onClick={handleManualModal}>
-                                    Ver Manual de Usuario
-                                </button>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 d-flex flex-column align-items-center">
@@ -136,7 +134,7 @@ export function LoginPage() {
                                 <input type="password" className="form-control" id="password" name="password" value={credentials.password} onChange={handleChange} />
                             </div>
                             <button type="submit" className="btn btn-primary w-100 mt-3">Ingresar</button>
-                            <p className='text-center fst-italic'><a class="link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={handleOpenComunicado}><i className='bi bi-info-circle'></i>Instrucciones de ingreso</a></p>
+                            <p className='text-center fst-italic'><a className="link-offset-2 link-underline link-underline-opacity-0" href="#" onClick={handleOpenComunicado}><i className='bi bi-info-circle'></i> Instrucciones de ingreso</a></p>
                         </form>
                     </div>
                 </div>
@@ -153,9 +151,6 @@ export function LoginPage() {
                     </div>
                 </div>
             </footer>
-
-
-
         </div>
     );
 }
