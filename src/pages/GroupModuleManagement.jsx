@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getModules, createModule, updateModule } from '../api/module.api';
 import { getGroups, createGroup, updateGroup } from '../api/group.api';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Button, Table, Modal, Form, Spinner,
-    InputGroup, FormControl,Image } from 'react-bootstrap';
+import { Container, Row, Col, Button, Table, Modal, Form, Spinner, Image } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -14,10 +13,12 @@ export function GroupModuleManagement() {
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showModal, setShowModal] = useState(false);
+    const [showGroupModal, setShowGroupModal] = useState(false);
+    const [showModuleModal, setShowModuleModal] = useState(false);
     const [selectedModule, setSelectedModule] = useState(null);
     const [selectedGroup, setSelectedGroup] = useState(null);
-    const [formData, setFormData] = useState({ name: '', description: '', icon: '' });
+    const [groupFormData, setGroupFormData] = useState({ name: '', description: '', icon: '' });
+    const [moduleFormData, setModuleFormData] = useState({ name: '', description: '', icon: '' });
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
@@ -37,43 +38,70 @@ export function GroupModuleManagement() {
         fetchData();
     }, []);
 
-    const handleShowModal = (type, item = null, isGroup = false) => {
-        setSelectedModule(isGroup ? null : item);
-        setSelectedGroup(isGroup ? item : null);
-        setFormData({
-            name: item ? item.name : '',
-            description: item ? item.description : '',
-            icon: item ? item.icon : ''
+    const handleShowGroupModal = (group = null) => {
+        setSelectedGroup(group);
+        setGroupFormData({
+            name: group ? group.name : '',
+            description: group ? group.description : '',
+            icon: group ? group.icon : ''
         });
-        setShowModal(true);
+        setShowGroupModal(true);
     };
 
-    const handleCloseModal = () => setShowModal(false);
+    const handleShowModuleModal = (module = null) => {
+        setSelectedModule(module);
+        setModuleFormData({
+            name: module ? module.name : '',
+            description: module ? module.description : '',
+            icon: module ? module.icon : ''
+        });
+        setShowModuleModal(true);
+    };
 
-    const handleChange = (e) => {
+    const handleCloseGroupModal = () => setShowGroupModal(false);
+    const handleCloseModuleModal = () => setShowModuleModal(false);
+
+    const handleGroupChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setGroupFormData({ ...groupFormData, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleModuleChange = (e) => {
+        const { name, value } = e.target;
+        setModuleFormData({ ...moduleFormData, [name]: value });
+    };
+
+    const handleGroupSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (selectedGroup) {
+                await updateGroup(selectedGroup.id, groupFormData);
+                toast.success('Grupo actualizado con éxito');
+            } else {
+                await createGroup(groupFormData);
+                toast.success('Grupo creado con éxito');
+            }
+            const groupsResponse = await getGroups();
+            setGroups(groupsResponse.data);
+            handleCloseGroupModal();
+        } catch (error) {
+            toast.error('Error al procesar la solicitud');
+        }
+    };
+
+    const handleModuleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (selectedModule) {
-                await updateModule(selectedModule.id, formData);
+                await updateModule(selectedModule.id, moduleFormData);
                 toast.success('Módulo actualizado con éxito');
-            } else if (selectedGroup) {
-                await updateGroup(selectedGroup.id, formData);
-                toast.success('Grupo actualizado con éxito');
             } else {
-                await createModule(formData);
+                await createModule(moduleFormData);
                 toast.success('Módulo creado con éxito');
             }
-            // Refresh data
             const modulesResponse = await getModules();
-            const groupsResponse = await getGroups();
             setModules(modulesResponse.data);
-            setGroups(groupsResponse.data);
-            handleCloseModal();
+            handleCloseModuleModal();
         } catch (error) {
             toast.error('Error al procesar la solicitud');
         }
@@ -97,29 +125,19 @@ export function GroupModuleManagement() {
         <div className='p-0'>
             <NavBar />
             <Container fluid className='mt-5 mb-1 p-5'>
-                <Row >
+                <Row>
                     <Col>
-                        <nav className aria-label="breadcrumb">
+                        <nav aria-label="breadcrumb">
                             <ol className="breadcrumb">
                                 <li className="breadcrumb-item" onClick={() => navigate('/menu')}>
                                     <a href="#">
-                                    <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
-                                    </i>Menú Principal</a>
+                                        <i className="bi bi-house-door" style={{ paddingRight: '5px' }}>
+                                        </i>Menú Principal</a>
                                 </li>
-                                <li className="breadcrumb-item active" aria-current="page">Grupos y módulos</li> {/* Colocar aqui el nombre de los módulos */}
+                                <li className="breadcrumb-item active" aria-current="page">Grupos y módulos</li>
                             </ol>
                         </nav>
                     </Col>
-                    {/**<Col md={10} xs={12} className="mt-2 mb-2">
-                        <InputGroup>
-                            <FormControl
-                                placeholder="Buscar por nombre o descripción"
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                            />
-                        </InputGroup>
-                    </Col> */}
-
                 </Row>
                 {loading ? (
                     <div className="d-flex justify-content-center align-items-center" style={{ height: '70vh' }}>
@@ -131,12 +149,12 @@ export function GroupModuleManagement() {
                     <p>Error: {error}</p>
                 ) : (
                     <>
-                        <Row  className='my-3'>
-                            <Col md={10} >
-                                <h2 className='custom-h2'>Grupos</h2>  
+                        <Row className='my-3'>
+                            <Col md={10}>
+                                <h2 className='custom-h2'>Grupos</h2>
                             </Col>
-                            <Col md={2} style={{alignContent:'center'}}>
-                                <Button variant="primary" onClick={() => handleShowModal('createGroup', null, true)} className="ms-2 ">
+                            <Col md={2} style={{ alignContent: 'center' }}>
+                                <Button variant="primary" onClick={() => handleShowGroupModal(null)} className="ms-2">
                                     Crear Grupo
                                 </Button>
                             </Col>
@@ -145,11 +163,11 @@ export function GroupModuleManagement() {
                             <tbody>
                                 {filteredGroups.map((group) => (
                                     <tr key={group.id}>
-                                        <td ><i className={`bi bi-${group.icon}`}></i> {group.name}</td>
-                                        <td >{group.description}</td>
-                                        <td >
-                                            <Button variant="link" onClick={() => handleShowModal('edit', group, true)} style={{textDecorationLine:'none'}} >
-                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                        <td><i className={`bi bi-${group.icon}`}></i> {group.name}</td>
+                                        <td>{group.description}</td>
+                                        <td>
+                                            <Button variant="link" onClick={() => handleShowGroupModal(group)} style={{ textDecorationLine: 'none' }}>
+                                                <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                 Editar
                                             </Button>
                                         </td>
@@ -161,22 +179,21 @@ export function GroupModuleManagement() {
                             <Col md={10} className='my-3'>
                                 <h2 className='custom-h2'>Módulos</h2>
                             </Col>
-                            <Col md={2} style={{alignContent:'center'}}>
-                                <Button variant="primary" onClick={() => handleShowModal('createModule', null, false)}>
+                            <Col md={2} style={{ alignContent: 'center' }}>
+                                <Button variant="primary" onClick={() => handleShowModuleModal(null)}>
                                     Crear Módulo
                                 </Button>
                             </Col>
                         </Row>
-                        
                         <Table responsive className='mt-3'>
                             <tbody>
                                 {filteredModules.map((module) => (
                                     <tr key={module.id}>
-                                        <td ><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
-                                        <td >{module.description}</td>
-                                        <td >
-                                            <Button variant="link" onClick={() => handleShowModal('edit', module, false)} style={{textDecorationLine:'none'}}>
-                                                <i className="bi bi-pencil-fill"  style={{paddingRight:'10px'}}></i>
+                                        <td><i className={`bi bi-${module.icon}`}></i> {module.name}</td>
+                                        <td>{module.description}</td>
+                                        <td>
+                                            <Button variant="link" onClick={() => handleShowModuleModal(module)} style={{ textDecorationLine: 'none' }}>
+                                                <i className="bi bi-pencil-fill" style={{ paddingRight: '10px' }}></i>
                                                 Editar
                                             </Button>
                                         </td>
@@ -186,82 +203,97 @@ export function GroupModuleManagement() {
                         </Table>
                     </>
                 )}
-                {/**
-                <Row className='mb-4 justify-content-center'>
-                    <Col md={2} className='mb-2'>
-                        <Button variant="dark" onClick={() => navigate('/menu')} className="w-100">
-                            Volver
-                        </Button>
-                    </Col>
-                </Row>                 
-                 */}
-
             </Container>
 
-            <Modal show={showModal} onHide={handleCloseModal} size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered>
+            <Modal show={showGroupModal} onHide={handleCloseGroupModal} size="lg" centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        {selectedModule ? 'Editar Módulo' : selectedGroup ? 'Editar Grupo' : 'Crear Módulo'}
-                    </Modal.Title>
+                    <Modal.Title>{selectedGroup ? 'Editar Grupo' : 'Crear Grupo'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Row>
-                            <Col  md={8}>
-                                    <Form.Group controlId="formName">
-                                        <Form.Label>Nombre *</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </Form.Group>
-                                
-                                    <Form.Group controlId="formDescription">
-                                        <Form.Label>Descripción</Form.Label>
-                                        <Form.Control
-                                            as="textarea"
-                                            name="description"
-                                            value={formData.description}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </Form.Group>
-                            </Col>
-                            <Col md={4}>
-                                <Form.Group controlId="formIcon">
-                                    <Row  >
-                                        <Image src="holder.js/171x180" thumbnail className='d-flow' style={{height:'70px', alignContent:'center'}} />
-                                    </Row>
-                                    <Row  >
-                                        <Form.Label>Icono: (Solo nombre) <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Ver íconos</a></Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="icon"
-                                            value={formData.icon}
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                    </Row>
-                                    
-                                    
-                                </Form.Group>
-                            </Col>  
-                        </Row>
+                    <Form onSubmit={handleGroupSubmit}>
+                        <Form.Group controlId="formGroupName">
+                            <Form.Label>Nombre *</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="name"
+                                value={groupFormData.name}
+                                onChange={handleGroupChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formGroupDescription">
+                            <Form.Label>Descripción</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                name="description"
+                                value={groupFormData.description}
+                                onChange={handleGroupChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formGroupIcon">
+                            <Form.Label><i thumbnail className={`bi bi-${groupFormData.icon}`} style={{ fontSize: '3rem', color: 'cornflowerblue'}}/>Icono: (Solo nombre) <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Ver íconos</a></Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="icon"
+                                value={groupFormData.icon}
+                                onChange={handleGroupChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Modal.Footer>
+                            <Button variant="outline-primary" onClick={handleCloseGroupModal}>Cancelar</Button>
+                            <Button variant="primary" type="submit">{selectedGroup ? 'Guardar' : 'Crear'}</Button>
+                        </Modal.Footer>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                            <Button  variant="outline-primary" >Cancelar</Button>
-                            <Button variant="primary" >
-                                {selectedModule ? 'Guardar' : 'Guardar'}
-                            </Button>
-                        </Modal.Footer>
             </Modal>
-            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{minHeight: '2vh' }}>
+
+            <Modal show={showModuleModal} onHide={handleCloseModuleModal} size="lg" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{selectedModule ? 'Editar Módulo' : 'Crear Módulo'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleModuleSubmit}>
+                        <Form.Group controlId="formModuleName">
+                            <Form.Label>Nombre *</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="name"
+                                value={moduleFormData.name}
+                                onChange={handleModuleChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formModuleDescription">
+                            <Form.Label>Descripción</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                name="description"
+                                value={moduleFormData.description}
+                                onChange={handleModuleChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formModuleIcon">                            
+                            <Form.Label><i thumbnail className={`bi bi-${moduleFormData.icon}`} style={{ fontSize: '3rem', color: 'cornflowerblue'}}/> Icono: (Solo nombre) <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Ver íconos</a></Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="icon"
+                                value={moduleFormData.icon}
+                                onChange={handleModuleChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Modal.Footer>
+                            <Button variant="outline-primary" onClick={handleCloseModuleModal}>Cancelar</Button>
+                            <Button variant="primary" type="submit">{selectedModule ? 'Guardar' : 'Crear'}</Button>
+                        </Modal.Footer>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+
+            <footer className="fixed-bottom text-white px-5 m-0 footer" style={{ minHeight: '2vh' }}>
                 <div className='container-fluid'>
                     <div className='row d-flex d-sm-none justify-content-left'>
                         <div className="col-7">© GCTIC-EsSalud</div>

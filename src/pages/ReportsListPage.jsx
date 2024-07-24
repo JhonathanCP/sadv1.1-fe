@@ -264,7 +264,7 @@ export function ReportListPage() {
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col>
+                            {/* <Col>
                                 <Row>
                                     <Col md={2}>
                                         <i thumbnail className={`bi bi-${currentReport.icon}`} style={{ fontSize: '3rem', color: 'cornflowerblue'}}/>
@@ -282,7 +282,7 @@ export function ReportListPage() {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-                            </Col>
+                            </Col> */}
                         </Row>
                         <Row>
                             <Col>

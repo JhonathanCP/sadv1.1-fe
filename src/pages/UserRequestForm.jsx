@@ -498,19 +498,23 @@ export function UserRequestForm() {
             {/* Alert Modal */}
             <Modal show={showWarning || showSuccess} onHide={() => { setShowWarning(false); setShowSuccess(false); }} centered>
                 <Modal.Body>
-                    <Lottie options={defaultOptions} height={200} width={200} />
+                    <Lottie options={defaultOptions} height={100} width={100} />
                     {showWarning && (
-                        <>
-                            <p>¿Estás seguro de que deseas guardar la solicitud?</p>
-                            <Button variant="secondary" onClick={() => setShowWarning(false)}>Cancelar</Button>
-                            <Button variant="primary" onClick={handleAcceptWarning}>Aceptar</Button>
-                        </>
+                        <div className='container-fluid'>
+                            <h4 className='text-center mt-5'>¿Estás seguro de que deseas guardar la solicitud?</h4>
+                            <div className='container-fluid d-flex justify-content-between mt-2'>
+                                <Button variant="secondary" onClick={() => setShowWarning(false)}>No</Button>
+                                <Button variant="primary" onClick={handleAcceptWarning}>Sí</Button>
+                            </div>
+                        </div>
                     )}
                     {showSuccess && (
-                        <>
-                            <p>Solicitud guardada con éxito.</p>
-                            <Button variant="primary" onClick={() => { setShowSuccess(false); navigate('/user-requests'); }}>Cerrar</Button>
-                        </>
+                        <div className='container-fluid'>
+                            <h4 className='text-center mt-5'>Solicitud guardada con éxito.</h4>
+                            <div className='container-fluid d-flex justify-content-center mt-2'>
+                                <Button variant="primary" onClick={() => { setShowSuccess(false); navigate('/user-requests'); }}>Cerrar</Button>
+                            </div>
+                        </div>
                     )}
                 </Modal.Body>
             </Modal>

@@ -4,7 +4,7 @@ import { getStates } from '../api/state.api'; // Asegúrate de tener un archivo 
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import { NavBar } from '../components/NavBar';
-import { Container, Row, Col, Table, Modal, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Table, Modal, Button, Form, Pagination } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -20,6 +20,8 @@ export function UserRequestsPage() {
     const [previewPdfUrl, setPreviewPdfUrl] = useState(null);
     const [selectedRequestId, setSelectedRequestId] = useState(null);
     const [pdfFile, setPdfFile] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const requestsPerPage = 11; // Ajusta este valor según lo necesites
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,7 +47,8 @@ export function UserRequestsPage() {
             const fetchAccessRequests = async () => {
                 try {
                     const response = await getAccessRequestByUser(userId);
-                    const userAccessRequests = response.data.filter(request => request.UserId === decodedToken.id);
+                    const sortedRequests = response.data.sort((a, b) => a.StateId - b.StateId);
+                    const userAccessRequests = sortedRequests.filter(request => request.UserId === decodedToken.id);
                     setAccessRequests(userAccessRequests);
                 } catch (error) {
                     console.error('Error al obtener las solicitudes de acceso:', error);
@@ -131,13 +134,21 @@ export function UserRequestsPage() {
     };
 
     const handleLogout = () => {
-        // Lógica para cerrar sesión, por ejemplo, eliminar el token y redirigir al inicio de sesión
         localStorage.removeItem('access');
         localStorage.removeItem('expirationTime');
-        // Redirige al inicio de sesión u otra página
         toast.success("Sesión terminada");
         navigate("/login");
     };
+
+    // Paginación
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const indexOfLastRequest = currentPage * requestsPerPage;
+    const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+    const currentRequests = accessRequests.slice(indexOfFirstRequest, indexOfLastRequest);
+    const totalPages = Math.ceil(accessRequests.length / requestsPerPage);
 
     return (
         <div className='p-0' style={{ height: "100%" }}>
@@ -178,9 +189,9 @@ export function UserRequestsPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {accessRequests.map((request, index) => (
+                                {currentRequests.map((request, index) => (
                                     <tr key={request.id}>
-                                        <td>{index + 1}</td>
+                                        <td>{indexOfFirstRequest + index + 1}</td>
                                         <td>{new Date(request.createdAt).toLocaleDateString('es-ES')}</td>
                                         <td>{getStateNameById(request.StateId)}</td>
                                         <td>
@@ -192,6 +203,37 @@ export function UserRequestsPage() {
                                 ))}
                             </tbody>
                         </Table>
+                        <Pagination style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Pagination.First onClick={() => handlePageChange(1)} />
+                            <Pagination.Prev onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)} />
+                            {currentPage > 2 && (
+                                <>
+                                    <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
+                                    {currentPage > 3 && <Pagination.Ellipsis />}
+                                </>
+                            )}
+                            {Array.from({ length: totalPages }, (_, index) => {
+                                const page = index + 1;
+                                if (page === currentPage || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                                    return (
+                                        <Pagination.Item key={page} active={page === currentPage} onClick={() => handlePageChange(page)}>
+                                            {page}
+                                        </Pagination.Item>
+                                    );
+                                }
+                                return null;
+                            })}
+                            {currentPage < totalPages - 1 && (
+                                <>
+                                    {currentPage < totalPages - 2 && <Pagination.Ellipsis />}
+                                    <Pagination.Item onClick={() => handlePageChange(totalPages)}>
+                                        {totalPages}
+                                    </Pagination.Item>
+                                </>
+                            )}
+                            <Pagination.Next onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)} />
+                            <Pagination.Last onClick={() => handlePageChange(totalPages)} />
+                        </Pagination>
                     </Col>
                 </Row>
             </Container>
