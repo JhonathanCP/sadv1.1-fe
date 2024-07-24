@@ -93,16 +93,17 @@ export function LoginPage() {
             <Modal size='xl' show={showNewsModal} onHide={handleCloseNews} centered>
                 <Modal.Body className="p-0">
                     <Button onClick={handleCloseNews} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1 }} className="btn btn-light">
-                    <i class="bi bi-x-lg"></i>
+                        <i class="bi bi-x-lg"></i>
                     </Button>
                     <Image src={NewsImage} alt="Noticias" fluid style={{ width: '100%', height: '100%' }} />
                 </Modal.Body>
             </Modal>
             <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
-                <Modal.Header closeButton>
-                </Modal.Header>
-                <Modal.Body>
-                    <Image src={ComunicadoImage} alt="Comunicado" fluid />
+                <Modal.Body className="p-0">
+                    <Button onClick={handleCloseComunicado} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1 }} className="btn btn-light">
+                        <i class="bi bi-x-lg"></i>
+                    </Button>
+                    <Image src={ComunicadoImage} alt="Noticias" fluid style={{ width: '100%', height: '100%' }} />
                 </Modal.Body>
             </Modal>
             <div className='row'>
