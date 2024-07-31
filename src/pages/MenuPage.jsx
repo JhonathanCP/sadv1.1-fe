@@ -15,6 +15,7 @@ import '../assets/main.css';
 import AOS from 'aos';
 import { NavBar } from '../components/NavBar';
 import { Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
+import LogoExplota from '../assets/Logotipo001.svg';
 
 export function MenuPage() {
     const [modules, setModules] = useState([]);
@@ -211,11 +212,11 @@ export function MenuPage() {
             <NavBar></NavBar>
             <Container fluid style={{ minHeight: '35vh' }} className='banner-container'>
                 <Row className='px-5 py-5 d-flex banner'>
-                    <Col xs={12} md={12} xl={7} className='px-4 text-white ' data-aos="fade-in" data-aos-delay="250">
-                        <h1 className='d-xl-none text-center' style={{ fontWeight: 'bold', }}>Explora EsSalud</h1>
-                        <h1 className='d-none d-xl-block' style={{ fontWeight: 'bold', }}>Explora EsSalud</h1>
-                        <p className='d-none d-md-block d-xl-none text-center'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
-                        <p className='d-none d-xl-block'>Sistema institucional de ESSALUD que pone a disposición los tableros de mando y control desarrollados con business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.</p>
+                    <Col xs={12} md={12} xl={7} className='px-2 text-white ' data-aos="fade-in" data-aos-delay="250">
+                        <div className='d-flex justify-content-center d-xl-none'><img className='' style={{height: '35px'}} src={LogoExplota}></img></div>
+                        <div className='d-none d-xl-block pb-3'><img  style={{height: '50px'}} src={LogoExplota}></img></div>
+                        <p className='d-none d-md-block d-xl-none text-center'>Sistema de EsSalud que pone a disposición reportes dinámicos y tableros de mando desarrollados con Business Intelligence (BI). Esta plataforma presenta información visual de distintas áreas y problemáticas internas de EsSalud, permitiendo el seguimiento, creación de alertas, verificación y análisis de datos para la toma de decisiones en beneficio de la organización y de los asegurados.</p>
+                        <p className='d-none d-xl-block'>Sistema de EsSalud que pone a disposición reportes dinámicos y tableros de mando desarrollados con Business Intelligence (BI). Esta plataforma presenta información visual de distintas áreas y problemáticas internas de EsSalud, permitiendo el seguimiento, creación de alertas, verificación y análisis de datos para la toma de decisiones en beneficio de la organización y de los asegurados.</p>
                         <h5 className='pt-3 d-xl-none text-center' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
                         <h5 className='pt-3 d-none d-xl-block' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
                         <div className='d-flex justify-content-center d-xl-none'>
@@ -225,7 +226,7 @@ export function MenuPage() {
                             <Button href='https://www.datosabiertos.gob.pe/group/seguro-social-de-salud-essalud' target="_blank" variant="outline-light">Explora datos abiertos de Essalud <i className="bi bi-box-arrow-up-right"></i></Button>
                         </div>
                     </Col>
-                    <Col xs={12} md={12} xl={5} className='px-5 py-0 d-flex align-items-center justify-content-center'>
+                    <Col xs={12} md={12} xl={5} className='py-0 d-flex align-items-center justify-content-center'>
                         <img src={Img} className="img-fluid img-banner" alt="" data-aos="zoom-out" data-aos-delay="250" />
                     </Col>
                 </Row>

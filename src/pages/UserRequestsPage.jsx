@@ -195,9 +195,10 @@ export function UserRequestsPage() {
                                         <td>{new Date(request.createdAt).toLocaleDateString('es-ES')}</td>
                                         <td>{getStateNameById(request.StateId)}</td>
                                         <td>
-                                            <button className="btn btn-primary" onClick={() => handleViewDetails(request.id)}>
+                                            <Button variant="link" onClick={() => handleViewDetails(request.id)}>
+                                            <i className="bi bi-file-earmark-text-fill" style={{ paddingRight: '10px' }}></i>
                                                 Ver solicitudes
-                                            </button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}

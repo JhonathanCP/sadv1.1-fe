@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { getUser, updateUser } from '../api/user.api';
 import { getDependencies, getDependency } from '../api/dependency.api';
 import { getMainDependencies } from '../api/maindependency.api';
+import { getNotificationsByUser, updateNotification, getNotificationById } from '../api/notification.api';
 import { getRLs } from '../api/rl.api';
 import { getPositions } from '../api/position.api';
-import { Navbar, Nav, NavDropdown, Form, Button, Container, Modal, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Form, Button, Container, Modal, Dropdown, Badge, Offcanvas } from 'react-bootstrap';
 import Logo from '../assets/logo-essalud-blanco.svg';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
@@ -15,16 +16,20 @@ export function NavBar() {
     const [usuario, setUsuario] = useState('');
     const [role, setRole] = useState('');
     const [userId, setUserId] = useState('');
-    const navigate = useNavigate();
+    const [notifications, setNotifications] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [userDetails, setUserDetails] = useState({});
     const [mainDependencies, setMainDependencies] = useState([]);
     const [dependencies, setDependencies] = useState([]);
     const [RLs, setRLs] = useState([]);
+    const navigate = useNavigate();
     const [positions, setPositions] = useState([]);
     const [selectedMainDependency, setSelectedMainDependency] = useState(null);
     const [errors, setErrors] = useState({});
     const [originalUserData, setOriginalUserData] = useState({});
+    const [selectedNotification, setSelectedNotification] = useState(null);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [showOffCanvas, setShowOffCanvas] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('access');
@@ -37,6 +42,7 @@ export function NavBar() {
             fetchRLs();
             fetchPositions();
             fetchMainDependencies();
+            fetchNotifications(decodedToken.id);
         }
     }, []);
 
@@ -104,6 +110,15 @@ export function NavBar() {
             setDependencies(response.data);
         } catch (error) {
             console.error('Error al obtener Dependencies:', error);
+        }
+    };
+
+    const fetchNotifications = async (userId) => {
+        try {
+            const response = await getNotificationsByUser(userId);
+            setNotifications(response.data);
+        } catch (error) {
+            console.error('Error al obtener las notificaciones:', error);
         }
     };
 
@@ -175,6 +190,48 @@ export function NavBar() {
         navigate("/login");
     };
 
+    const handleMarkAsRead = async (notificationId) => {
+        try {
+            const formattedNotification = {
+                opened: true, openedAt: new Date()
+            };
+            await updateNotification(notificationId, formattedNotification);
+            setNotifications(notifications.map(notification =>
+                notification.id === notificationId ? { ...notification, opened: true, openedAt: new Date() } : notification
+            ));
+        } catch (error) {
+            console.error('Error al marcar la notificación como leída:', error);
+        }
+    };
+
+    const handleMarkAsHidden = async (notificationId) => {
+        try {
+            const formattedNotification = {
+                hidden: true
+            };
+            await updateNotification(notificationId, formattedNotification);
+            setNotifications(notifications.map(notification =>
+                notification.id === notificationId ? { ...notification, hidden: true } : notification
+            ));
+        } catch (error) {
+            console.error('Error al marcar la notificación como oculta:', error);
+        }
+    };
+
+    const handleNotificationClick = async (notificationId) => {
+        try {
+            const response = await getNotificationById(notificationId);
+            setSelectedNotification(response.data);
+            setShowNotificationModal(true);
+            await handleMarkAsRead(notificationId);
+        } catch (error) {
+            console.error('Error al obtener la notificación:', error);
+        }
+    };
+
+    const unreadNotifications = notifications.filter(notification => !notification.opened && !notification.hidden);
+    const visibleNotifications = notifications.filter(notification => !notification.hidden);
+
     return (
         <Navbar className='fixed-top' variant="dark" expand="lg">
             <Container fluid className='px-5 mx-5 py-2'>
@@ -189,11 +246,7 @@ export function NavBar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto my-2 my-lg-0 px-3" style={{ maxHeight: '100px' }}>
-                        <Dropdown className='btn-menu-web'>
-                            {/* <Dropdown.Toggle>
-                                
-                                </i>
-                            </Dropdown.Toggle> */}
+                        <Dropdown className='btn-menu-web mx-2'>
                             {role === 1 && (
                                 <NavDropdown title={<i className="bi bi-grid-3x3-gap-fill"></i>}>
                                     <div className='menu2' style={{ width: '230px' }}>
@@ -249,8 +302,17 @@ export function NavBar() {
                                 </NavDropdown>
                             )}
                         </Dropdown>
-                        <Nav.Link href="#home"><span><i className="bi bi-bell-fill"></i></span></Nav.Link>
-                        <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web'>
+                        <Dropdown className='mx-2'>
+                            <Dropdown.Toggle as="a" className="nav-link" id="notification-dropdown" onClick={() => setShowOffCanvas(true)}>
+                                <i className="bi bi-bell-fill"></i>
+                                {unreadNotifications.length > 0 && (
+                                    <Badge bg="danger" className="notification-badge">
+                                        {unreadNotifications.length}
+                                    </Badge>
+                                )}
+                            </Dropdown.Toggle>
+                        </Dropdown>
+                        <NavDropdown title={<span><i className="bi bi-person-fill"></i> {usuario}</span>} className='btn-menu-web mx-2'>
                             <NavDropdown.Item onClick={() => setShowModal(true)}>Actualizar información</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => handleLogout()}>Cerrar sesión</NavDropdown.Item>
                         </NavDropdown>
@@ -340,6 +402,55 @@ export function NavBar() {
                     <Button variant="primary" onClick={handleSaveUserDetails}>Guardar cambios</Button>
                 </Modal.Footer>
             </Modal>
+
+            {/*****************OFFCANVAS DE NOTIFICACIONES ****************/}
+            <Offcanvas show={showOffCanvas} onHide={() => setShowOffCanvas(false)} placement="end">
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Notificaciones</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    {visibleNotifications.length === 0 ? (
+                        <p>No hay notificaciones</p>
+                    ) : (
+                        visibleNotifications.map(notification => (
+                            <div key={notification.id} className={`notification-item ${notification.opened ? '' : 'bold'}`}>
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <span onClick={() => handleNotificationClick(notification.id)}>
+                                        {notification.name}
+                                    </span>
+                                    <Button variant="link" onClick={() => handleMarkAsHidden(notification.id)}>
+                                        <i className="bi bi-x"></i>
+                                    </Button>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </Offcanvas.Body>
+            </Offcanvas>
+
+            {/*****************MODAL DE NOTIFICACIÓN ****************/}
+            {selectedNotification && (
+                <Modal size="lg" show={showNotificationModal} onHide={() => setShowNotificationModal(false)} centered keyboard={true}>
+                    <Modal.Header closeButton={true}>
+                        <Modal.Title>{selectedNotification.name}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className='text-center'>
+                            <p>{selectedNotification.shortDescription}</p>
+                            {selectedNotification.link && (
+                                <div>
+                                    <a onClick={() => navigate(selectedNotification.link)} href='' rel="noopener noreferrer">
+                                        Ver aquí
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowNotificationModal(false)}>Cerrar</Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
         </Navbar>
     );
 }

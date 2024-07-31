@@ -10,6 +10,8 @@ import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import { NavBar } from '../components/NavBar';
 import { useNavigate } from 'react-router-dom';
+import termsAndConditions from '../assets/TyC.pdf'; // Ajusta la ruta según tu estructura de carpetas
+
 import {
     Container, Row, Col, Form, Button, Modal, Table, InputGroup, FormControl,
     Dropdown, ModalFooter, Pagination
@@ -43,6 +45,8 @@ export function UserRequestForm() {
     const reportsPerPage = 7;
     const [showWarning, setShowWarning] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showTC, setShowTC] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -214,7 +218,15 @@ export function UserRequestForm() {
         setSelectedReports(selectedReports.filter(id => id !== reportId));
     };
 
-    const paginatedReports = modalReports.slice(
+    const handleShowTC = () => setShowTC(true);
+    const handleCloseTC = () => setShowTC(false);
+
+    const filteredReports = modalReports.filter(report =>
+        report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        report.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const paginatedReports = filteredReports.slice(
         (currentPage - 1) * reportsPerPage,
         currentPage * reportsPerPage
     );
@@ -356,12 +368,33 @@ export function UserRequestForm() {
                             <Form.Group controlId="formAcceptedTerms">
                                 <Form.Check
                                     type="checkbox"
-                                    label="He leído y acepto los Términos y Condiciones *"
+                                    label={
+                                        <span>
+                                            He leído y acepto los{' '}
+                                            <a href="#" onClick={handleShowTC}>
+                                                Términos y Condiciones
+                                            </a>{' '}
+                                            *
+                                        </span>
+                                    }
                                     checked={acceptedTerms}
                                     onChange={(e) => setAcceptedTerms(e.target.checked)}
                                     required
                                 />
                             </Form.Group>
+                            <Modal show={showTC} onHide={handleCloseModal} size="xl" centered>
+                                <Modal.Header closeButton onClick={handleCloseTC}>
+                                    <Modal.Title>Términos y Condiciones</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <iframe src={termsAndConditions} width="100%" height="500px" title="Términos y Condiciones" />
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleCloseTC}>
+                                        Cerrar
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
                             <Row>
                                 <Col md={10} className='d-flex' style={{ alignItems: 'center' }}>
                                     <h4>Listado de reportes a solicitar</h4>
@@ -427,6 +460,26 @@ export function UserRequestForm() {
                     <Modal.Title>Catálogo de reportes</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <div className='d-flex' style={{ justifyContent: "flex-end" }}>
+                        <div className="search-bar d-flex mb-3">
+                            <Form.Control
+                                type="search"
+                                placeholder="Buscar reporte"
+                                className="search-input"
+                                aria-label="Buscar reporte"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <i className="bi bi-search search-icon"></i>
+                        </div>
+                    </div>
+                    {/* <Form.Control
+                        type="text"
+                        placeholder="Buscar reportes"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="mb-3"
+                    /> */}
                     <Table responsive>
                         <thead>
                             <tr>
@@ -465,7 +518,7 @@ export function UserRequestForm() {
                                     {currentPage > 3 && <Pagination.Ellipsis />}
                                 </>
                             )}
-                            {Array.from({ length: Math.ceil(modalReports.length / reportsPerPage) }, (_, index) => {
+                            {Array.from({ length: Math.ceil(filteredReports.length / reportsPerPage) }, (_, index) => {
                                 const page = index + 1;
                                 if (page === currentPage || (page >= currentPage - 1 && page <= currentPage + 1)) {
                                     return (
@@ -476,16 +529,16 @@ export function UserRequestForm() {
                                 }
                                 return null;
                             })}
-                            {currentPage < Math.ceil(modalReports.length / reportsPerPage) - 1 && (
+                            {currentPage < Math.ceil(filteredReports.length / reportsPerPage) - 1 && (
                                 <>
-                                    {currentPage < Math.ceil(modalReports.length / reportsPerPage) - 2 && <Pagination.Ellipsis />}
-                                    <Pagination.Item onClick={() => handlePageChange(Math.ceil(modalReports.length / reportsPerPage))}>
-                                        {Math.ceil(modalReports.length / reportsPerPage)}
+                                    {currentPage < Math.ceil(filteredReports.length / reportsPerPage) - 2 && <Pagination.Ellipsis />}
+                                    <Pagination.Item onClick={() => handlePageChange(Math.ceil(filteredReports.length / reportsPerPage))}>
+                                        {Math.ceil(filteredReports.length / reportsPerPage)}
                                     </Pagination.Item>
                                 </>
                             )}
-                            <Pagination.Next onClick={() => handlePageChange(currentPage < Math.ceil(modalReports.length / reportsPerPage) ? currentPage + 1 : Math.ceil(modalReports.length / reportsPerPage))} />
-                            <Pagination.Last onClick={() => handlePageChange(Math.ceil(modalReports.length / reportsPerPage))} />
+                            <Pagination.Next onClick={() => handlePageChange(currentPage < Math.ceil(filteredReports.length / reportsPerPage) ? currentPage + 1 : Math.ceil(filteredReports.length / reportsPerPage))} />
+                            <Pagination.Last onClick={() => handlePageChange(Math.ceil(filteredReports.length / reportsPerPage))} />
                         </Pagination>
                     </Row>
                 </Modal.Body>

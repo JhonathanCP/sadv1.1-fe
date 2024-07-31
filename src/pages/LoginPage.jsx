@@ -6,8 +6,9 @@ import { jwtDecode } from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Row, Card, Col, Form, FormGroup, FormControl, FormLabel, Button, Container, Image, Modal, FormCheck } from 'react-bootstrap';
 import FondoSvg from '../assets/fondo.svg';
-import background from '../assets/wallpaper-sad.png';
-import Logo from '../assets/logo-essalud-blanco.svg';
+import background from '../assets/FondoExplora.png';
+import Logo from '../assets/logo-essalud.svg';
+import LogoExplota from '../assets/Logotipo001.svg';
 import { ManualComponent } from '../components/ManualComponent';
 import ComunicadoImage from '../assets/COMUNICADO.jpeg';  // Asegúrate de que la ruta es correcta
 
@@ -91,28 +92,30 @@ export function LoginPage() {
             style={{ backgroundImage: `url(${background})`, minHeight: '100vh', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }}
             className="d-flex text-login "
         >
-            <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
+            {/* <Modal size='xl' show={showComunicadoModal} onHide={handleCloseComunicado} centered>
                 <Modal.Header closeButton>
                 </Modal.Header>
                 <Modal.Body>
                     <Image src={ComunicadoImage} alt="Comunicado" fluid />
                 </Modal.Body>
-                {/* <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseComunicado}>
-                        Cerrar
-                    </Button>
-                </Modal.Footer> */}
-            </Modal>
+            </Modal> */}
             <div className='container fluid container-background-login '>
                 
                     <div className="container fluid text-login">
-                        <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}} className='logo-essalud'/>
-                        <h1 className="d-block d-sm-none text-center" style={{fontWeight:'bold'}}>Explora EsSalud: <br/>Visualización y Análisis de Datos</h1>
-                        <h1 className="d-none d-md-block" style={{fontWeight:'bold',}}>Explora EsSalud:  <br/>Visualización y Análisis de Datos</h1>
-                        <h5 className="d-none d-sm-block" style={{paddingTop:'40px'}}>
-                            Sistema institucional de EsSalud que pone a disposición los tableros de mando y control desarrollados con
-                            business intelligence y business analytics para la toma de decisiones en el marco del gobierno de datos.
+                        {/* <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}} className='logo-essalud pb-4'/> */}
+                        <h2 className="d-block d-sm-none text-center" style={{fontWeight:'bold'}}><img src={LogoExplota}></img><br/>Visualización y Análisis de Datos</h2>
+                        <h2 className="d-none d-md-block" style={{fontWeight:'bold',}}><img src={LogoExplota}></img><br/>Visualización y Análisis de Datos</h2>
+                        <h5 className="d-none d-sm-block" style={{paddingTop:'25px'}}>
+                        Sistema que ofrece reportes dinámicos y tableros de mando utilizando Business Intelligence (BI). Presenta información visual de distintas áreas internas, facilitando el análisis de datos para las decisiones en beneficio de la organización y los asegurados.
                         </h5>
+                        <h5 className='pt-3 d-xl-none text-center' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
+                        <h5 className='pt-3 d-none d-xl-block' style={{ fontWeight: 'bold', }}>Plataforma Nacional de Datos Abiertos - PCM</h5>
+                        <div className='d-flex justify-content-center d-xl-none'>
+                            <Button href='https://www.datosabiertos.gob.pe/group/seguro-social-de-salud-essalud' target="_blank" variant="light">Explora datos abiertos de Essalud <i className="bi bi-box-arrow-up-right"></i></Button>
+                        </div>
+                        <div className='d-none d-xl-block'>
+                            <Button href='https://www.datosabiertos.gob.pe/group/seguro-social-de-salud-essalud' target="_blank" variant="light">Explora datos abiertos de Essalud <i className="bi bi-box-arrow-up-right"></i></Button>
+                        </div>
                         {/* <div className="row">
                             <div className="container-fluid col-lg-12 col-md-12 col-sm-12 d-flex justify-content-md-start justify-content-center">
                                 <button type="button" className="btn btn-primary text-light mt-3 px-3 fw-medium" onClick={handleManualModal}>
@@ -123,12 +126,13 @@ export function LoginPage() {
                     </div>
                 
                 <div className="container-fluid col-lg-5 col-md-6 col-xs-12 form-login">
-                    <div className="card p-4" style={{ width: '24rem' }}>
+                    <div className="card p-4" style={{ width: '22.5rem' }}>
                         <form onSubmit={handleLogin} className="my-2">
-                            <div className="text-center my-4">
-                                <h4 className="">Inicio de sesión</h4>
+                            <div className="text-center my-1">
+                            <img src={Logo} alt="Logo"  style={{paddingBottom:'20px'}} className='logo-essalud'/>
+
                             </div>
-                            <div className="form-group my-4">
+                            <div className="form-group my-3">
                                 <label htmlFor="username">Usuario</label>
                                 <div className="input-group">
                                     <input type="text" className="form-control" id="username" name="username" value={credentials.username} onChange={handleChange}></input>
